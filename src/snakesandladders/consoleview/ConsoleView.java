@@ -13,6 +13,7 @@ package snakesandladders.consoleview;
 public class ConsoleView {
 
     public ConsoleView() {
+        //Noam change
         
     }
     
