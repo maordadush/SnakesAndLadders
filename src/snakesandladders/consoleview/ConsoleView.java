@@ -13,8 +13,7 @@ package snakesandladders.consoleview;
 public class ConsoleView {
 
     public ConsoleView() {
-        //noam
-        
+           
         
     }
     
