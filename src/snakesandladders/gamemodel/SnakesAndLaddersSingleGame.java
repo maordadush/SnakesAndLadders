@@ -72,7 +72,7 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
     private int throwCube() {
         Random rand = new Random();
 
-        int randomNum = rand.nextInt(6) + 1;
+        int randomNum = rand.nextInt(5) + 1;
 
         return randomNum;
     }
