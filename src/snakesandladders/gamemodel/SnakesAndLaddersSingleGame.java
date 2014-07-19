@@ -65,7 +65,7 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
             m_GameBoard[X][Y].setType(eChars.SNAKE);
             m_GameBoard[nextX][nextY].setType(eChars.SNAKE);
             m_GameBoard[nextX][nextY].setType(eChars.SNAKE);
-            m_GameBoard[X][Y].JumpTo.setLocation(nextX, nextY);
+            m_GameBoard[X][Y].setLocation(nextX, nextY);
               
         }
     }
