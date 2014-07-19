@@ -64,7 +64,6 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
             // set snake paramter tail
             m_GameBoard[X][Y].setType(eChars.SNAKE);
             m_GameBoard[nextX][nextY].setType(eChars.SNAKE);
-            m_GameBoard[nextX][nextY].setType(eChars.SNAKE);
             m_GameBoard[X][Y].setLocation(nextX, nextY);
               
         }
