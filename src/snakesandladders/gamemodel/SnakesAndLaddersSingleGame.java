@@ -49,8 +49,8 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
         for (int i = 0; i < o_NumOfSnakesAndLadders; i++) {
             int X = rand.nextInt(this.m_BoardSize - 1);
             int Y = rand.nextInt(this.m_BoardSize - 1);
-            while ((X != 0 && Y != 0) && (X != m_BoardSize - 1 && Y != m_BoardSize - 1)
-                    && (m_GameBoard[X][Y].getType() != eChars.NONE)) {
+            while ((X == 0 && Y == 0) || (X == m_BoardSize - 1 && Y == m_BoardSize - 1)
+                    || (m_GameBoard[X][Y].getType() != eChars.NONE)) {
                 X = rand.nextInt(this.m_BoardSize - 1);
                 Y = rand.nextInt(this.m_BoardSize - 1);
             }
