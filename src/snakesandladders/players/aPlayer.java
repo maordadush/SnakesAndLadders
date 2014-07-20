@@ -16,22 +16,17 @@ public abstract class aPlayer {
 
     String m_PlayerName;
     List<Soldier> m_SoldiersList;
-    int m_NumOfSoldiers;
+    public final int NUM_OF_SOLDIERS = 4;
     int m_NumOfSoldiersToWin;
 
-    protected aPlayer(String o_Name, int o_NumOfSoldiers, int o_NumOfSoldiersToWin) {
+    protected aPlayer(String o_Name, int o_NumOfSoldiersToWin) {
         this.m_PlayerName = o_Name;
-        this.m_NumOfSoldiers = o_NumOfSoldiers;
         this.m_NumOfSoldiersToWin = o_NumOfSoldiersToWin;
-        this.m_SoldiersList = new ArrayList<Soldier>(m_NumOfSoldiers);
+        this.m_SoldiersList = new ArrayList<Soldier>(NUM_OF_SOLDIERS);
     }
 
     public String getPlayerName() {
         return m_PlayerName;
-    }
-
-    public int getNumOfSoldiers() {
-        return m_NumOfSoldiers;
     }
 
     public int getNumOfSoldiersToWin() {

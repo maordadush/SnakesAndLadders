@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package snakesandladders.gamemodel;
+
+import java.util.ArrayList;
+import snakesandladders.players.aPlayer;
 
 /**
  *
@@ -12,8 +14,33 @@ package snakesandladders.gamemodel;
  */
 public class GameModel {
 
-    public GameModel() {
-        
+    public static final int MAX_PLAYERS = 4;
+    private SnakesAndLaddersSingleGame game;
+    private aPlayer currTurnPlayer;
+    private boolean selectNextGame;
+    private String saveGamePath;
+
+    public GameModel(int o_GameSize, int o_NumOfPlayers) {
+        game = new SnakesAndLaddersSingleGame(o_GameSize, o_NumOfPlayers);
+        saveGamePath = null;
     }
-    
+
+    public void initNewGame() {
+        game.initGame();
+        game.InitPlayers();
+        selectNextGame = true;
+    }
+
+    public boolean hasGameWon() {
+        return (game.hasGameWon());
+    }
+
+    public BoardSquare getCurrGameIndex() {
+        return game.getCurrentBoardSquere();
+    }
+
+    public aPlayer getCurrPlayer() {
+        return currTurnPlayer;
+    }
+
 }

@@ -28,6 +28,33 @@ public class ConsoleView {
         System.out.println("3. Exit Game.");
     }
 
+    public int GetBoardSize()throws SnakesAndLaddersRunTimeException{
+        Scanner scanner = new Scanner(System.in);
+        int input;
+        
+        showMenuSize();
+        
+        while (!scanner.hasNextInt()) {
+            System.out.println("Inavlid Input. Please enter a number.");
+            scanner.next();
+        }
+        input = scanner.nextInt();
+        
+        while (input < 5 || input > 8) {
+            System.out.println("Not Valid input, Please enter again:");
+            showMenuSize();
+
+            while (!scanner.hasNextInt()) {
+                System.out.println("Inavlid Input. Please enter a number.");
+                scanner.next();
+            }
+
+            input = scanner.nextInt();
+        }
+        
+        return input;
+    }
+            
     public eStartMenu GetMainOptionMenu() throws SnakesAndLaddersRunTimeException {
         Scanner scanner = new Scanner(System.in);
         int input;
@@ -335,7 +362,7 @@ public class ConsoleView {
 //                + ", in game: " + gameIndex.getX() + " " + gameIndex.getY());
 //    }
 
-    public void printXMixDrixException(SnakesAndLaddersRunTimeException ex) {
+    public void printSnakesAndLaddersRunTimeExceptiom(SnakesAndLaddersRunTimeException ex) {
         System.out.println(ex.toString() + ": \n" + ex.getMessage());
     }
 
@@ -363,5 +390,14 @@ public class ConsoleView {
 
     public void displayXMLSavedSuccessfully(String savePath) {
         System.out.println("Game SaveSuccessfully to: " + savePath);
+    }
+
+    private void showMenuSize() {
+        System.out.println("Welcome to Snakes and ladders game");
+        System.out.println("First, please write the board size (5-8):");
+    }
+
+    public int GetNumOfPlayers() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

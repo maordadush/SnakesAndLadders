@@ -5,6 +5,7 @@
  */
 package snakesandladders.gamemodel;
 
+import java.util.ArrayList;
 import java.util.Random;
 import snakesandladders.players.aPlayer;
 import sun.nio.cs.ext.ExtendedCharsets;
@@ -18,17 +19,24 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
     private int m_BoardSize = 0;
     private BoardSquare m_GameBoard[][];
     private int gameWinner;
+    private ArrayList<aPlayer> players;
+    private BoardSquare m_CuurentSquere;
 
-    public SnakesAndLaddersSingleGame(int o_BoardSize) {
-        if (o_BoardSize > 4 || o_BoardSize < 9) {
+    public SnakesAndLaddersSingleGame(int o_BoardSize, int o_NumberOfPlayers) {
+        if ((o_BoardSize > 4 || o_BoardSize < 9) && (o_NumberOfPlayers > 0 || o_NumberOfPlayers < 5)) {
+            players = new ArrayList<>(o_NumberOfPlayers);
             m_BoardSize = o_BoardSize;
             m_GameBoard = new BoardSquare[m_BoardSize][m_BoardSize];
         } else {
-            throw new UnsupportedOperationException("Illeagal board size"); //To change body of generated methods, choose Tools | Templates.
-            
+            throw new UnsupportedOperationException("Illeagal board/players number"); //To change body of generated methods, choose Tools | Templates.
+
         }
 
         gameWinner = -1;
+    }
+
+    public void InitPlayers() {
+        players.clear();
     }
 
     public void setO_BoardSize(int o_BoardSize) {
@@ -60,14 +68,15 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
                 nextX = rand.nextInt(this.m_BoardSize - X - 1);
                 nextY = rand.nextInt(this.m_BoardSize - 1);
             }
-            
+
             // set snake paramter tail
             m_GameBoard[X][Y].setType(eChars.SNAKE);
             m_GameBoard[nextX][nextY].setType(eChars.SNAKE);
             m_GameBoard[X][Y].setLocation(nextX, nextY);
-              
+
         }
     }
+
     private int throwCube() {
         Random rand = new Random();
 
@@ -84,6 +93,20 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
     @Override
     public boolean checkWinner() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    boolean hasGameWon() {
+        boolean returnValue = false;
+        for (aPlayer player : players) {
+            if (player.getNumOfSoldiersToWin()== 0) {
+                returnValue = true;
+            }
+        }
+        return returnValue;
+    }
+
+    BoardSquare getCurrentBoardSquere() {
+        return m_CuurentSquere;
     }
 
 }
