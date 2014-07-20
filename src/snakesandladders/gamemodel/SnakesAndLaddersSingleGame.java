@@ -31,7 +31,7 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
     }
 
     public SnakesAndLaddersSingleGame(int o_BoardSize, int o_NumberOfPlayers) {
-        if ((o_BoardSize > 4 || o_BoardSize < 9) && (o_NumberOfPlayers > 0 || o_NumberOfPlayers < 5)) {
+        if ((o_BoardSize > 4 || o_BoardSize < 9) && (o_NumberOfPlayers > 1 || o_NumberOfPlayers < 5)) {
             players = new ArrayList<>(o_NumberOfPlayers);
             m_BoardSize = o_BoardSize;
             m_GameBoard = new BoardSquare[m_BoardSize][m_BoardSize];

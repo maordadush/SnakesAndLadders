@@ -397,7 +397,35 @@ public class ConsoleView {
         System.out.println("First, please write the board size (5-8):");
     }
 
-    public int GetNumOfPlayers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int GetNumOfPlayers() throws SnakesAndLaddersRunTimeException {
+        Scanner scanner = new Scanner(System.in);
+        int input;
+
+        showNumOfPlayersMenu();
+
+        while (!scanner.hasNextInt()) {
+            System.out.println("Inavlid Input. Please enter a number.");
+            scanner.next();
+        }
+
+        input = scanner.nextInt();
+
+        while (input < 2 || input > 4) {
+            System.out.println("Not Valid input, Please enter again:");
+            showMainMenu();
+
+            while (!scanner.hasNextInt()) {
+                System.out.println("Inavlid Input. Please enter a number.");
+                scanner.next();
+            }
+
+            input = scanner.nextInt();
+        }
+        
+        return input;
+    }
+    
+    public void showNumOfPlayersMenu(){
+        System.out.println("How many players (2-4)? ");
     }
 }
