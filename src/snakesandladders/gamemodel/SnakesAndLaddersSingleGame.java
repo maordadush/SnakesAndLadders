@@ -22,6 +22,14 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
     private ArrayList<aPlayer> players;
     private BoardSquare m_CuurentSquere;
 
+    public int getNumOfPlayers() {
+        return players.size();
+    }
+
+    public ArrayList<aPlayer> getPlayers() {
+        return players;
+    }
+
     public SnakesAndLaddersSingleGame(int o_BoardSize, int o_NumberOfPlayers) {
         if ((o_BoardSize > 4 || o_BoardSize < 9) && (o_NumberOfPlayers > 0 || o_NumberOfPlayers < 5)) {
             players = new ArrayList<>(o_NumberOfPlayers);
@@ -98,7 +106,7 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
     boolean hasGameWon() {
         boolean returnValue = false;
         for (aPlayer player : players) {
-            if (player.getNumOfSoldiersToWin()== 0) {
+            if (player.getNumOfSoldiersToWin() == 0) {
                 returnValue = true;
             }
         }

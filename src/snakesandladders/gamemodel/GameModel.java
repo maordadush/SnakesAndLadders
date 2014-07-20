@@ -6,6 +6,7 @@
 package snakesandladders.gamemodel;
 
 import java.util.ArrayList;
+import java.util.Random;
 import snakesandladders.players.aPlayer;
 
 /**
@@ -41,6 +42,18 @@ public class GameModel {
 
     public aPlayer getCurrPlayer() {
         return currTurnPlayer;
+    }
+
+    public void initGame() {
+        game.initGame();
+        selectFirstPlayer();
+        selectNextGame = true;
+    }
+
+    private void selectFirstPlayer() {
+        Random rand = new Random();
+        int i = rand.nextInt(game.getNumOfPlayers());
+        currTurnPlayer = game.getPlayers().get(i);
     }
 
 }

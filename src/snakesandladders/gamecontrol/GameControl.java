@@ -145,4 +145,15 @@ public class GameControl {
         initPlayers();
         m_gameModel.selectFirstPlayer();
     }
+
+    private eStartMenu startLoadGame() throws SnakesAndLaddersRunTimeException {
+//        XMLLoadStatus status = loadGame();
+//
+//        if (status != XMLLoadStatus.LOAD_SUCCESS) {
+//            return eStartMenu.CHOOSE;
+//        }
+//
+//        runGame();
+        return eStartMenu.EXIT;
+    }
 }
