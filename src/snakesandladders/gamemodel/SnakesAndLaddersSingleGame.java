@@ -8,7 +8,7 @@ package snakesandladders.gamemodel;
 import java.util.ArrayList;
 import java.util.Random;
 import snakesandladders.players.aPlayer;
-import sun.nio.cs.ext.ExtendedCharsets;
+
 
 /**
  *
@@ -63,6 +63,7 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
     public void shuffleSnakesAndLadders(int o_NumOfSnakesAndLadders) {
         Random rand = new Random();
         for (int i = 0; i < o_NumOfSnakesAndLadders; i++) {
+            //snake head
             int X = rand.nextInt(this.m_BoardSize - 1);
             int Y = rand.nextInt(this.m_BoardSize - 1);
             while ((X == 0 && Y == 0) || (X == m_BoardSize - 1 && Y == m_BoardSize - 1)
@@ -70,16 +71,43 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
                 X = rand.nextInt(this.m_BoardSize - 1);
                 Y = rand.nextInt(this.m_BoardSize - 1);
             }
+            //snake tail 
             int nextX = rand.nextInt(m_BoardSize - X - 1);
             int nextY = rand.nextInt(m_BoardSize - 1);
-            while ((X != 0 && Y != 0) && (m_GameBoard[X][Y].getType() != eChars.NONE)) {
+            while ((X != 0 && Y != 0) || (m_GameBoard[X][Y].getType() != eChars.NONE)) {
                 nextX = rand.nextInt(this.m_BoardSize - X - 1);
                 nextY = rand.nextInt(this.m_BoardSize - 1);
             }
 
             // set snake paramter tail
-            m_GameBoard[X][Y].setType(eChars.SNAKE);
-            m_GameBoard[nextX][nextY].setType(eChars.SNAKE);
+            m_GameBoard[X][Y].setType(eChars.SNAKE_HEAD);
+            m_GameBoard[X][Y].setJumpTo(m_GameBoard[nextX][nextY]);
+            m_GameBoard[nextX][nextY].setType(eChars.SNAKE_TAIL);
+            m_GameBoard[X][Y].setLocation(nextX, nextY);
+
+        }
+        
+        for (int i = 0; i < o_NumOfSnakesAndLadders; i++) {
+            //Ladder tail
+            int X = rand.nextInt(this.m_BoardSize - 1);
+            int Y = rand.nextInt(this.m_BoardSize - 1);
+            while ((X == 0 && Y == 0) || (X == m_BoardSize - 1 && Y == m_BoardSize - 1)
+                    || (m_GameBoard[X][Y].getType() != eChars.NONE)) {
+                X = rand.nextInt(this.m_BoardSize - 1);
+                Y = rand.nextInt(this.m_BoardSize - 1);
+            }
+            //Ladder head 
+            int nextX = rand.nextInt(m_BoardSize + X + 1);
+            int nextY = rand.nextInt(m_BoardSize - 1);
+            while ((X != m_BoardSize - 1 && Y != m_BoardSize - 1 ) || (m_GameBoard[X][Y].getType() != eChars.NONE)) {
+                nextX = rand.nextInt(this.m_BoardSize + X + 1);
+                nextY = rand.nextInt(this.m_BoardSize - 1);
+            }
+
+            // set Ladder paramter tail
+            m_GameBoard[X][Y].setType(eChars.LADDER_TAIL);
+            m_GameBoard[X][Y].setJumpTo(m_GameBoard[nextX][nextY]);
+            m_GameBoard[nextX][nextY].setType(eChars.LADDER_HEAD);
             m_GameBoard[X][Y].setLocation(nextX, nextY);
 
         }
@@ -117,4 +145,14 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
         return m_CuurentSquere;
     }
 
+    public int getO_BoardSize() {
+        return m_BoardSize;
+    }
+
+    public BoardSquare getBoardSquare(int i, int j) {
+        return m_GameBoard[i][j];
+    }
+
+    
+    
 }
