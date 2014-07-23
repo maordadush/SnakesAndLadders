@@ -5,6 +5,9 @@
  */
 package snakesandladders.consoleview;
 
+import com.sun.org.apache.xalan.internal.xsltc.runtime.BasisLibrary;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamecontrol.eEndMenu;
@@ -12,6 +15,7 @@ import snakesandladders.gamecontrol.eGameMenu;
 import snakesandladders.gamecontrol.eStartMenu;
 import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
+import snakesandladders.gamemodel.eChars;
 import snakesandladders.players.aPlayer;
 import snakesandladders.players.ePlayerType;
 
@@ -28,18 +32,18 @@ public class ConsoleView {
         System.out.println("3. Exit Game.");
     }
 
-    public int GetBoardSize()throws SnakesAndLaddersRunTimeException{
+    public int GetBoardSize() throws SnakesAndLaddersRunTimeException {
         Scanner scanner = new Scanner(System.in);
         int input;
-        
+
         showMenuSize();
-        
+
         while (!scanner.hasNextInt()) {
             System.out.println("Inavlid Input. Please enter a number.");
             scanner.next();
         }
         input = scanner.nextInt();
-        
+
         while (input < 5 || input > 8) {
             System.out.println("Not Valid input, Please enter again:");
             showMenuSize();
@@ -51,10 +55,10 @@ public class ConsoleView {
 
             input = scanner.nextInt();
         }
-        
+
         return input;
     }
-            
+
     public eStartMenu GetMainOptionMenu() throws SnakesAndLaddersRunTimeException {
         Scanner scanner = new Scanner(System.in);
         int input;
@@ -306,37 +310,35 @@ public class ConsoleView {
 //        }
 //    }
     public void printGame(SnakesAndLaddersSingleGame game) throws SnakesAndLaddersRunTimeException {
-//        XMixDrixChars printChar;
-//        int singleGameBoardSize = XMixDrixSingleGame.BOARD_SIZE;
-//        int ngBoardSize = XMixDrixSingleGame.BOARD_SIZE * XMixDrixSingleGame.BOARD_SIZE;
-//        SquareIndex gameIndex = new SquareIndex(0, 0);
-//        SquareIndex index = new SquareIndex(0, 0);
-//
-//        for (int i = 0; i < ngBoardSize; i++) {
-//            for (int j = 0; j < ngBoardSize; j++) {
-//                gameIndex.setSquare(i / singleGameBoardSize, j / singleGameBoardSize);
-//                index.setSquare(i % singleGameBoardSize, j % singleGameBoardSize);
-//                printChar = game.getCharFromGame(gameIndex, index);
-//                printChar(printChar);
-//                if (j != 8) {
-//                    if (j % singleGameBoardSize == 2) {
-//                        System.out.print(" # ");
-//                    } else {
-//                        System.out.print(" | ");
-//                    }
-//                } else {
-//                    System.out.print('\n');
-//                }
-//            }
-//            if (i != 8) {
-//                if (i % singleGameBoardSize == 2) {
-//                    System.out.println("#################################");
-//                } else {
-//                    System.out.println(" -------  #  -------  #  ------- ");
-//                }
-//            }
-//        }
-//        System.out.println("");
+        int singleGameBoardSize = game.getO_BoardSize();
+        ArrayList<aPlayer> players = game.getPlayers();
+        int numPlayers = players.size();
+        StringBuilder boardString = new StringBuilder();
+        
+        for (int i = 0; i < singleGameBoardSize; i++) {
+            for (int j = 0; j < singleGameBoardSize; j++) {
+                BoardSquare bs = game.getBoardSquare(i, j);
+                eChars bsType = bs.getType();
+                boardString.append(bs.getSquareNumber()).append("|");
+                if (bsType != eChars.NONE) {
+                    boardString.append(bs.getJumpTo().getSquareNumber()).append("|");
+                } else {
+                    boardString.append("--|");
+                }
+                for (int k = 0; k < numPlayers; k++) {
+                    boardString.append(players.get(k).getNumSoldiersAtSquare(bs));
+                }
+                boardString.append(" ");
+            }
+            boardString.append(System.lineSeparator());
+        }
+        boardString.append("-------------------------------------------------------").append(System.lineSeparator());
+        for (aPlayer player : players) {
+            boardString.append("Player " + (players.indexOf(player) + 1) + ":" + player.getPlayerName() + "\t");
+        }
+        
+        //Print out the board
+        System.out.print(boardString.toString());
     }
 
     public void displayCurrPlayerAndGameIndex(BoardSquare index, aPlayer player, boolean selectNextGame, boolean isCurrGameFull) {
@@ -356,12 +358,10 @@ public class ConsoleView {
 //    public void displayNoWinner() {
 //        System.out.println("The game is Tie");
 //    }
-
 //    public void displayLastMove(XMixDrixPlayer player, SquareIndex move, SquareIndex gameIndex) {
 //        System.out.println(player.getPlayerName() + " last move: " + move.getX() + " " + move.getY()
 //                + ", in game: " + gameIndex.getX() + " " + gameIndex.getY());
 //    }
-
     public void printSnakesAndLaddersRunTimeExceptiom(SnakesAndLaddersRunTimeException ex) {
         System.out.println(ex.toString() + ": \n" + ex.getMessage());
     }
@@ -369,7 +369,6 @@ public class ConsoleView {
 //    public void displayXMLLoadErro(XMLLoadStatus loadStatus) {
 //        System.out.println("Error loading game from XML: " + loadStatus.toString());
 //    }
-
     public String getLoadXMLPath() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter full XML path to load game:");
@@ -387,7 +386,6 @@ public class ConsoleView {
 //    public void displayXMLSaveError(XMLSaveStatus saveStatus) {
 //        System.out.println("Error saving game to XML: " + saveStatus.toString());
 //    }
-
     public void displayXMLSavedSuccessfully(String savePath) {
         System.out.println("Game SaveSuccessfully to: " + savePath);
     }
@@ -421,11 +419,11 @@ public class ConsoleView {
 
             input = scanner.nextInt();
         }
-        
+
         return input;
     }
-    
-    public void showNumOfPlayersMenu(){
+
+    public void showNumOfPlayersMenu() {
         System.out.println("How many players (2-4)? ");
     }
 }
