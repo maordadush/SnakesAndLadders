@@ -5,9 +5,8 @@
  */
 package snakesandladders.consoleview;
 
-import com.sun.org.apache.xalan.internal.xsltc.runtime.BasisLibrary;
+
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Scanner;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamecontrol.eEndMenu;
