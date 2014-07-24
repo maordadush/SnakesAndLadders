@@ -5,7 +5,6 @@
  */
 package snakesandladders.gamemodel;
 
-import java.util.ArrayList;
 import java.util.Random;
 import snakesandladders.players.aPlayer;
 

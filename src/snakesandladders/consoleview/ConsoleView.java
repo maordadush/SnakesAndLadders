@@ -14,8 +14,6 @@ import snakesandladders.gamecontrol.eEndMenu;
 import snakesandladders.gamecontrol.eGameMenu;
 import snakesandladders.gamecontrol.eStartMenu;
 import snakesandladders.gamemodel.BoardSquare;
-import snakesandladders.gamemodel.GameModel;
-import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
 import snakesandladders.gamemodel.eChars;
 import snakesandladders.players.aPlayer;
 import snakesandladders.players.ePlayerType;
