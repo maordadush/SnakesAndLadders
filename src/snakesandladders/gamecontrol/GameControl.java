@@ -5,6 +5,7 @@
  */
 package snakesandladders.gamecontrol;
 
+import java.util.ArrayList;
 import snakesandladders.consoleview.ConsoleView;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamemodel.BoardSquare;
@@ -103,7 +104,7 @@ public class GameControl {
             currGameIndex = m_gameModel.getCurrGameIndex();
             player = m_gameModel.getCurrPlayer();
             m_consoleView.displayCurrPlayerAndGameIndex(currGameIndex, player, m_gameModel.GetSelectNextGame());
-            m_consoleView.printGame(m_gameModel.getGame());
+            m_consoleView.printGame(m_gameModel);
             if (player instanceof ComputerPlayer) {
            //     makeMove();
             } else {
@@ -139,6 +140,10 @@ public class GameControl {
 //        }
     }
 
+    public ArrayList<aPlayer> getPlayers(){
+        return m_gameModel.getPlayers();
+    }
+    
    // private void createNewGame() throws SnakesAndLaddersRunTimeException {
     //    m_gameModel.initNewGame();
      //   initPlayers();

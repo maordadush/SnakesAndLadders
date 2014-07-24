@@ -9,10 +9,12 @@ package snakesandladders.consoleview;
 import java.util.ArrayList;
 import java.util.Scanner;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
+import snakesandladders.gamecontrol.GameControl;
 import snakesandladders.gamecontrol.eEndMenu;
 import snakesandladders.gamecontrol.eGameMenu;
 import snakesandladders.gamecontrol.eStartMenu;
 import snakesandladders.gamemodel.BoardSquare;
+import snakesandladders.gamemodel.GameModel;
 import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
 import snakesandladders.gamemodel.eChars;
 import snakesandladders.players.aPlayer;
@@ -308,15 +310,15 @@ public class ConsoleView {
 //                throw new XMixDrixRunTimeException("PrintChar(): Not valid char input.");
 //        }
 //    }
-    public void printGame(SnakesAndLaddersSingleGame game) throws SnakesAndLaddersRunTimeException {
-        int singleGameBoardSize = game.getO_BoardSize();
+    public void printGame(GameModel game) throws SnakesAndLaddersRunTimeException {
+        int singleGameBoardSize = game.GetSingleGame().getO_BoardSize();
         ArrayList<aPlayer> players = game.getPlayers();
         int numPlayers = players.size();
         StringBuilder boardString = new StringBuilder();
         
         for (int i = 0; i < singleGameBoardSize; i++) {
             for (int j = 0; j < singleGameBoardSize; j++) {
-                BoardSquare bs = game.getBoardSquare(i, j);
+                BoardSquare bs = game.GetSingleGame().getBoardSquare(i, j);
                 eChars bsType = bs.getType();
                 boardString.append(bs.getSquareNumber()).append("|");
                 if (bsType != eChars.NONE) {

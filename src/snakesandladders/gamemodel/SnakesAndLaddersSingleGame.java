@@ -19,32 +19,18 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
     private int m_BoardSize = 0;
     private BoardSquare m_GameBoard[][];
     private int gameWinner;
-    private ArrayList<aPlayer> players;
     private BoardSquare m_CuurentSquere;
 
-    public int getNumOfPlayers() {
-        return players.size();
-    }
-
-    public ArrayList<aPlayer> getPlayers() {
-        return players;
-    }
-
-    public SnakesAndLaddersSingleGame(int o_BoardSize, int o_NumberOfPlayers) {
-        if ((o_BoardSize > 4 || o_BoardSize < 9) && (o_NumberOfPlayers > 1 || o_NumberOfPlayers < 5)) {
-            players = new ArrayList<>(o_NumberOfPlayers);
+    public SnakesAndLaddersSingleGame(int o_BoardSize) {
+        if (o_BoardSize > 4 || o_BoardSize < 9){
             m_BoardSize = o_BoardSize;
             m_GameBoard = new BoardSquare[m_BoardSize][m_BoardSize];
         } else {
-            throw new UnsupportedOperationException("Illeagal board/players number"); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Illeagal board size"); //To change body of generated methods, choose Tools | Templates.
 
         }
 
         gameWinner = -1;
-    }
-
-    public void InitPlayers() {
-        players.clear();
     }
 
     public void setO_BoardSize(int o_BoardSize) {
@@ -131,15 +117,7 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    boolean hasGameWon() {
-        boolean returnValue = false;
-        for (aPlayer player : players) {
-            if (player.getNumOfSoldiersToWin() == 0) {
-                returnValue = true;
-            }
-        }
-        return returnValue;
-    }
+    
 
     BoardSquare getCurrentBoardSquere() {
         return m_CuurentSquere;
