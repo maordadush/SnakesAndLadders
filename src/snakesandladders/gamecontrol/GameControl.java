@@ -102,8 +102,7 @@ public class GameControl {
         while (!m_gameModel.hasGameWon()) {
             currGameIndex = m_gameModel.getCurrGameIndex();
             player = m_gameModel.getCurrPlayer();
-            //Noam - Stopped here!
-            m_consoleView.displayCurrPlayerAndGameIndex(currGameIndex, player, m_gameModel.selectNextGame());
+            m_consoleView.displayCurrPlayerAndGameIndex(currGameIndex, player, m_gameModel.GetSelectNextGame());
             m_consoleView.printGame(m_gameModel.getGame());
             if (player instanceof ComputerPlayer) {
                 makeMove();

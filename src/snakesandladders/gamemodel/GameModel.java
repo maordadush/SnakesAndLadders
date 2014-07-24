@@ -55,5 +55,9 @@ public class GameModel {
         int i = rand.nextInt(game.getNumOfPlayers());
         currTurnPlayer = game.getPlayers().get(i);
     }
+    
+    public boolean GetSelectNextGame() {
+        return selectNextGame;
+    }
 
 }

@@ -341,7 +341,8 @@ public class ConsoleView {
         System.out.print(boardString.toString());
     }
 
-    public void displayCurrPlayerAndGameIndex(BoardSquare index, aPlayer player, boolean selectNextGame, boolean isCurrGameFull) {
+    //Noam - Check ablut selectNextGame
+    public void displayCurrPlayerAndGameIndex(BoardSquare index, aPlayer player, boolean selectNextGame) {
         int x = (int) index.getX();
         int y = (int) index.getY();
 
