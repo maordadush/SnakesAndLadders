@@ -131,12 +131,12 @@ public class GameControl {
             }
         }
 
-        if (model.hasGameWon()) {
-            XMixDrixPlayer winnerPlayer = model.getWinnerPlayer();
-            view.displayWinner(winnerPlayer.getPlayerName(), winnerPlayer.getPlayerChar());
-        } else {
-            view.displayNoWinner();
-        }
+//        if (m_gameModel.hasGameWon()) {
+            aPlayer winnerPlayer = m_gameModel.getWinnerPlayer();
+            m_consoleView.displayWinner(winnerPlayer.getPlayerName());
+//        } else {
+//            m_consoleView.displayNoWinner();
+//        }
     }
 
     private void createNewGame() throws SnakesAndLaddersRunTimeException {
@@ -154,5 +154,21 @@ public class GameControl {
 //
 //        runGame();
         return eStartMenu.EXIT;
+    }
+
+    private void makeMove() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void saveGame() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void saveGameAs() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void initPlayers() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -50,14 +50,22 @@ public class GameModel {
         selectNextGame = true;
     }
 
-    private void selectFirstPlayer() {
+    public void selectFirstPlayer() {
         Random rand = new Random();
         int i = rand.nextInt(game.getNumOfPlayers());
         currTurnPlayer = game.getPlayers().get(i);
     }
-    
+
     public boolean GetSelectNextGame() {
         return selectNextGame;
+    }
+
+    public SnakesAndLaddersSingleGame getGame() {
+        return this.game;
+    }
+
+    public aPlayer getWinnerPlayer() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
