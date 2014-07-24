@@ -5,8 +5,8 @@
  */
 package snakesandladders.consoleview;
 
-
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamecontrol.GameControl;
@@ -46,6 +46,33 @@ public class ConsoleView {
         while (input < 5 || input > 8) {
             System.out.println("Not Valid input, Please enter again:");
             showMenuSize();
+
+            while (!scanner.hasNextInt()) {
+                System.out.println("Inavlid Input. Please enter a number.");
+                scanner.next();
+            }
+
+            input = scanner.nextInt();
+        }
+
+        return input;
+    }
+
+    public int GetNumOfSoldiersToWin() throws SnakesAndLaddersRunTimeException {
+        Scanner scanner = new Scanner(System.in);
+        int input;
+
+        showNumOfSoldiers();
+
+        while (!scanner.hasNextInt()) {
+            System.out.println("Inavlid Input. Please enter a number.");
+            scanner.next();
+        }
+        input = scanner.nextInt();
+
+        while (input < 1 || input > 4) {
+            System.out.println("Not Valid input, Please enter again:");
+            showNumOfSoldiers();
 
             while (!scanner.hasNextInt()) {
                 System.out.println("Inavlid Input. Please enter a number.");
@@ -310,10 +337,10 @@ public class ConsoleView {
 //    }
     public void printGame(GameControl game) throws SnakesAndLaddersRunTimeException {
         int singleGameBoardSize = game.GetSingleGame().getO_BoardSize();
-        ArrayList<aPlayer> players = game.getPlayers();
+        List<aPlayer> players = game.getPlayers();
         int numPlayers = players.size();
         StringBuilder boardString = new StringBuilder();
-        
+
         for (int i = 0; i < singleGameBoardSize; i++) {
             for (int j = 0; j < singleGameBoardSize; j++) {
                 BoardSquare bs = game.GetSingleGame().getBoardSquare(i, j);
@@ -335,7 +362,7 @@ public class ConsoleView {
         for (aPlayer player : players) {
             boardString.append("Player " + (players.indexOf(player) + 1) + ":" + player.getPlayerName() + "\t");
         }
-        
+
         //Print out the board
         System.out.print(boardString.toString());
     }
@@ -427,7 +454,8 @@ public class ConsoleView {
         System.out.println("How many players (2-4)? ");
     }
 
-    public ArrayList<aPlayer> GetInitializedPlayers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void showNumOfSoldiers() {
+        System.out.println("How many soldiers from 4 need to finish for win (1-4)?");
+
     }
 }

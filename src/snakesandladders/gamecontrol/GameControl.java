@@ -6,13 +6,17 @@
 package snakesandladders.gamecontrol;
 
 import java.util.ArrayList;
+import java.util.List;
 import snakesandladders.consoleview.ConsoleView;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.gamemodel.GameModel;
 import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
+import snakesandladders.gamemodel.eChars;
 import snakesandladders.players.ComputerPlayer;
+import snakesandladders.players.HumanPlayer;
 import snakesandladders.players.aPlayer;
+import snakesandladders.players.ePlayerType;
 
 /**
  *
@@ -29,8 +33,6 @@ public class GameControl {
             int boardSize = m_consoleView.GetBoardSize();
             int numOfPlayers = m_consoleView.GetNumOfPlayers();
             m_gameModel = new GameModel(boardSize, numOfPlayers);
-            ArrayList<aPlayer> initializedPlayers = m_consoleView.GetInitializedPlayers();  //Dadush start from implement this :)
-            m_gameModel.SetPlayers(initializedPlayers);
         } catch (SnakesAndLaddersRunTimeException ex) {
             m_consoleView.printSnakesAndLaddersRunTimeExceptiom(ex);
         }
@@ -46,7 +48,7 @@ public class GameControl {
                         mainOpt = startNewGame();
                         break;
                     case LOAD_GAME:
-          //              mainOpt = startLoadGame();
+                        //              mainOpt = startLoadGame();
                         break;
                     case EXIT:
                         break;
@@ -60,7 +62,7 @@ public class GameControl {
     }
 
     private eStartMenu startNewGame() throws SnakesAndLaddersRunTimeException {
-      //  createNewGame();
+        createNewGame();
         runGame();
 
         return eStartMenu.EXIT;
@@ -81,7 +83,7 @@ public class GameControl {
                         m_gameModel.initGame();
                         break;
                     case START_NEW_GAME:
-                        //createNewGame();
+                        createNewGame();
                         break;
                     case LOAD_GAME:
 //                        loadStatus = loadGame();
@@ -104,9 +106,9 @@ public class GameControl {
         BoardSquare currGameIndex;
 
         while (!m_gameModel.hasGameWon()) {
-            currGameIndex = m_gameModel.getCurrGameIndex();
+            //currGameIndex = m_gameModel.getCurrGameIndex(); //dadush start from initialize currentIndex
             player = m_gameModel.getCurrPlayer();
-            m_consoleView.displayCurrPlayerAndGameIndex(currGameIndex, player, m_gameModel.GetSelectNextGame());
+            //m_consoleView.displayCurrPlayerAndGameIndex(currGameIndex, player, m_gameModel.GetSelectNextGame());
             m_consoleView.printGame(this);
             if (player instanceof ComputerPlayer) {
                 makeMove();
@@ -116,14 +118,14 @@ public class GameControl {
                     gameOption = m_consoleView.getGameOption();
                     switch (gameOption) {
                         case MAKE_MOVE:
-             //               makeMove();
+                            //               makeMove();
                             break;
                         case SAVE_GAME:
-               //             saveGame();
+                            //             saveGame();
                             gameOption = eGameMenu.CHOOSE;
                             break;
                         case SAVE_GAME_AS:
-                 //           saveGameAs();
+                            //           saveGameAs();
                             gameOption = eGameMenu.CHOOSE;
                             break;
                         case EXIT_CURRENT_GAME:
@@ -143,15 +145,15 @@ public class GameControl {
 //        }
     }
 
-    public ArrayList<aPlayer> getPlayers(){
+    public List<aPlayer> getPlayers() {
         return m_gameModel.getPlayers();
     }
-    
-   // private void createNewGame() throws SnakesAndLaddersRunTimeException {
-    //    m_gameModel.initNewGame();
-     //   initPlayers();
-      //  m_gameModel.selectFirstPlayer();
-   // }
+
+    private void createNewGame() throws SnakesAndLaddersRunTimeException {
+        m_gameModel.initNewGame();
+        initPlayers();
+        m_gameModel.selectFirstPlayer();
+    }
 
 //   private eStartMenu startLoadGame() throws SnakesAndLaddersRunTimeException {
 //        XMLLoadStatus status = loadGame();
@@ -163,7 +165,6 @@ public class GameControl {
 //      runGame();
 //        return eStartMenu.EXIT;
 //    }
-
     private void makeMove() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -176,8 +177,31 @@ public class GameControl {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-   private void initPlayers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void initPlayers() throws SnakesAndLaddersRunTimeException {
+        aPlayer player;
+        ePlayerType playertype;
+        String playerName;
+        int playerNumOfSoldiersToWin;
+
+        for (int i = 0; i < m_gameModel.getNumOfPlayers(); i++) {
+            playertype = m_consoleView.getPlayerType(i);
+
+            switch (playertype) {
+                case Human:
+                    playerName = m_consoleView.getPlayerString();
+                    playerNumOfSoldiersToWin = m_consoleView.GetNumOfSoldiersToWin();
+                    player = new HumanPlayer(playerName, m_gameModel.NUM_OF_SOLDIERS, playerNumOfSoldiersToWin);
+                    m_gameModel.addPlayer(player);
+                    break;
+                case Computer:
+                    playerNumOfSoldiersToWin = m_consoleView.GetNumOfSoldiersToWin();
+                    player = new ComputerPlayer("Computer", m_gameModel.NUM_OF_SOLDIERS, playerNumOfSoldiersToWin);
+                    m_gameModel.addPlayer(player);
+                    break;
+                default:
+                    throw new SnakesAndLaddersRunTimeException("InitPlayers(): Invalid PlayerType Input");
+            }
+        }
     }
 
     public SnakesAndLaddersSingleGame GetSingleGame() {

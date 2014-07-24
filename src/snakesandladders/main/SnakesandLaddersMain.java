@@ -6,10 +6,7 @@
 
 package snakesandladders.main;
 
-import java.util.Scanner;
-import snakesandladders.consoleview.ConsoleView;
 import snakesandladders.gamecontrol.GameControl;
-import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
 
 /**
  *

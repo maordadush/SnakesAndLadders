@@ -6,7 +6,9 @@
 package snakesandladders.gamemodel;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.players.aPlayer;
 
 /**
@@ -16,15 +18,18 @@ import snakesandladders.players.aPlayer;
 public class GameModel implements iWinChecker {
 
     public static final int MAX_PLAYERS = 4;
-    private ArrayList<aPlayer> players;
+    public static final int NUM_OF_SOLDIERS = 4;
+    private List<aPlayer> players;
     private SnakesAndLaddersSingleGame game;
     private aPlayer currTurnPlayer;
     private boolean selectNextGame;
     private String saveGamePath;
+    private int m_NumOfPlayers;
 
     public GameModel(int o_GameSize, int o_NumOfPlayers) {
         if (o_NumOfPlayers > 1 || o_NumOfPlayers < 5) {
-            players = new ArrayList<>(o_NumOfPlayers);
+            m_NumOfPlayers = o_NumOfPlayers;
+            players = new ArrayList<>();
         } else {
             throw new UnsupportedOperationException("Illeagal number of players"); //To change body of generated methods, choose Tools | Templates.
 
@@ -93,7 +98,7 @@ public class GameModel implements iWinChecker {
         return this.game;
     }
 
-    public ArrayList<aPlayer> getPlayers() {
+    public List<aPlayer> getPlayers() {
         return players;
     }
 
@@ -110,14 +115,18 @@ public class GameModel implements iWinChecker {
     }
 
     public int getNumOfPlayers() {
-        return players.size();
+        return m_NumOfPlayers;
     }
 
     public SnakesAndLaddersSingleGame GetSingleGame() {
         return this.game;
     }
 
-    public void SetPlayers(ArrayList<aPlayer> o_InitializedPlayers) {
-        players = o_InitializedPlayers;
+    public void addPlayer(aPlayer player) throws SnakesAndLaddersRunTimeException {
+        if (players.size() < getNumOfPlayers()) {
+            players.add(player);
+        } else {
+            throw new SnakesAndLaddersRunTimeException("addPlayer(): can't add more players.");
+        }
     }
 }
