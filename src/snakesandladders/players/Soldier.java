@@ -6,6 +6,9 @@
 
 package snakesandladders.players;
 
+import java.awt.Point;
+import snakesandladders.gamemodel.BoardSquare;
+
 /**
  *
  * @author Noam
@@ -13,4 +16,17 @@ package snakesandladders.players;
 public class Soldier {
     int m_IndexOnBoard;
     boolean m_FinishedGame;
+    BoardSquare locationOnBoard;
+
+    public BoardSquare getLocationOnBoard() {
+        return locationOnBoard;
+    }
+
+    public void setLocationOnBoard(BoardSquare locationOnBoard) {
+        this.locationOnBoard = locationOnBoard;
+    }
+
+    boolean atSquare(BoardSquare bs) {
+        return bs == this.locationOnBoard;
+    }
 }

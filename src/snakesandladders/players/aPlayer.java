@@ -7,6 +7,7 @@ package snakesandladders.players;
 
 import java.util.ArrayList;
 import java.util.List;
+import snakesandladders.gamemodel.BoardSquare;
 
 /**
  *
@@ -40,5 +41,12 @@ public abstract class aPlayer {
     public List<Soldier> getSoldiersList() {
         return m_SoldiersList;
     }
-    
+    public int getNumSoldiersAtSquare(BoardSquare bs){
+        int numSoldiers = 0;
+        for (Soldier soldier : m_SoldiersList) {
+            if (soldier.atSquare(bs))
+                numSoldiers++;
+        }
+        return numSoldiers;
+    }
 }
