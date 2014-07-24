@@ -153,6 +153,8 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
         return m_GameBoard[i][j];
     }
 
-    
+    public BoardSquare[][] getGame() {
+        return m_GameBoard;
+    }
     
 }
