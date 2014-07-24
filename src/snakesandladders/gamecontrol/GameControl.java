@@ -145,14 +145,14 @@ public class GameControl {
       //  m_gameModel.selectFirstPlayer();
    // }
 
-    //private eStartMenu startLoadGame() throws SnakesAndLaddersRunTimeException {
-//        XMLLoadStatus status = loadGame();
-//
-//        if (status != XMLLoadStatus.LOAD_SUCCESS) {
-//            return eStartMenu.CHOOSE;
-//        }
-//
-//        runGame();
+   private eStartMenu startLoadGame() throws SnakesAndLaddersRunTimeException {
+        XMLLoadStatus status = loadGame();
+
+        if (status != XMLLoadStatus.LOAD_SUCCESS) {
+            return eStartMenu.CHOOSE;
+        }
+
+      runGame();
         return eStartMenu.EXIT;
     }
 
@@ -168,7 +168,7 @@ public class GameControl {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private void initPlayers() {
+   private void initPlayers() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
