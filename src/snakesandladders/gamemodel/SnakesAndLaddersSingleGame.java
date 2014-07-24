@@ -13,14 +13,16 @@ import snakesandladders.players.aPlayer;
  *
  * @author Noam
  */
-public class SnakesAndLaddersSingleGame implements iWinChecker {
+public class SnakesAndLaddersSingleGame {
 
     private int m_BoardSize = 0;
     private BoardSquare m_GameBoard[][];
     private int gameWinner;
     private BoardSquare m_CuurentSquere;
+    private Cube m_Cube;
 
     public SnakesAndLaddersSingleGame(int o_BoardSize) {
+        m_Cube = new Cube();
         if (o_BoardSize > 4 || o_BoardSize < 9){
             m_BoardSize = o_BoardSize;
             m_GameBoard = new BoardSquare[m_BoardSize][m_BoardSize];
@@ -98,25 +100,10 @@ public class SnakesAndLaddersSingleGame implements iWinChecker {
         }
     }
 
-    private int throwCube() {
-        Random rand = new Random();
-
-        int randomNum = rand.nextInt(5) + 1;
-
-        return randomNum;
-    }
-
     public void makeMove(aPlayer o_CurrentPlayer, int o_indexOfSoldier) {
-        int cubeAnswer = throwCube();
+        int cubeAnswer = m_Cube.throwCube();
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
-    public boolean checkWinner() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    
 
     BoardSquare getCurrentBoardSquere() {
         return m_CuurentSquere;

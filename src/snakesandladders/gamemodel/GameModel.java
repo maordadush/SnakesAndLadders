@@ -13,7 +13,7 @@ import snakesandladders.players.aPlayer;
  *
  * @author Noam
  */
-public class GameModel {
+public class GameModel implements iWinChecker {
 
     public static final int MAX_PLAYERS = 4;
     private ArrayList<aPlayer> players;
@@ -37,6 +37,18 @@ public class GameModel {
         players.clear();
     }
     
+    @Override
+    public boolean checkWinner() {
+        Boolean returnedValue = false;
+        aPlayer winningPlayer = getWinnerPlayer();
+        
+        if (winningPlayer != null){
+            returnedValue = true;
+        }
+        
+        return returnedValue;
+    }
+
     public boolean hasGameWon() {
         boolean returnValue = false;
         for (aPlayer player : players) {
@@ -86,18 +98,26 @@ public class GameModel {
     }
 
     public aPlayer getWinnerPlayer() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        aPlayer playerToReturn = null;
+        for (aPlayer player : players) {
+            if (player.getNumSoldiersAtSquare(game.getBoardSquare(game.getO_BoardSize() - 1, game.getO_BoardSize() - 1))
+                    == player.getNumOfSoldiersToWin()) {
+                playerToReturn = player;
+            }
+        }
+        return playerToReturn;
+
     }
 
     public int getNumOfPlayers() {
         return players.size();
     }
-    
-    public SnakesAndLaddersSingleGame GetSingleGame(){
+
+    public SnakesAndLaddersSingleGame GetSingleGame() {
         return this.game;
     }
-    
-    public void SetPlayers(ArrayList<aPlayer> o_InitializedPlayers){
+
+    public void SetPlayers(ArrayList<aPlayer> o_InitializedPlayers) {
         players = o_InitializedPlayers;
     }
 }
