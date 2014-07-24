@@ -7,6 +7,7 @@ package snakesandladders.players;
 
 import java.util.ArrayList;
 import java.util.List;
+import snakesandladders.gamemodel.BoardSquare;
 
 /**
  *

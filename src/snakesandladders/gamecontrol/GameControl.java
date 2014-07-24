@@ -42,7 +42,7 @@ public class GameControl {
                         mainOpt = startNewGame();
                         break;
                     case LOAD_GAME:
-                        mainOpt = startLoadGame();
+          //              mainOpt = startLoadGame();
                         break;
                     case EXIT:
                         break;
@@ -56,7 +56,7 @@ public class GameControl {
     }
 
     private eStartMenu startNewGame() throws SnakesAndLaddersRunTimeException {
-        createNewGame();
+      //  createNewGame();
         runGame();
 
         return eStartMenu.EXIT;
@@ -77,7 +77,7 @@ public class GameControl {
                         m_gameModel.initGame();
                         break;
                     case START_NEW_GAME:
-                        createNewGame();
+                        //createNewGame();
                         break;
                     case LOAD_GAME:
 //                        loadStatus = loadGame();
@@ -105,21 +105,21 @@ public class GameControl {
             m_consoleView.displayCurrPlayerAndGameIndex(currGameIndex, player, m_gameModel.GetSelectNextGame());
             m_consoleView.printGame(m_gameModel.getGame());
             if (player instanceof ComputerPlayer) {
-                makeMove();
+           //     makeMove();
             } else {
                 gameOption = eGameMenu.CHOOSE;
                 while (gameOption == eGameMenu.CHOOSE) {
                     gameOption = m_consoleView.getGameOption();
                     switch (gameOption) {
                         case MAKE_MOVE:
-                            makeMove();
+             //               makeMove();
                             break;
                         case SAVE_GAME:
-                            saveGame();
+               //             saveGame();
                             gameOption = eGameMenu.CHOOSE;
                             break;
                         case SAVE_GAME_AS:
-                            saveGameAs();
+                 //           saveGameAs();
                             gameOption = eGameMenu.CHOOSE;
                             break;
                         case EXIT_CURRENT_GAME:
@@ -139,20 +139,20 @@ public class GameControl {
 //        }
     }
 
-    private void createNewGame() throws SnakesAndLaddersRunTimeException {
-        m_gameModel.initNewGame();
-        initPlayers();
-        m_gameModel.selectFirstPlayer();
-    }
+   // private void createNewGame() throws SnakesAndLaddersRunTimeException {
+    //    m_gameModel.initNewGame();
+     //   initPlayers();
+      //  m_gameModel.selectFirstPlayer();
+   // }
 
-    private eStartMenu startLoadGame() throws SnakesAndLaddersRunTimeException {
-//        XMLLoadStatus status = loadGame();
-//
-//        if (status != XMLLoadStatus.LOAD_SUCCESS) {
-//            return eStartMenu.CHOOSE;
-//        }
-//
-//        runGame();
+   private eStartMenu startLoadGame() throws SnakesAndLaddersRunTimeException {
+        XMLLoadStatus status = loadGame();
+
+        if (status != XMLLoadStatus.LOAD_SUCCESS) {
+            return eStartMenu.CHOOSE;
+        }
+
+      runGame();
         return eStartMenu.EXIT;
     }
 
@@ -168,7 +168,7 @@ public class GameControl {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private void initPlayers() {
+   private void initPlayers() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
