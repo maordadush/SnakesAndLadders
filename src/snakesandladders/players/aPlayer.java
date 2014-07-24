@@ -47,5 +47,18 @@ public abstract class aPlayer {
     public Soldier getCurrentSoldier() {
         return m_CurrentSoldier;
     }
+
+    public Object getNumSoldiersAtSquare(BoardSquare bs) {
+        int numSoldiers = 0;
+        for (Soldier soldier : m_SoldiersList) {
+            if (soldier.atSquare(bs)) {
+                numSoldiers++;
+            }
+        }
+        return numSoldiers;
+    }
+  
+ 
+    
     
 }

@@ -15,4 +15,17 @@ import snakesandladders.gamemodel.BoardSquare;
 public class Soldier {
     BoardSquare m_IndexOnBoard;
     boolean m_FinishedGame;
+    private BoardSquare locationOnBoard;
+
+    public BoardSquare getLocationOnBoard() {
+        return locationOnBoard;
+    }
+
+    public void setLocationOnBoard(BoardSquare locationOnBoard) {
+        this.locationOnBoard = locationOnBoard;
+    }
+
+    boolean atSquare(BoardSquare bs) {
+      return bs == this.locationOnBoard;
+    }
 }
