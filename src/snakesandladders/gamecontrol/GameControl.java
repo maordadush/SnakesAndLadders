@@ -10,6 +10,7 @@ import snakesandladders.consoleview.ConsoleView;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.gamemodel.GameModel;
+import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
 import snakesandladders.players.ComputerPlayer;
 import snakesandladders.players.aPlayer;
 
@@ -28,6 +29,8 @@ public class GameControl {
             int boardSize = m_consoleView.GetBoardSize();
             int numOfPlayers = m_consoleView.GetNumOfPlayers();
             m_gameModel = new GameModel(boardSize, numOfPlayers);
+           // ArrayList<aPlayer> initializedPlayers = m_consoleView.GetInitializedPlayers();
+           // m_gameModel.SetPlayers(initializedPlayers);
         } catch (SnakesAndLaddersRunTimeException ex) {
             m_consoleView.printSnakesAndLaddersRunTimeExceptiom(ex);
         }
@@ -104,9 +107,9 @@ public class GameControl {
             currGameIndex = m_gameModel.getCurrGameIndex();
             player = m_gameModel.getCurrPlayer();
             m_consoleView.displayCurrPlayerAndGameIndex(currGameIndex, player, m_gameModel.GetSelectNextGame());
-            m_consoleView.printGame(m_gameModel);
+            m_consoleView.printGame(this);
             if (player instanceof ComputerPlayer) {
-           //     makeMove();
+                makeMove();
             } else {
                 gameOption = eGameMenu.CHOOSE;
                 while (gameOption == eGameMenu.CHOOSE) {
@@ -175,5 +178,9 @@ public class GameControl {
 
    private void initPlayers() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public SnakesAndLaddersSingleGame GetSingleGame() {
+        return m_gameModel.GetSingleGame();
     }
 }

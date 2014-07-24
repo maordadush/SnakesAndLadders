@@ -428,4 +428,8 @@ public class ConsoleView {
     public void showNumOfPlayersMenu() {
         System.out.println("How many players (2-4)? ");
     }
+
+    public ArrayList<aPlayer> GetInitializedPlayers() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

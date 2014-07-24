@@ -96,4 +96,8 @@ public class GameModel {
     public SnakesAndLaddersSingleGame GetSingleGame(){
         return this.game;
     }
+    
+    public void SetPlayers(ArrayList<aPlayer> o_InitializedPlayers){
+        players = o_InitializedPlayers;
+    }
 }
