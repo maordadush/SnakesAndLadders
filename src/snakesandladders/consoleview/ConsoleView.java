@@ -310,7 +310,7 @@ public class ConsoleView {
 //                throw new XMixDrixRunTimeException("PrintChar(): Not valid char input.");
 //        }
 //    }
-    public void printGame(GameModel game) throws SnakesAndLaddersRunTimeException {
+    public void printGame(GameControl game) throws SnakesAndLaddersRunTimeException {
         int singleGameBoardSize = game.GetSingleGame().getO_BoardSize();
         ArrayList<aPlayer> players = game.getPlayers();
         int numPlayers = players.size();
