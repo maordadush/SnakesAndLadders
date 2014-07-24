@@ -7,7 +7,9 @@
 package snakesandladders.main;
 
 import java.util.Scanner;
+import snakesandladders.consoleview.ConsoleView;
 import snakesandladders.gamecontrol.GameControl;
+import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
 
 /**
  *
@@ -22,6 +24,9 @@ public class SnakesandLaddersMain {
         try {
             GameControl gameControl = new GameControl();
             gameControl.Run();
+            //SnakesAndLaddersSingleGame game = new SnakesAndLaddersSingleGame(5,2);
+            //ConsoleView m_consoleView = new ConsoleView();
+            //m_consoleView.printGame(game);
         } catch (Exception ex) {
             System.out.println("Error found. Bye bye");
         }
