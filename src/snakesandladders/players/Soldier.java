@@ -6,11 +6,13 @@
 
 package snakesandladders.players;
 
+import snakesandladders.gamemodel.BoardSquare;
+
 /**
  *
  * @author Noam
  */
 public class Soldier {
-    int m_IndexOnBoard;
+    BoardSquare m_IndexOnBoard;
     boolean m_FinishedGame;
 }

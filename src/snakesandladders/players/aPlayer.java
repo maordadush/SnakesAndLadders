@@ -18,9 +18,11 @@ public abstract class aPlayer {
     List<Soldier> m_SoldiersList;
     public final int NUM_OF_SOLDIERS = 4;
     int m_NumOfSoldiersToWin;
+    Soldier m_CurrentSoldier;
 
     protected aPlayer(String o_Name, int o_NumOfSoldiersToWin) {
         this.m_PlayerName = o_Name;
+        m_CurrentSoldier = new Soldier();
         this.m_NumOfSoldiersToWin = o_NumOfSoldiersToWin;
         this.m_SoldiersList = new ArrayList<Soldier>(NUM_OF_SOLDIERS);
     }
@@ -39,6 +41,10 @@ public abstract class aPlayer {
 
     public List<Soldier> getSoldiersList() {
         return m_SoldiersList;
+    }
+
+    public Soldier getCurrentSoldier() {
+        return m_CurrentSoldier;
     }
     
 }

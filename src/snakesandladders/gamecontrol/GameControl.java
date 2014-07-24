@@ -132,8 +132,8 @@ public class GameControl {
         }
 
 //        if (m_gameModel.hasGameWon()) {
-            aPlayer winnerPlayer = m_gameModel.getWinnerPlayer();
-            m_consoleView.displayWinner(winnerPlayer.getPlayerName());
+        aPlayer winnerPlayer = m_gameModel.getWinnerPlayer();
+        m_consoleView.displayWinner(winnerPlayer.getPlayerName());
 //        } else {
 //            m_consoleView.displayNoWinner();
 //        }
