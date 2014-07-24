@@ -29,8 +29,8 @@ public class GameControl {
             int boardSize = m_consoleView.GetBoardSize();
             int numOfPlayers = m_consoleView.GetNumOfPlayers();
             m_gameModel = new GameModel(boardSize, numOfPlayers);
-           // ArrayList<aPlayer> initializedPlayers = m_consoleView.GetInitializedPlayers();
-           // m_gameModel.SetPlayers(initializedPlayers);
+            ArrayList<aPlayer> initializedPlayers = m_consoleView.GetInitializedPlayers();  //Dadush start from implement this :)
+            m_gameModel.SetPlayers(initializedPlayers);
         } catch (SnakesAndLaddersRunTimeException ex) {
             m_consoleView.printSnakesAndLaddersRunTimeExceptiom(ex);
         }
