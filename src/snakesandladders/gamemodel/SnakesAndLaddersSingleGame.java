@@ -23,9 +23,11 @@ public class SnakesAndLaddersSingleGame {
 
     public SnakesAndLaddersSingleGame(int o_BoardSize) {
         m_Cube = new Cube();
+        m_CuurentSquere = new BoardSquare();
         if (o_BoardSize > 4 || o_BoardSize < 9){
             m_BoardSize = o_BoardSize;
             m_GameBoard = new BoardSquare[m_BoardSize][m_BoardSize];
+            m_CuurentSquere = m_GameBoard[0][0];
         } else {
             throw new UnsupportedOperationException("Illeagal board size"); //To change body of generated methods, choose Tools | Templates.
 
@@ -98,11 +100,6 @@ public class SnakesAndLaddersSingleGame {
             m_GameBoard[X][Y].setLocation(nextX, nextY);
 
         }
-    }
-
-    public void makeMove(aPlayer o_CurrentPlayer, int o_indexOfSoldier) {
-        int cubeAnswer = m_Cube.throwCube();
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     BoardSquare getCurrentBoardSquere() {

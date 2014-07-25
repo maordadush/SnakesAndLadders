@@ -129,4 +129,8 @@ public class GameModel implements iWinChecker {
             throw new SnakesAndLaddersRunTimeException("addPlayer(): can't add more players.");
         }
     }
+
+    public void makeMove(BoardSquare move) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

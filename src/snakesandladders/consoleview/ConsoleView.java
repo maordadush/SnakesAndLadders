@@ -5,15 +5,14 @@
  */
 package snakesandladders.consoleview;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
-import snakesandladders.gamecontrol.GameControl;
 import snakesandladders.gamecontrol.eEndMenu;
 import snakesandladders.gamecontrol.eGameMenu;
 import snakesandladders.gamecontrol.eStartMenu;
 import snakesandladders.gamemodel.BoardSquare;
+import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
 import snakesandladders.gamemodel.eChars;
 import snakesandladders.players.aPlayer;
 import snakesandladders.players.ePlayerType;
@@ -335,15 +334,15 @@ public class ConsoleView {
 //                throw new XMixDrixRunTimeException("PrintChar(): Not valid char input.");
 //        }
 //    }
-    public void printGame(GameControl game) throws SnakesAndLaddersRunTimeException {
-        int singleGameBoardSize = game.GetSingleGame().getO_BoardSize();
-        List<aPlayer> players = game.getPlayers();
+    public void printGame(SnakesAndLaddersSingleGame o_Game, List<aPlayer> o_Players) throws SnakesAndLaddersRunTimeException {
+        int singleGameBoardSize = o_Game.getO_BoardSize();
+        List<aPlayer> players = o_Players;
         int numPlayers = players.size();
         StringBuilder boardString = new StringBuilder();
 
         for (int i = 0; i < singleGameBoardSize; i++) {
             for (int j = 0; j < singleGameBoardSize; j++) {
-                BoardSquare bs = game.GetSingleGame().getBoardSquare(i, j);
+                BoardSquare bs = o_Game.getBoardSquare(i, j);
                 eChars bsType = bs.getType();
                 boardString.append(bs.getSquareNumber()).append("|");
                 if (bsType != eChars.NONE) {
@@ -457,5 +456,21 @@ public class ConsoleView {
     public void showNumOfSoldiers() {
         System.out.println("How many soldiers from 4 need to finish for win (1-4)?");
 
+    }
+
+    public void displayNoWinner() {
+        System.out.println("The game is Tie");
+    }
+
+    public void displayLastMove(aPlayer player, BoardSquare move) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public int GetCubeAnswer() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public int GetAutomaticCubeAnswer() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
