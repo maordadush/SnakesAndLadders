@@ -25,8 +25,16 @@ public class GameModel implements iWinChecker {
     private boolean selectNextGame;
     private String saveGamePath;
     private int m_NumOfPlayers;
+    private int m_numOfSnakesAndLadders;
 
-    public GameModel(int o_GameSize, int o_NumOfPlayers) {
+    public GameModel(int o_GameSize,int o_numOfSnakesAndLadders, int o_NumOfPlayers) {
+        //TODO: move input valdition to here
+        if (o_numOfSnakesAndLadders > 1 || o_numOfSnakesAndLadders < (o_GameSize * o_GameSize) - 2){
+            m_numOfSnakesAndLadders = o_numOfSnakesAndLadders;
+        }else{
+            throw new UnsupportedOperationException("Illeagal number of snakes and ladders");
+        }
+                    
         if (o_NumOfPlayers > 1 || o_NumOfPlayers < 5) {
             m_NumOfPlayers = o_NumOfPlayers;
             players = new ArrayList<>();
@@ -34,9 +42,10 @@ public class GameModel implements iWinChecker {
             throw new UnsupportedOperationException("Illeagal number of players"); //To change body of generated methods, choose Tools | Templates.
 
         }
-        game = new SnakesAndLaddersSingleGame(o_GameSize);
+        game = new SnakesAndLaddersSingleGame(o_GameSize,o_numOfSnakesAndLadders);
         saveGamePath = null;
     }
+
 
     public void InitPlayers() {
         players.clear();
@@ -71,7 +80,7 @@ public class GameModel implements iWinChecker {
     }
 
     public BoardSquare getCurrGameIndex() {
-        return game.getCurrentBoardSquere();
+        return game.getCurrentBoardSquare();
     }
 
     public aPlayer getCurrPlayer() {

@@ -18,16 +18,16 @@ public class SnakesAndLaddersSingleGame {
     private int m_BoardSize = 0;
     private BoardSquare m_GameBoard[][];
     private int gameWinner;
-    private BoardSquare m_CuurentSquere;
+    private BoardSquare m_CurrentSquare;
     private Cube m_Cube;
+    private int m_numOfSnakesAndLadders;
 
-    public SnakesAndLaddersSingleGame(int o_BoardSize) {
+    public SnakesAndLaddersSingleGame(int o_BoardSize, int o_numOfSnakesAndLadders) {
         m_Cube = new Cube();
-        m_CuurentSquere = new BoardSquare();
         if (o_BoardSize > 4 || o_BoardSize < 9){
             m_BoardSize = o_BoardSize;
             m_GameBoard = new BoardSquare[m_BoardSize][m_BoardSize];
-            m_CuurentSquere = m_GameBoard[0][0];
+            m_numOfSnakesAndLadders = o_numOfSnakesAndLadders;
         } else {
             throw new UnsupportedOperationException("Illeagal board size"); //To change body of generated methods, choose Tools | Templates.
 
@@ -42,30 +42,34 @@ public class SnakesAndLaddersSingleGame {
 
     public void initGame() {
         for (int i = 0; i < m_BoardSize; i++) {
-            for (int j = 0; j < m_BoardSize; j++) {
-                m_GameBoard[i][j] = new BoardSquare();
+            for (int j = 0; j < m_BoardSize ; j++) {
+                m_GameBoard[i][j] = new BoardSquare((m_BoardSize * i) + j + 1);//(m_BoardSize * (m_BoardSize - (i + 1)) + ( j + 1));
             }
         }
+        shuffleSnakesAndLadders(m_numOfSnakesAndLadders);
+        m_CurrentSquare = m_GameBoard[0][0];
+        
         gameWinner = -1;
     }
 
     public void shuffleSnakesAndLadders(int o_NumOfSnakesAndLadders) {
         Random rand = new Random();
+        int maxCell = this.m_BoardSize - 1;
         for (int i = 0; i < o_NumOfSnakesAndLadders; i++) {
             //snake head
-            int X = rand.nextInt(this.m_BoardSize - 1);
-            int Y = rand.nextInt(this.m_BoardSize - 1);
-            while ((X == 0 && Y == 0) || (X == m_BoardSize - 1 && Y == m_BoardSize - 1)
+            int X = rand.nextInt(maxCell - 1) + 1;
+            int Y = rand.nextInt(maxCell);
+            while ((X == 0 && Y == 0) || (X == maxCell && Y == maxCell)
                     || (m_GameBoard[X][Y].getType() != eChars.NONE)) {
-                X = rand.nextInt(this.m_BoardSize - 1);
-                Y = rand.nextInt(this.m_BoardSize - 1);
+                X = rand.nextInt(maxCell);
+                Y = rand.nextInt(maxCell);
             }
             //snake tail 
-            int nextX = rand.nextInt(m_BoardSize - X - 1);
-            int nextY = rand.nextInt(m_BoardSize - 1);
-            while ((X != 0 && Y != 0) || (m_GameBoard[X][Y].getType() != eChars.NONE)) {
-                nextX = rand.nextInt(this.m_BoardSize - X - 1);
-                nextY = rand.nextInt(this.m_BoardSize - 1);
+            int nextX = X > 1 ? rand.nextInt(X) : 0;
+            int nextY = rand.nextInt(maxCell);
+            while ((nextX == 0 && nextY == 0) || (m_GameBoard[nextX][nextY].getType() != eChars.NONE)) {
+                nextX = X > 1 ? rand.nextInt(X) : 0;
+                nextY = rand.nextInt(maxCell);
             }
 
             // set snake paramter tail
@@ -78,19 +82,18 @@ public class SnakesAndLaddersSingleGame {
         
         for (int i = 0; i < o_NumOfSnakesAndLadders; i++) {
             //Ladder tail
-            int X = rand.nextInt(this.m_BoardSize - 1);
-            int Y = rand.nextInt(this.m_BoardSize - 1);
-            while ((X == 0 && Y == 0) || (X == m_BoardSize - 1 && Y == m_BoardSize - 1)
-                    || (m_GameBoard[X][Y].getType() != eChars.NONE)) {
-                X = rand.nextInt(this.m_BoardSize - 1);
-                Y = rand.nextInt(this.m_BoardSize - 1);
+            int X = rand.nextInt(maxCell - 1);
+            int Y = rand.nextInt(maxCell);
+            while ((X == 0 && Y == 0) || (m_GameBoard[X][Y].getType() != eChars.NONE)) {
+                X = rand.nextInt(maxCell - 1);
+                Y = rand.nextInt(maxCell);
             }
             //Ladder head 
-            int nextX = rand.nextInt(m_BoardSize + X + 1);
-            int nextY = rand.nextInt(m_BoardSize - 1);
-            while ((X != m_BoardSize - 1 && Y != m_BoardSize - 1 ) || (m_GameBoard[X][Y].getType() != eChars.NONE)) {
-                nextX = rand.nextInt(this.m_BoardSize + X + 1);
-                nextY = rand.nextInt(this.m_BoardSize - 1);
+            int nextX = rand.nextInt((maxCell) - (X + 1)) + (X + 1);
+            int nextY = rand.nextInt(maxCell);
+            while ((nextX == maxCell && nextY == maxCell) || (m_GameBoard[nextX][nextY].getType() != eChars.NONE)) {
+                nextX = rand.nextInt((maxCell) - (X + 1)) + (X + 1);
+                nextY = rand.nextInt(maxCell);
             }
 
             // set Ladder paramter tail
@@ -102,8 +105,8 @@ public class SnakesAndLaddersSingleGame {
         }
     }
 
-    BoardSquare getCurrentBoardSquere() {
-        return m_CuurentSquere;
+    BoardSquare getCurrentBoardSquare() {
+        return m_CurrentSquare;
     }
 
     public int getO_BoardSize() {

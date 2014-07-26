@@ -34,7 +34,7 @@ public class ConsoleView {
         Scanner scanner = new Scanner(System.in);
         int input;
 
-        showMenuSize();
+        showMenuBoardSize();
 
         while (!scanner.hasNextInt()) {
             System.out.println("Inavlid Input. Please enter a number.");
@@ -44,7 +44,7 @@ public class ConsoleView {
 
         while (input < 5 || input > 8) {
             System.out.println("Not Valid input, Please enter again:");
-            showMenuSize();
+            showMenuBoardSize();
 
             while (!scanner.hasNextInt()) {
                 System.out.println("Inavlid Input. Please enter a number.");
@@ -57,6 +57,33 @@ public class ConsoleView {
         return input;
     }
 
+    public int getNumOfSnakesAndLadders(int boardSize) throws SnakesAndLaddersRunTimeException {
+        Scanner scanner = new Scanner(System.in);
+        int input;
+
+        showMenuSnakesAndLaddersSize();
+
+        while (!scanner.hasNextInt()) {
+            System.out.println("Inavlid Input. Please enter a number.");
+            scanner.next();
+        }
+        input = scanner.nextInt();
+        // TODO: Check Verified snakes And Ladders
+        while (input < 1 || input > (boardSize * boardSize) - 2) {
+            System.out.println("Not Valid input, Please enter again:");
+            showMenuSnakesAndLaddersSize();
+
+            while (!scanner.hasNextInt()) {
+                System.out.println("Inavlid Input. Please enter a number.");
+                scanner.next();
+            }
+
+            input = scanner.nextInt();
+        }
+
+        return input;
+    }
+    
     public int GetNumOfSoldiersToWin() throws SnakesAndLaddersRunTimeException {
         Scanner scanner = new Scanner(System.in);
         int input;
@@ -340,15 +367,15 @@ public class ConsoleView {
         int numPlayers = players.size();
         StringBuilder boardString = new StringBuilder();
 
-        for (int i = 0; i < singleGameBoardSize; i++) {
+        for (int i = singleGameBoardSize - 1 ; i >= 0; i--) {
             for (int j = 0; j < singleGameBoardSize; j++) {
                 BoardSquare bs = o_Game.getBoardSquare(i, j);
                 eChars bsType = bs.getType();
-                boardString.append(bs.getSquareNumber()).append("|");
-                if (bsType != eChars.NONE) {
-                    boardString.append(bs.getJumpTo().getSquareNumber()).append("|");
+                boardString.append(String.format("%02d", bs.getSquareNumber())).append("|");
+                if (bsType == eChars.LADDER_TAIL || bsType == eChars.SNAKE_HEAD) {
+                    boardString.append(String.format("%02d", bs.getJumpTo().getSquareNumber())).append("|" + bsType + "|");
                 } else {
-                    boardString.append("--|");
+                    boardString.append("--|" + bsType + "|");
                 }
                 for (int k = 0; k < numPlayers; k++) {
                     boardString.append(players.get(k).getNumSoldiersAtSquare(bs));
@@ -357,11 +384,12 @@ public class ConsoleView {
             }
             boardString.append(System.lineSeparator());
         }
-        boardString.append("-------------------------------------------------------").append(System.lineSeparator());
+        boardString.append("------------------------------------------------------").append(System.lineSeparator());
         for (aPlayer player : players) {
-            boardString.append("Player " + (players.indexOf(player) + 1) + ":" + player.getPlayerName() + "\t");
+            boardString.append("Player " + (players.indexOf(player) + 1) + ": " + player.getPlayerName() + "\t");
         }
-
+        boardString.append(System.lineSeparator());
+        
         //Print out the board
         System.out.print(boardString.toString());
     }
@@ -372,9 +400,9 @@ public class ConsoleView {
         int y = (int) index.getY();
 
         System.out.print(player.getPlayerName());
-        System.out.println("Your current index is:" + "(" + x + "," + y + ")");
+        System.out.println(" your current index is:" + "(" + x + "," + y + ")");
 
-        System.out.println("");
+        System.out.println();
     }
 
     public void displayWinner(String name) {
@@ -416,7 +444,7 @@ public class ConsoleView {
         System.out.println("Game SaveSuccessfully to: " + savePath);
     }
 
-    private void showMenuSize() {
+    private void showMenuBoardSize() {
         System.out.println("Welcome to Snakes and ladders game");
         System.out.println("First, please write the board size (5-8):");
     }
@@ -473,4 +501,10 @@ public class ConsoleView {
     public int GetAutomaticCubeAnswer() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    private void showMenuSnakesAndLaddersSize() {
+        System.out.println("Second, please write the number of snakes and ladders:");
+    }
+
+
 }

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package snakesandladders.main;
 
 import snakesandladders.gamecontrol.GameControl;
@@ -18,15 +17,9 @@ public class SnakesandLaddersMain {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        try {
-            GameControl gameControl = new GameControl();
-            gameControl.Run();
-            //SnakesAndLaddersSingleGame game = new SnakesAndLaddersSingleGame(5,2);
-            //ConsoleView m_consoleView = new ConsoleView();
-            //m_consoleView.printGame(game);
-        } catch (Exception ex) {
-            System.out.println("Error found. Bye bye");
-        }
+        GameControl gameControl = new GameControl();
+        gameControl.Run();
+
     }
-    
+
 }
