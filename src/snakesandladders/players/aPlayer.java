@@ -5,6 +5,7 @@
  */
 package snakesandladders.players;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import snakesandladders.gamemodel.BoardSquare;
@@ -15,17 +16,20 @@ import snakesandladders.gamemodel.BoardSquare;
  */
 public abstract class aPlayer {
 
-    String m_PlayerName;
-    List<Soldier> m_SoldiersList;
     public final int NUM_OF_SOLDIERS = 4;
+    String m_PlayerName;
+    Soldier[] m_SoldiersList;
     int m_NumOfSoldiersToWin;
-    Soldier m_CurrentSoldier;
+    Color color;
 
     protected aPlayer(String o_Name, int o_NumOfSoldiersToWin) {
         this.m_PlayerName = o_Name;
-        m_CurrentSoldier = new Soldier();
         this.m_NumOfSoldiersToWin = o_NumOfSoldiersToWin;
-        this.m_SoldiersList = new ArrayList<Soldier>(NUM_OF_SOLDIERS);
+        m_SoldiersList = new Soldier[NUM_OF_SOLDIERS];
+        this.color = Color.decode(Integer.toString(this.hashCode()));
+        for (int i = 0; i < m_SoldiersList.length; i++) {
+             m_SoldiersList[i] = new Soldier(this.color);
+        }
     }
 
     public String getPlayerName() {
@@ -40,13 +44,10 @@ public abstract class aPlayer {
         this.m_NumOfSoldiersToWin = m_NumOfSoldiersToWin;
     }
 
-    public List<Soldier> getSoldiersList() {
+    public Soldier[] getM_SoldiersList() {
         return m_SoldiersList;
     }
 
-    public Soldier getCurrentSoldier() {
-        return m_CurrentSoldier;
-    }
 
     public int getNumSoldiersAtSquare(BoardSquare bs) {
         int numSoldiers = 0;
@@ -58,6 +59,8 @@ public abstract class aPlayer {
         return numSoldiers;
     }
   
+    
+    
  
     
     

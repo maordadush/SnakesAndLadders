@@ -6,6 +6,7 @@
 package snakesandladders.gamecontrol;
 
 import java.util.List;
+import java.util.Stack;
 import snakesandladders.consoleview.ConsoleView;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamemodel.BoardSquare;
@@ -13,6 +14,7 @@ import snakesandladders.gamemodel.GameModel;
 import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
 import snakesandladders.players.ComputerPlayer;
 import snakesandladders.players.HumanPlayer;
+import snakesandladders.players.Soldier;
 import snakesandladders.players.aPlayer;
 import snakesandladders.players.ePlayerType;
 
@@ -188,6 +190,8 @@ public class GameControl {
         String playerName;
         int playerNumOfSoldiersToWin;
 
+        
+        
         for (int i = 0; i < m_gameModel.getNumOfPlayers(); i++) {
             playertype = m_consoleView.getPlayerType(i);
 
@@ -196,11 +200,17 @@ public class GameControl {
                     playerName = m_consoleView.getPlayerString();
                     playerNumOfSoldiersToWin = m_consoleView.GetNumOfSoldiersToWin();
                     player = new HumanPlayer(playerName, m_gameModel.NUM_OF_SOLDIERS, playerNumOfSoldiersToWin);
+                    for (Soldier s : player.getM_SoldiersList()){
+                        s.setLocationOnBoard(m_gameModel.getCurrGameIndex());
+                    }
                     m_gameModel.addPlayer(player);
                     break;
                 case Computer:
                     playerNumOfSoldiersToWin = m_consoleView.GetNumOfSoldiersToWin();
                     player = new ComputerPlayer("Computer", m_gameModel.NUM_OF_SOLDIERS, playerNumOfSoldiersToWin);
+                    for (Soldier s : player.getM_SoldiersList()){
+                        s.setLocationOnBoard(m_gameModel.getCurrGameIndex());
+                    }
                     m_gameModel.addPlayer(player);
                     break;
                 default:
@@ -231,8 +241,8 @@ public class GameControl {
 
     private BoardSquare move(aPlayer player, int cubeAnswer) throws SnakesAndLaddersRunTimeException {
         BoardSquare boardToMove;
-        int xToMove = (int) player.getCurrentSoldier().getLocationOnBoard().getX() + cubeAnswer;
-        int yToMove = (int) player.getCurrentSoldier().getLocationOnBoard().getY();
+        int xToMove = 0;
+        int yToMove = 0;
         int boardSize = GetSingleGame().getO_BoardSize() - 1;
 
         if (xToMove < boardSize) {
