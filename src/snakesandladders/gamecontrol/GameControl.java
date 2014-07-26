@@ -107,7 +107,7 @@ public class GameControl {
         BoardSquare currGameIndex;
 
         while (!m_gameModel.hasGameWon()) {
-            currGameIndex = m_gameModel.getCurrGameIndex(); //dadush start from initialize currentIndex
+            currGameIndex = m_gameModel.getCurrGameIndex();
             player = m_gameModel.getCurrPlayer();
             m_consoleView.displayCurrPlayerAndGameIndex(currGameIndex, player, m_gameModel.GetSelectNextGame());
             m_consoleView.printGame(GetSingleGame(), getPlayers());
@@ -119,6 +119,7 @@ public class GameControl {
                     gameOption = m_consoleView.getGameOption();
                     switch (gameOption) {
                         case MAKE_MOVE:
+                            m_consoleView.displaySoldiersOfPlayer(player.getM_SoldiersList());
                             makeMove();
                             break;
                         case SAVE_GAME:

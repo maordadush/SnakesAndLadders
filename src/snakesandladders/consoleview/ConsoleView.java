@@ -14,6 +14,7 @@ import snakesandladders.gamecontrol.eStartMenu;
 import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
 import snakesandladders.gamemodel.eChars;
+import snakesandladders.players.Soldier;
 import snakesandladders.players.aPlayer;
 import snakesandladders.players.ePlayerType;
 
@@ -384,7 +385,7 @@ public class ConsoleView {
             }
             boardString.append(System.lineSeparator());
         }
-        boardString.append("------------------------------------------------------").append(System.lineSeparator());
+        boardString.append("--------------------------------------------------------------").append(System.lineSeparator());
         for (aPlayer player : players) {
             boardString.append("Player " + (players.indexOf(player) + 1) + ": " + player.getPlayerName() + "\t");
         }
@@ -506,5 +507,24 @@ public class ConsoleView {
         System.out.println("Second, please write the number of snakes and ladders:");
     }
 
+//    public void displaySoldiersOfPlayer(aPlayer player) {
+//        Soldier[] Soldiers = player.getM_SoldiersList();
+//        for (int i = 0; i < Soldiers.length; i++) {
+//            Object object = Soldiers[i].getLocationOnBoard().getSquareNumber();
+//            
+//        }
+//        Soldiers[0].getLocationOnBoard().getSquareNumber();
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
+//
+
+    public void displaySoldiersOfPlayer(Soldier[] m_SoldiersList) {
+       int squareNumber;
+        for (int i = 0; i < m_SoldiersList.length; i++) {
+             squareNumber = m_SoldiersList[i].getLocationOnBoard().getSquareNumber();
+        }
+                
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }

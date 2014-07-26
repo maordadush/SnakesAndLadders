@@ -43,7 +43,7 @@ public class SnakesAndLaddersSingleGame {
     public void initGame() {
         for (int i = 0; i < m_BoardSize; i++) {
             for (int j = 0; j < m_BoardSize ; j++) {
-                m_GameBoard[i][j] = new BoardSquare((m_BoardSize * i) + j + 1);//(m_BoardSize * (m_BoardSize - (i + 1)) + ( j + 1));
+                m_GameBoard[i][j] = new BoardSquare((m_BoardSize * i) + j + 1);
             }
         }
         shuffleSnakesAndLadders(m_numOfSnakesAndLadders);
@@ -54,22 +54,22 @@ public class SnakesAndLaddersSingleGame {
 
     public void shuffleSnakesAndLadders(int o_NumOfSnakesAndLadders) {
         Random rand = new Random();
-        int maxCell = this.m_BoardSize - 1;
+        int maxBoundary = this.m_BoardSize - 1;
         for (int i = 0; i < o_NumOfSnakesAndLadders; i++) {
             //snake head
-            int X = rand.nextInt(maxCell - 1) + 1;
-            int Y = rand.nextInt(maxCell);
-            while ((X == 0 && Y == 0) || (X == maxCell && Y == maxCell)
+            int X = rand.nextInt(maxBoundary - 1) + 1;
+            int Y = rand.nextInt(maxBoundary);
+            while ((X == 0 && Y == 0) || (X == maxBoundary && Y == maxBoundary)
                     || (m_GameBoard[X][Y].getType() != eChars.NONE)) {
-                X = rand.nextInt(maxCell);
-                Y = rand.nextInt(maxCell);
+                X = rand.nextInt(maxBoundary);
+                Y = rand.nextInt(maxBoundary);
             }
             //snake tail 
             int nextX = X > 1 ? rand.nextInt(X) : 0;
-            int nextY = rand.nextInt(maxCell);
+            int nextY = rand.nextInt(maxBoundary);
             while ((nextX == 0 && nextY == 0) || (m_GameBoard[nextX][nextY].getType() != eChars.NONE)) {
                 nextX = X > 1 ? rand.nextInt(X) : 0;
-                nextY = rand.nextInt(maxCell);
+                nextY = rand.nextInt(maxBoundary);
             }
 
             // set snake paramter tail
@@ -82,18 +82,18 @@ public class SnakesAndLaddersSingleGame {
         
         for (int i = 0; i < o_NumOfSnakesAndLadders; i++) {
             //Ladder tail
-            int X = rand.nextInt(maxCell - 1);
-            int Y = rand.nextInt(maxCell);
+            int X = rand.nextInt(maxBoundary - 1);
+            int Y = rand.nextInt(maxBoundary);
             while ((X == 0 && Y == 0) || (m_GameBoard[X][Y].getType() != eChars.NONE)) {
-                X = rand.nextInt(maxCell - 1);
-                Y = rand.nextInt(maxCell);
+                X = rand.nextInt(maxBoundary - 1);
+                Y = rand.nextInt(maxBoundary);
             }
             //Ladder head 
-            int nextX = rand.nextInt((maxCell) - (X + 1)) + (X + 1);
-            int nextY = rand.nextInt(maxCell);
-            while ((nextX == maxCell && nextY == maxCell) || (m_GameBoard[nextX][nextY].getType() != eChars.NONE)) {
-                nextX = rand.nextInt((maxCell) - (X + 1)) + (X + 1);
-                nextY = rand.nextInt(maxCell);
+            int nextX = rand.nextInt((maxBoundary) - (X + 1)) + (X + 1);
+            int nextY = rand.nextInt(maxBoundary);
+            while ((nextX == maxBoundary && nextY == maxBoundary) || (m_GameBoard[nextX][nextY].getType() != eChars.NONE)) {
+                nextX = rand.nextInt((maxBoundary) - (X + 1)) + (X + 1);
+                nextY = rand.nextInt(maxBoundary);
             }
 
             // set Ladder paramter tail
