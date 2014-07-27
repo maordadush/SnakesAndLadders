@@ -26,15 +26,16 @@ public class GameModel implements iWinChecker {
     private String saveGamePath;
     private int m_NumOfPlayers;
     private int m_numOfSnakesAndLadders;
+    private int m_CurrentPlayerIndex;
 
-    public GameModel(int o_GameSize,int o_numOfSnakesAndLadders, int o_NumOfPlayers) {
+    public GameModel(int o_GameSize, int o_numOfSnakesAndLadders, int o_NumOfPlayers) {
         //TODO: move input valdition to here
-        if (o_numOfSnakesAndLadders > 1 || o_numOfSnakesAndLadders < (o_GameSize * o_GameSize) - 2){
+        if (o_numOfSnakesAndLadders > 1 || o_numOfSnakesAndLadders < (o_GameSize * o_GameSize) - 2) {
             m_numOfSnakesAndLadders = o_numOfSnakesAndLadders;
-        }else{
+        } else {
             throw new UnsupportedOperationException("Illeagal number of snakes and ladders");
         }
-                    
+
         if (o_NumOfPlayers > 1 || o_NumOfPlayers < 5) {
             m_NumOfPlayers = o_NumOfPlayers;
             players = new ArrayList<>();
@@ -42,24 +43,23 @@ public class GameModel implements iWinChecker {
             throw new UnsupportedOperationException("Illeagal number of players"); //To change body of generated methods, choose Tools | Templates.
 
         }
-        game = new SnakesAndLaddersSingleGame(o_GameSize,o_numOfSnakesAndLadders);
+        game = new SnakesAndLaddersSingleGame(o_GameSize, o_numOfSnakesAndLadders);
         saveGamePath = null;
     }
-
 
     public void InitPlayers() {
         players.clear();
     }
-    
+
     @Override
     public boolean checkWinner() {
         Boolean returnedValue = false;
         aPlayer winningPlayer = getWinnerPlayer();
-        
-        if (winningPlayer != null){
+
+        if (winningPlayer != null) {
             returnedValue = true;
         }
-        
+
         return returnedValue;
     }
 
@@ -85,6 +85,16 @@ public class GameModel implements iWinChecker {
 
     public aPlayer getCurrPlayer() {
         return currTurnPlayer;
+    }
+
+    public void forwardPlayer() {
+        m_CurrentPlayerIndex = players.indexOf(getCurrPlayer());
+
+        this.m_CurrentPlayerIndex++;
+        if (this.m_CurrentPlayerIndex >= this.m_NumOfPlayers) {
+            this.m_CurrentPlayerIndex = 0;
+        }
+        this.currTurnPlayer = getPlayers().get(m_CurrentPlayerIndex);
     }
 
     public void initGame() {
@@ -139,7 +149,7 @@ public class GameModel implements iWinChecker {
         }
     }
 
-    public void makeMove(BoardSquare move) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setMove(aPlayer player, BoardSquare move) {
+        player.getCurrentSoldier().setLocationOnBoard(move);
     }
 }

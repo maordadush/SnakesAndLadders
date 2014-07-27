@@ -10,6 +10,7 @@ import java.util.Stack;
 import snakesandladders.consoleview.ConsoleView;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamemodel.BoardSquare;
+import snakesandladders.gamemodel.Cube;
 import snakesandladders.gamemodel.GameModel;
 import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
 import snakesandladders.players.ComputerPlayer;
@@ -109,18 +110,22 @@ public class GameControl {
         while (!m_gameModel.hasGameWon()) {
             currGameIndex = m_gameModel.getCurrGameIndex();
             player = m_gameModel.getCurrPlayer();
+
+            m_consoleView.ClearScreen();
             m_consoleView.displayCurrPlayerAndGameIndex(currGameIndex, player, m_gameModel.GetSelectNextGame());
             m_consoleView.printGame(GetSingleGame(), getPlayers());
             if (player instanceof ComputerPlayer) {
                 makeMove();
+                m_gameModel.forwardPlayer();
             } else {
                 gameOption = eGameMenu.CHOOSE;
                 while (gameOption == eGameMenu.CHOOSE) {
                     gameOption = m_consoleView.getGameOption();
                     switch (gameOption) {
                         case MAKE_MOVE:
-                            m_consoleView.displaySoldiersOfPlayer(player.getM_SoldiersList());
+                            //m_consoleView.displaySoldiersOfPlayer(player.getM_SoldiersList()); //Noam: "For what?"
                             makeMove();
+                            m_gameModel.forwardPlayer();
                             break;
                         case SAVE_GAME:
                             //             saveGame();
@@ -169,11 +174,12 @@ public class GameControl {
 //    }
     private void makeMove() throws SnakesAndLaddersRunTimeException {
         BoardSquare move;
-        aPlayer player = m_gameModel.getCurrPlayer();
+        //aPlayer player = m_gameModel.getCurrPlayer();
 
         move = selectSquareToFill();
-        m_gameModel.makeMove(move);
-        m_consoleView.displayLastMove(player, move);
+        m_gameModel.GetSingleGame().setCurrentBoardSquare(move);
+
+        //m_consoleView.displayLastMove(player, move); - Noam: "Check if needed"
         m_consoleView.printGame(GetSingleGame(), getPlayers());
     }
 
@@ -191,8 +197,6 @@ public class GameControl {
         String playerName;
         int playerNumOfSoldiersToWin;
 
-        
-        
         for (int i = 0; i < m_gameModel.getNumOfPlayers(); i++) {
             playertype = m_consoleView.getPlayerType(i);
 
@@ -201,7 +205,7 @@ public class GameControl {
                     playerName = m_consoleView.getPlayerString();
                     playerNumOfSoldiersToWin = m_consoleView.GetNumOfSoldiersToWin();
                     player = new HumanPlayer(playerName, m_gameModel.NUM_OF_SOLDIERS, playerNumOfSoldiersToWin);
-                    for (Soldier s : player.getM_SoldiersList()){
+                    for (Soldier s : player.getM_SoldiersList()) {
                         s.setLocationOnBoard(m_gameModel.getCurrGameIndex());
                     }
                     m_gameModel.addPlayer(player);
@@ -209,7 +213,7 @@ public class GameControl {
                 case Computer:
                     playerNumOfSoldiersToWin = m_consoleView.GetNumOfSoldiersToWin();
                     player = new ComputerPlayer("Computer", m_gameModel.NUM_OF_SOLDIERS, playerNumOfSoldiersToWin);
-                    for (Soldier s : player.getM_SoldiersList()){
+                    for (Soldier s : player.getM_SoldiersList()) {
                         s.setLocationOnBoard(m_gameModel.getCurrGameIndex());
                     }
                     m_gameModel.addPlayer(player);
@@ -227,14 +231,16 @@ public class GameControl {
     private BoardSquare selectSquareToFill() throws SnakesAndLaddersRunTimeException {
         BoardSquare nextMove;
         int cubeAnswer;
+        Cube cube = new Cube();
         aPlayer player = m_gameModel.getCurrPlayer();
 
         if (player instanceof ComputerPlayer) {
-            cubeAnswer = m_consoleView.GetAutomaticCubeAnswer();
+            m_consoleView.LetComputerPlay();
         } else {
-            cubeAnswer = m_consoleView.GetCubeAnswer();
+            m_consoleView.ThrowCube();
         }
-
+        cubeAnswer = cube.throwCube();
+        m_consoleView.PrintCubeAnswer(cubeAnswer);
         nextMove = move(player, cubeAnswer);
 
         return nextMove;
@@ -242,16 +248,16 @@ public class GameControl {
 
     private BoardSquare move(aPlayer player, int cubeAnswer) throws SnakesAndLaddersRunTimeException {
         BoardSquare boardToMove;
-        int xToMove = 0;
-        int yToMove = 0;
+        int xToMove = (int) player.getCurrentSoldier().getLocationOnBoard().getX() + cubeAnswer;
+        int yToMove = (int) player.getCurrentSoldier().getLocationOnBoard().getY();
         int boardSize = GetSingleGame().getO_BoardSize() - 1;
 
-        if (xToMove < boardSize) {
-            boardToMove = GetSingleGame().getBoardSquare(xToMove, yToMove);
+        if (xToMove <= boardSize) {
+            boardToMove = GetSingleGame().getBoardSquare(yToMove, xToMove);
         } else {
             yToMove += 1;
-            xToMove = boardSize - xToMove;
-            boardToMove = GetSingleGame().getBoardSquare(xToMove, yToMove);
+            xToMove = boardSize - xToMove + 1;
+            boardToMove = GetSingleGame().getBoardSquare(yToMove, xToMove);
         }
         if ((xToMove >= boardSize) && (yToMove >= boardSize)) {
             boardToMove = GetSingleGame().getBoardSquare(boardSize, boardSize);
@@ -271,6 +277,8 @@ public class GameControl {
             case NONE:
                 break;
         }
+        m_gameModel.setMove(player, boardToMove);
+        player.ForwardCurrentSoldier();
         return boardToMove;
     }
 }

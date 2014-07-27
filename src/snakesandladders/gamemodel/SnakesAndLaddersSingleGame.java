@@ -19,11 +19,9 @@ public class SnakesAndLaddersSingleGame {
     private BoardSquare m_GameBoard[][];
     private int gameWinner;
     private BoardSquare m_CurrentSquare;
-    private Cube m_Cube;
     private int m_numOfSnakesAndLadders;
 
     public SnakesAndLaddersSingleGame(int o_BoardSize, int o_numOfSnakesAndLadders) {
-        m_Cube = new Cube();
         if (o_BoardSize > 4 || o_BoardSize < 9){
             m_BoardSize = o_BoardSize;
             m_GameBoard = new BoardSquare[m_BoardSize][m_BoardSize];
@@ -105,8 +103,12 @@ public class SnakesAndLaddersSingleGame {
         }
     }
 
-    BoardSquare getCurrentBoardSquare() {
+    public BoardSquare getCurrentBoardSquare() {
         return m_CurrentSquare;
+    }
+    
+    public void setCurrentBoardSquare(BoardSquare updatedBoardSquere) {
+        m_CurrentSquare = updatedBoardSquere;
     }
 
     public int getO_BoardSize() {

@@ -21,6 +21,8 @@ public abstract class aPlayer {
     Soldier[] m_SoldiersList;
     int m_NumOfSoldiersToWin;
     Color color;
+    int m_CurrentSoldierIndex;
+    private Soldier m_CurrentSoldier;
 
     protected aPlayer(String o_Name, int o_NumOfSoldiersToWin) {
         this.m_PlayerName = o_Name;
@@ -28,8 +30,11 @@ public abstract class aPlayer {
         m_SoldiersList = new Soldier[NUM_OF_SOLDIERS];
         this.color = Color.decode(Integer.toString(this.hashCode()));
         for (int i = 0; i < m_SoldiersList.length; i++) {
-             m_SoldiersList[i] = new Soldier(this.color);
+            m_SoldiersList[i] = new Soldier(this.color);
         }
+        this.m_CurrentSoldierIndex = 0;
+        this.m_CurrentSoldier = m_SoldiersList[m_CurrentSoldierIndex];
+
     }
 
     public String getPlayerName() {
@@ -48,7 +53,6 @@ public abstract class aPlayer {
         return m_SoldiersList;
     }
 
-
     public int getNumSoldiersAtSquare(BoardSquare bs) {
         int numSoldiers = 0;
         for (Soldier soldier : m_SoldiersList) {
@@ -58,10 +62,16 @@ public abstract class aPlayer {
         }
         return numSoldiers;
     }
-  
-    
-    
- 
-    
-    
+
+    public Soldier getCurrentSoldier() {
+        return m_CurrentSoldier;
+    }
+
+    public void ForwardCurrentSoldier() {
+        this.m_CurrentSoldierIndex++;
+        if (this.m_CurrentSoldierIndex >= this.NUM_OF_SOLDIERS){
+            this.m_CurrentSoldierIndex = 0;
+        }
+        this.m_CurrentSoldier = this.m_SoldiersList[this.m_CurrentSoldierIndex];
+    }
 }

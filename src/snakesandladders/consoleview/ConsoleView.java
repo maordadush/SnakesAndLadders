@@ -84,7 +84,7 @@ public class ConsoleView {
 
         return input;
     }
-    
+
     public int GetNumOfSoldiersToWin() throws SnakesAndLaddersRunTimeException {
         Scanner scanner = new Scanner(System.in);
         int input;
@@ -368,7 +368,7 @@ public class ConsoleView {
         int numPlayers = players.size();
         StringBuilder boardString = new StringBuilder();
 
-        for (int i = singleGameBoardSize - 1 ; i >= 0; i--) {
+        for (int i = singleGameBoardSize - 1; i >= 0; i--) {
             for (int j = 0; j < singleGameBoardSize; j++) {
                 BoardSquare bs = o_Game.getBoardSquare(i, j);
                 eChars bsType = bs.getType();
@@ -390,7 +390,7 @@ public class ConsoleView {
             boardString.append("Player " + (players.indexOf(player) + 1) + ": " + player.getPlayerName() + "\t");
         }
         boardString.append(System.lineSeparator());
-        
+
         //Print out the board
         System.out.print(boardString.toString());
     }
@@ -495,12 +495,16 @@ public class ConsoleView {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public int GetCubeAnswer() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void ThrowCube() {
+        System.out.println("Press 'Enter' to throw the cube");
+        Scanner reader = new Scanner(System.in);
+        String str = reader.nextLine();
     }
 
-    public int GetAutomaticCubeAnswer() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void LetComputerPlay() {
+        System.out.println("Press 'Enter' to see computer turn");
+        Scanner reader = new Scanner(System.in);
+        String str = reader.nextLine();
     }
 
     private void showMenuSnakesAndLaddersSize() {
@@ -517,14 +521,26 @@ public class ConsoleView {
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 //    }
 //
-
     public void displaySoldiersOfPlayer(Soldier[] m_SoldiersList) {
-       int squareNumber;
+        int squareNumber;
         for (int i = 0; i < m_SoldiersList.length; i++) {
-             squareNumber = m_SoldiersList[i].getLocationOnBoard().getSquareNumber();
+            squareNumber = m_SoldiersList[i].getLocationOnBoard().getSquareNumber();
         }
-                
+
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void PrintCubeAnswer(int cubeAnswer) {
+        System.out.println("Cube answer: " + cubeAnswer);
+        System.out.println("Press 'Enter' to continue.");
+        Scanner reader = new Scanner(System.in);
+        String str = reader.nextLine();
+    }
+
+    public void ClearScreen() {
+        for (int i = 0; i < 10; i++) {
+            System.out.println("");
+        }
     }
 
 }
