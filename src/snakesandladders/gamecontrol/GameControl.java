@@ -123,7 +123,7 @@ public class GameControl {
                     gameOption = m_consoleView.getGameOption();
                     switch (gameOption) {
                         case MAKE_MOVE:
-                            //m_consoleView.displaySoldiersOfPlayer(player.getM_SoldiersList()); //Noam: "For what?"
+                            m_consoleView.displaySoldiersOfPlayer(player);
                             makeMove();
                             m_gameModel.forwardPlayer();
                             break;

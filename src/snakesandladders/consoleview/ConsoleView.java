@@ -511,23 +511,17 @@ public class ConsoleView {
         System.out.println("Second, please write the number of snakes and ladders:");
     }
 
-//    public void displaySoldiersOfPlayer(aPlayer player) {
-//        Soldier[] Soldiers = player.getM_SoldiersList();
-//        for (int i = 0; i < Soldiers.length; i++) {
-//            Object object = Soldiers[i].getLocationOnBoard().getSquareNumber();
-//            
-//        }
-//        Soldiers[0].getLocationOnBoard().getSquareNumber();
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-//
-    public void displaySoldiersOfPlayer(Soldier[] m_SoldiersList) {
-        int squareNumber;
-        for (int i = 0; i < m_SoldiersList.length; i++) {
-            squareNumber = m_SoldiersList[i].getLocationOnBoard().getSquareNumber();
+    public void displaySoldiersOfPlayer(aPlayer player) {
+        Soldier[] soldierList = player.getM_SoldiersList();
+        StringBuilder playerSoldiersString = new StringBuilder();
+        playerSoldiersString.append("Player" + ": " + player.getPlayerName() + "\t");
+        
+       //TODO change i+1 to real soldier id
+        for (int i = 0; i < soldierList.length; i++) {
+             playerSoldiersString.append("Soldier " + (i + 1) + ": " + (String.format("%02d", soldierList[i].getLocationOnBoard().getSquareNumber()) + "\t"));
         }
-
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        playerSoldiersString.append(System.lineSeparator());
+        System.out.print(playerSoldiersString.toString());
     }
 
     public void PrintCubeAnswer(int cubeAnswer) {
