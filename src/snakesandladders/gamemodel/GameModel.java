@@ -78,6 +78,25 @@ public class GameModel implements iWinChecker {
         return currTurnPlayer;
     }
 
+    public void setCurrPlayer(aPlayer o_CurrPlayer) {
+        currTurnPlayer = o_CurrPlayer;
+    }
+
+    public void setCurrPlayer(String o_CurrPlayerName) throws SnakesAndLaddersRunTimeException {
+        aPlayer foundPlayer = null;
+       
+        for (aPlayer player : players) {
+            if (player.getPlayerName().equals(o_CurrPlayerName)) {
+                foundPlayer = player;
+            }
+        }
+        if (foundPlayer != null) {
+            this.currTurnPlayer = foundPlayer;
+        } else {
+            throw new SnakesAndLaddersRunTimeException("setCurrPlayer(): player found error.");
+        }
+    }
+
     public void forwardPlayer() {
         m_CurrentPlayerIndex = players.indexOf(getCurrPlayer());
 

@@ -33,15 +33,6 @@ public class GameControl {
 
     public GameControl() {
         m_consoleView = new ConsoleView();
-        try {
-            int boardSize = m_consoleView.GetBoardSize();
-            int numOfSnakesAndLadders = m_consoleView.getNumOfSnakesAndLadders(boardSize);
-            int numOfPlayers = m_consoleView.GetNumOfPlayers();
-            m_NumOfSoldiersToWin = m_consoleView.GetNumOfSoldiersToWin();
-            m_gameModel = new GameModel(boardSize, numOfSnakesAndLadders, numOfPlayers);
-        } catch (SnakesAndLaddersRunTimeException ex) {
-            m_consoleView.printSnakesAndLaddersRunTimeExceptiom(ex);
-        }
     }
 
     public void Run() {
@@ -161,6 +152,16 @@ public class GameControl {
     }
 
     private void createNewGame() throws SnakesAndLaddersRunTimeException {
+        try {
+            int boardSize = m_consoleView.GetBoardSize();
+            int numOfSnakesAndLadders = m_consoleView.getNumOfSnakesAndLadders(boardSize);
+            int numOfPlayers = m_consoleView.GetNumOfPlayers();
+            m_NumOfSoldiersToWin = m_consoleView.GetNumOfSoldiersToWin();
+            m_gameModel = new GameModel(boardSize, numOfSnakesAndLadders, numOfPlayers);
+        } catch (SnakesAndLaddersRunTimeException ex) {
+            m_consoleView.printSnakesAndLaddersRunTimeExceptiom(ex);
+        }
+        
         m_gameModel.initNewGame();
         initPlayers();
         m_gameModel.selectFirstPlayer();
@@ -180,6 +181,7 @@ public class GameControl {
     private eXMLLoadStatus loadGame() throws SnakesAndLaddersRunTimeException {
         eXMLLoadStatus loadStatus;
 
+        //Noam: "First Init Table from XML
         int boardSize = m_consoleView.GetBoardSize();
         int numOfSnakesAndLadders = m_consoleView.getNumOfSnakesAndLadders(boardSize);
         int numOfPlayers = m_consoleView.GetNumOfPlayers();
@@ -187,7 +189,7 @@ public class GameControl {
         GameModel modelLoad = new GameModel(boardSize, numOfSnakesAndLadders, numOfPlayers);
         modelLoad.initNewGame();
         String xmlPath = m_consoleView.getLoadXMLPath();
-        loadStatus = XML.loadXML(xmlPath, modelLoad, m_gameModel.getPlayers());
+        loadStatus = XML.loadXML(xmlPath, modelLoad, modelLoad.getPlayers());
 
         if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
             m_consoleView.displayXMLLoadError(loadStatus);

@@ -66,7 +66,7 @@ public class XML {
 
             eXMLLoadStatus loadStatus;
 
-            loadStatus = loadPlayers(snakesandladders.getPlayers().getPlayer(), snakesandladders.getNumberOfSoldiers(), model, localPlayers);
+            loadStatus = loadPlayers(snakesandladders.getPlayers().getPlayer(), snakesandladders.getCurrentPlayer(), model);
             if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
                 return loadStatus;
             }
@@ -75,16 +75,12 @@ public class XML {
 //            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
 //                return loadStatus;
 //            }
-//
+
 //            loadStatus = loadGameBoards(Snakesandladders.getBoard().getBoard(), model);
 //            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
 //                return loadStatus;
 //            }
 //            loadStatus = loadNumberOfSoldiers(Snakesandladders.getNumberOfSoldiers().getBoard(), model);
-//            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
-//                return loadStatus;
-//            }
-//            loadStatus = loadGameCurrentPlayer(Snakesandladders.getCurrentPlayer().getBoard(), model);
 //            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
 //                return loadStatus;
 //            }
@@ -101,7 +97,7 @@ public class XML {
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
 
-    private static eXMLLoadStatus loadPlayers(List<Player> players, int numberOfSoldiersToWin, GameModel model, List<aPlayer> localPlayers) {
+    private static eXMLLoadStatus loadPlayers(List<Player> players, String currPlayer, GameModel model) {
         ePlayerType[] playerTypes = new ePlayerType[players.size()];
         String[] playerNames = new String[players.size()];
         
@@ -121,27 +117,31 @@ public class XML {
         
         for (int i = 0; i < playerNames.length; i++) {
             for (int j = i + 1; j < playerNames.length; j++) {
-                if (playerNames[i] == playerNames[j]) {
+                if (playerNames[i].equals(playerNames[j])) {
                     return eXMLLoadStatus.PLAYERS_DUPLICATE_NAME;
                 }
             }
         }
 
         try {
-            for (int i = 0; i < localPlayers.size(); i++) {
+            for (int i = 0; i < playerNames.length; i++) {
+                
                 switch (playerTypes[i]) {
                     case Human:
                         if (players.get(i).getName() != null) {
-                            model.addPlayer(new HumanPlayer(playerNames[i],4));    //Noam:"DealWithSoldiers"
+                            model.addPlayer(new HumanPlayer(playerNames[i],4)); 
                         }
                         break;
                     case Computer:
                         if (players.get(i).getName() != null) {
-                            model.addPlayer(new ComputerPlayer(players.get(i).getName(), 4)); //Noam:"DealWithSoldiers"
+                            model.addPlayer(new ComputerPlayer(players.get(i).getName(), 4)); 
                         } 
                         break;
                     default:
-                        return eXMLLoadStatus.PLAYER_TYPE;
+                        return eXMLLoadStatus.PLAYER_TYPE;                       
+                } 
+                if (players.get(i).getName().equals(currPlayer)){
+                    model.setCurrPlayer(currPlayer);
                 }
             }
         } catch (SnakesAndLaddersRunTimeException ex) {
