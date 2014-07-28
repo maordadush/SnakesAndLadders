@@ -5,6 +5,9 @@
  */
 package snakesandladders.players;
 
+import snakesandladders.xml.XMLException;
+import snl.PlayerType;
+
 /**
  *
  * @author Noam
@@ -12,4 +15,15 @@ package snakesandladders.players;
 public enum ePlayerType {
 
     Human, Computer;
+    
+    public static ePlayerType GetTypeFromXML(PlayerType type) throws XMLException {
+        switch (type) {
+            case HUMAN:
+                return Human;
+            case COMPUTER:
+                return Computer;
+            default:
+                throw new XMLException("GetTypeFromXML(): Invalid PlayerType");
+        }
+    }
 }

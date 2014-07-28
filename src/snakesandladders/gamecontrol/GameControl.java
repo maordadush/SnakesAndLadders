@@ -50,7 +50,7 @@ public class GameControl {
                         mainOpt = startNewGame();
                         break;
                     case LOAD_GAME:
-                        //              mainOpt = startLoadGame();
+                        mainOpt = startLoadGame();
                         break;
                     case EXIT:
                         break;
@@ -162,16 +162,17 @@ public class GameControl {
         m_gameModel.selectFirstPlayer();
     }
 
-//   private eStartMenu startLoadGame() throws SnakesAndLaddersRunTimeException {
-//        XMLLoadStatus status = loadGame();
-//
-//        if (status != XMLLoadStatus.LOAD_SUCCESS) {
-//            return eStartMenu.CHOOSE;
-//        }
-//
-//      runGame();
-//        return eStartMenu.EXIT;
-//    }
+    private eStartMenu startLoadGame() throws SnakesAndLaddersRunTimeException {
+        XMLLoadStatus status = loadGame();
+
+        if (status != XMLLoadStatus.LOAD_SUCCESS) {
+            return eStartMenu.CHOOSE;
+        }
+
+        runGame();
+        return eStartMenu.EXIT;
+    }
+
     private void makeMove() throws SnakesAndLaddersRunTimeException {
         BoardSquare move;
         //aPlayer player = m_gameModel.getCurrPlayer();
@@ -268,7 +269,7 @@ public class GameControl {
         }
 
         switch (boardToMove.getType()) {
-            case LADDER_HEAD:
+            case LADDER_TAIL:
                 boardToMove = boardToMove.getJumpTo();
                 break;
             case SNAKE_HEAD:
