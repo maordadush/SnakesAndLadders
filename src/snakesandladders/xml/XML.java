@@ -8,6 +8,7 @@ package snakesandladders.xml;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
@@ -18,11 +19,16 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamemodel.GameModel;
 import snakesandladders.gamemodel.eChars;
+import snakesandladders.players.ComputerPlayer;
+import snakesandladders.players.HumanPlayer;
+import snakesandladders.players.Soldier;
 import snakesandladders.players.aPlayer;
 import snakesandladders.players.ePlayerType;
 import snl.*;
+import snl.Cell.Soldiers;
 import snl.Players.Player;
 
 /**
@@ -34,111 +40,117 @@ public class XML {
     public static final String XSD_FOLDER = "/xsd/";
     public static final String XSD_FNAME = "snakesandladders.xsd";
 
-//    public static XMLLoadStatus loadXML(String xmlPath, GameModel model) {
-//        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-//        Schema schema;
-//
-//        URL xsdURL = XML.class.getResource(XSD_FOLDER + XSD_FNAME);
-//        if (xsdURL == null) {
-//            return XMLLoadStatus.XSD_FILE_NOT_FOUND;
-//        }
-//
-//        try {
-//            schema = schemaFactory.newSchema(new File(xsdURL.getFile()));
-//        } catch (SAXException ex) {
-//            return XMLLoadStatus.XSD_FILE_NOT_FOUND;
-//        }
-//
-//        try {
-//            JAXBContext jc = JAXBContext.newInstance(Tictactoe.class);
-//            Unmarshaller u = jc.createUnmarshaller();
-//            u.setSchema(schema);
-//
-//            File file = new File(xmlPath);
-//
-//            Tictactoe tictactoe = (Tictactoe) u.unmarshal(file);
-//
-//
-//            XMLLoadStatus loadStatus;
-//
-//            loadStatus = loadPlayers(tictactoe.getPlayers().getPlayer(), model);
-//            if (loadStatus != XMLLoadStatus.LOAD_SUCCESS) {
+    public static eXMLLoadStatus loadXML(String xmlPath, GameModel model, List<aPlayer> localPlayers) {
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Schema schema;
+
+        URL xsdURL = XML.class.getResource(XSD_FOLDER + XSD_FNAME);
+        if (xsdURL == null) {
+            return eXMLLoadStatus.XSD_FILE_NOT_FOUND;
+        }
+
+        try {
+            schema = schemaFactory.newSchema(new File(xsdURL.getFile()));
+        } catch (SAXException ex) {
+            return eXMLLoadStatus.XSD_FILE_NOT_FOUND;
+        }
+
+        try {
+            JAXBContext jc = JAXBContext.newInstance(Snakesandladders.class);
+            Unmarshaller u = jc.createUnmarshaller();
+            u.setSchema(schema);
+
+            File file = new File(xmlPath);
+
+            Snakesandladders snakesandladders = (Snakesandladders) u.unmarshal(file);
+
+            eXMLLoadStatus loadStatus;
+
+            loadStatus = loadPlayers(snakesandladders.getPlayers().getPlayer(), snakesandladders.getNumberOfSoldiers(), model, localPlayers);
+            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
+                return loadStatus;
+            }
+
+//            loadStatus = loadGameName(Snakesandladders.getName(), model);
+//            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
 //                return loadStatus;
 //            }
 //
-//            loadStatus = loadGameInfo(tictactoe.getGame(), model);
-//            if (loadStatus != XMLLoadStatus.LOAD_SUCCESS) {
+//            loadStatus = loadGameBoards(Snakesandladders.getBoard().getBoard(), model);
+//            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
 //                return loadStatus;
 //            }
-//
-//            loadStatus = loadGameBoards(tictactoe.getBoards().getBoard(), model);
-//            if (loadStatus != XMLLoadStatus.LOAD_SUCCESS) {
+//            loadStatus = loadNumberOfSoldiers(Snakesandladders.getNumberOfSoldiers().getBoard(), model);
+//            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
 //                return loadStatus;
 //            }
-//
-//        } catch (JAXBException ex) {
-//            if (ex.getLinkedException() instanceof FileNotFoundException) {
-//                return XMLLoadStatus.XML_FILE_NOT_FOUND;
+//            loadStatus = loadGameCurrentPlayer(Snakesandladders.getCurrentPlayer().getBoard(), model);
+//            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
+//                return loadStatus;
 //            }
-//            if (ex.getLinkedException() instanceof SAXParseException) {
-//                return XMLLoadStatus.NOT_VALID_XML;
-//            }
-//            return XMLLoadStatus.GENERAL_ERROR;
-//        }
-//
-//        return XMLLoadStatus.LOAD_SUCCESS;
-//    }
-//
-//    private static XMLLoadStatus loadPlayers(List<Player> players, GameModel model) {
-//        XMixDrixPlayerType playerType[] = new XMixDrixPlayerType[GameModel.MAX_PLAYERS];
-//        XMixDrixChars playerGameValue[] = new XMixDrixChars[GameModel.MAX_PLAYERS];
-//
-//        for (int i = 0; i < GameModel.MAX_PLAYERS; i++) {
+        } catch (JAXBException ex) {
+            if (ex.getLinkedException() instanceof FileNotFoundException) {
+                return eXMLLoadStatus.XML_FILE_NOT_FOUND;
+            }
+            if (ex.getLinkedException() instanceof SAXParseException) {
+                return eXMLLoadStatus.NOT_VALID_XML;
+            }
+            return eXMLLoadStatus.GENERAL_ERROR;
+        }
+
+        return eXMLLoadStatus.LOAD_SUCCESS;
+    }
+
+    private static eXMLLoadStatus loadPlayers(List<Player> players, int numberOfSoldiersToWin, GameModel model, List<aPlayer> localPlayers) {
+        ePlayerType[] playerTypes = new ePlayerType[players.size()];
+        String[] playerNames = new String[players.size()];
+        
+        for (int i = 0; i < playerTypes.length; i++) {
+            try {
+                playerTypes[i] = ePlayerType.GetTypeFromXML(players.get(i).getType());
+            } catch (XMLException ex) {
+                return eXMLLoadStatus.PLAYER_TYPE;
+            }
+
 //            try {
-//                playerType[i] = XMixDrixPlayerType.GetTypeFromXML(players.get(i).getType());
+                playerNames[i] = players.get(i).getName();
 //            } catch (XMLException ex) {
-//                return XMLLoadStatus.PLAYER_TYPE;
+//                return eXMLLoadStatus.PLAYER_NAME_ERROR;
 //            }
-//
-//            try {
-//                playerGameValue[i] = XMixDrixChars.getCharFromXML(players.get(i).getValue());
-//            } catch (XMLException ex) {
-//                return XMLLoadStatus.CHAR_ERROR;
-//            }
-//        }
-//
-//        if (playerGameValue[0] == playerGameValue[1]) {
-//            return XMLLoadStatus.PLAYERS_DUPLICATE_CHAR;
-//        }
-//
-//        try {
-//            for (int i = 0; i < GameModel.MAX_PLAYERS; i++) {
-//                switch (playerType[i]) {
-//                    case Human:
-//                        if (players.get(i).getName() != null) {
-//                            model.addPlayer(new HumanPlayer(players.get(i).getName(), playerGameValue[i]));
-//                        } else {
-//                            model.addPlayer(new HumanPlayer(i + 1, playerGameValue[i]));
-//                        }
-//                        break;
-//                    case Computer:
-//                        if (players.get(i).getName() != null) {
-//                            model.addPlayer(new ComputerPlayer(players.get(i).getName(), playerGameValue[i]));
-//                        } else {
-//                        model.addPlayer(new ComputerPlayer(i + 1, playerGameValue[i]));
-//                        }
-//                        break;
-//                    default:
-//                        return XMLLoadStatus.PLAYER_TYPE;
-//                }
-//            }
-//        } catch (XMixDrixRunTimeException ex) {
-//            return XMLLoadStatus.ADD_PLAYER_ERROR;
-//        }
-//
-//        return XMLLoadStatus.LOAD_SUCCESS;
-//    }
-//
+        }
+        
+        for (int i = 0; i < playerNames.length; i++) {
+            for (int j = i + 1; j < playerNames.length; j++) {
+                if (playerNames[i] == playerNames[j]) {
+                    return eXMLLoadStatus.PLAYERS_DUPLICATE_NAME;
+                }
+            }
+        }
+
+        try {
+            for (int i = 0; i < localPlayers.size(); i++) {
+                switch (playerTypes[i]) {
+                    case Human:
+                        if (players.get(i).getName() != null) {
+                            model.addPlayer(new HumanPlayer(playerNames[i],4));    //Noam:"DealWithSoldiers"
+                        }
+                        break;
+                    case Computer:
+                        if (players.get(i).getName() != null) {
+                            model.addPlayer(new ComputerPlayer(players.get(i).getName(), 4)); //Noam:"DealWithSoldiers"
+                        } 
+                        break;
+                    default:
+                        return eXMLLoadStatus.PLAYER_TYPE;
+                }
+            }
+        } catch (SnakesAndLaddersRunTimeException ex) {
+            return eXMLLoadStatus.ADD_PLAYER_ERROR;
+        }
+
+        return eXMLLoadStatus.LOAD_SUCCESS;
+    }
+
 //    private static XMLLoadStatus loadGameInfo(Tictactoe.Game game, GameModel model) {
 //        if (game.getCurrentBoard() != null) {
 //            int col = game.getCurrentBoard().getCol();

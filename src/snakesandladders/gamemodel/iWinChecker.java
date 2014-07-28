@@ -11,5 +11,5 @@ package snakesandladders.gamemodel;
  * @author Noam
  */
 public interface iWinChecker {
-    boolean checkWinner();
+    boolean checkWinner(int numOfSoldiersToWin);
 }

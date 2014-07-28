@@ -17,6 +17,7 @@ import snakesandladders.gamemodel.eChars;
 import snakesandladders.players.Soldier;
 import snakesandladders.players.aPlayer;
 import snakesandladders.players.ePlayerType;
+import snakesandladders.xml.eXMLLoadStatus;
 
 /**
  *
@@ -515,10 +516,10 @@ public class ConsoleView {
         Soldier[] soldierList = player.getM_SoldiersList();
         StringBuilder playerSoldiersString = new StringBuilder();
         playerSoldiersString.append("Player" + ": " + player.getPlayerName() + "\t");
-        
-       //TODO change i+1 to real soldier id
+
+        //TODO change i+1 to real soldier id
         for (int i = 0; i < soldierList.length; i++) {
-             playerSoldiersString.append("Soldier " + (i + 1) + ": " + (String.format("%02d", soldierList[i].getLocationOnBoard().getSquareNumber()) + "\t"));
+            playerSoldiersString.append("Soldier " + (i + 1) + ": " + (String.format("%02d", soldierList[i].getLocationOnBoard().getSquareNumber()) + "\t"));
         }
         playerSoldiersString.append(System.lineSeparator());
         System.out.print(playerSoldiersString.toString());
@@ -535,6 +536,10 @@ public class ConsoleView {
         for (int i = 0; i < 10; i++) {
             System.out.println("");
         }
+    }
+
+    public void displayXMLLoadError(eXMLLoadStatus loadStatus) {
+        System.out.println("Error loading game from XML: " + loadStatus.toString());
     }
 
 }

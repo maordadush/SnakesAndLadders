@@ -19,14 +19,12 @@ public abstract class aPlayer {
     public final int NUM_OF_SOLDIERS = 4;
     String m_PlayerName;
     Soldier[] m_SoldiersList;
-    int m_NumOfSoldiersToWin;
     Color color;
     int m_CurrentSoldierIndex;
     private Soldier m_CurrentSoldier;
 
-    protected aPlayer(String o_Name, int o_NumOfSoldiersToWin) {
+    protected aPlayer(String o_Name) {
         this.m_PlayerName = o_Name;
-        this.m_NumOfSoldiersToWin = o_NumOfSoldiersToWin;
         m_SoldiersList = new Soldier[NUM_OF_SOLDIERS];
         this.color = Color.decode(Integer.toString(this.hashCode()));
         for (int i = 0; i < m_SoldiersList.length; i++) {
@@ -39,14 +37,6 @@ public abstract class aPlayer {
 
     public String getPlayerName() {
         return m_PlayerName;
-    }
-
-    public int getNumOfSoldiersToWin() {
-        return m_NumOfSoldiersToWin;
-    }
-
-    public void setNumOfSoldiersToWin(int m_NumOfSoldiersToWin) {
-        this.m_NumOfSoldiersToWin = m_NumOfSoldiersToWin;
     }
 
     public Soldier[] getM_SoldiersList() {

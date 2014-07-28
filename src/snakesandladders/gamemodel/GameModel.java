@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.players.aPlayer;
+import snakesandladders.xml.XMLException;
 
 /**
  *
@@ -52,25 +53,15 @@ public class GameModel implements iWinChecker {
     }
 
     @Override
-    public boolean checkWinner() {
+    public boolean checkWinner(int numOfSoldiersToWin) {
         Boolean returnedValue = false;
-        aPlayer winningPlayer = getWinnerPlayer();
+        aPlayer winningPlayer = getWinnerPlayer(numOfSoldiersToWin);
 
         if (winningPlayer != null) {
             returnedValue = true;
         }
 
         return returnedValue;
-    }
-
-    public boolean hasGameWon() {
-        boolean returnValue = false;
-        for (aPlayer player : players) {
-            if (player.getNumOfSoldiersToWin() == 0) {
-                returnValue = true;
-            }
-        }
-        return returnValue;
     }
 
     public void initNewGame() {
@@ -121,11 +112,11 @@ public class GameModel implements iWinChecker {
         return players;
     }
 
-    public aPlayer getWinnerPlayer() {
+    public aPlayer getWinnerPlayer(int numOfSoldiersToWin) {
         aPlayer playerToReturn = null;
         for (aPlayer player : players) {
             if (player.getNumSoldiersAtSquare(game.getBoardSquare(game.getO_BoardSize() - 1, game.getO_BoardSize() - 1))
-                    == player.getNumOfSoldiersToWin()) {
+                    == numOfSoldiersToWin) {
                 playerToReturn = player;
             }
         }
