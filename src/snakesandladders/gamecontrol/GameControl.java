@@ -6,7 +6,6 @@
 package snakesandladders.gamecontrol;
 
 import java.util.List;
-import java.util.Stack;
 import snakesandladders.consoleview.ConsoleView;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamemodel.BoardSquare;
@@ -78,15 +77,16 @@ public class GameControl {
                 switch (endGameOption) {
                     case RESTART_GAME:
                         m_gameModel.initGame();
+                        m_gameModel.GetSingleGame().shuffleSnakesAndLadders(m_NumOfSoldiersToWin);
                         break;
                     case START_NEW_GAME:
                         createNewGame();
                         break;
                     case LOAD_GAME:
-//                        loadStatus = loadGame();
-//                        if (loadStatus != XMLLoadStatus.LOAD_SUCCESS) {
-//                            endGameOption = eEndMenu.CHOOSE;
-//                        }
+                        loadStatus = loadGame();
+                        if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
+                            endGameOption = eEndMenu.CHOOSE;
+                        }
                         break;
                     case EXIT_GAME:
                         break;
@@ -182,14 +182,10 @@ public class GameControl {
         eXMLLoadStatus loadStatus;
 
         //Noam: "First Init Table from XML
-        int boardSize = m_consoleView.GetBoardSize();
-        int numOfSnakesAndLadders = m_consoleView.getNumOfSnakesAndLadders(boardSize);
-        int numOfPlayers = m_consoleView.GetNumOfPlayers();
 
-        GameModel modelLoad = new GameModel(boardSize, numOfSnakesAndLadders, numOfPlayers);
-        modelLoad.initNewGame();
+        GameModel modelLoad = null;
         String xmlPath = m_consoleView.getLoadXMLPath();
-        loadStatus = XML.loadXML(xmlPath, modelLoad, modelLoad.getPlayers());
+        loadStatus = XML.loadXML(xmlPath, modelLoad, m_NumOfSoldiersToWin);
 
         if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
             m_consoleView.displayXMLLoadError(loadStatus);

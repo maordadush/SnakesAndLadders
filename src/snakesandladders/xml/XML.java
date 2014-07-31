@@ -20,6 +20,7 @@ import javax.xml.validation.SchemaFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
+import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.gamemodel.GameModel;
 import snakesandladders.gamemodel.eChars;
 import snakesandladders.players.ComputerPlayer;
@@ -29,7 +30,9 @@ import snakesandladders.players.aPlayer;
 import snakesandladders.players.ePlayerType;
 import snl.*;
 import snl.Cell.Soldiers;
+import snl.Ladders.Ladder;
 import snl.Players.Player;
+import snl.Snakes.Snake;
 
 /**
  *
@@ -40,7 +43,11 @@ public class XML {
     public static final String XSD_FOLDER = "/xsd/";
     public static final String XSD_FNAME = "snakesandladders.xsd";
 
-    public static eXMLLoadStatus loadXML(String xmlPath, GameModel model, List<aPlayer> localPlayers) {
+    public static eXMLLoadStatus loadXML(String xmlPath, GameModel model, int O_NumOfSoldiersToWin) {
+        int m_GameSize;
+        int m_NumOfSnakesAndLadders;
+        int m_NumOfPlayers;
+        
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema;
 
@@ -63,7 +70,13 @@ public class XML {
             File file = new File(xmlPath);
 
             Snakesandladders snakesandladders = (Snakesandladders) u.unmarshal(file);
-
+            
+            m_NumOfPlayers = snakesandladders.getPlayers().getPlayer().size();  //Noam: "check legal"
+            m_GameSize = snakesandladders.getBoard().getSize(); //Noam: "check legal"
+            m_NumOfSnakesAndLadders = snakesandladders.getBoard().getLadders().getLadder().size();  //Noam: "check legal"
+            
+            model = new GameModel(m_GameSize, m_NumOfSnakesAndLadders, m_NumOfPlayers);
+            O_NumOfSoldiersToWin = snakesandladders.getNumberOfSoldiers();
             eXMLLoadStatus loadStatus;
 
             loadStatus = loadPlayers(snakesandladders.getPlayers().getPlayer(), snakesandladders.getCurrentPlayer(), model);
@@ -75,12 +88,11 @@ public class XML {
 //            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
 //                return loadStatus;
 //            }
-
-//            loadStatus = loadGameBoards(Snakesandladders.getBoard().getBoard(), model);
-//            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
-//                return loadStatus;
-//            }
-//            loadStatus = loadNumberOfSoldiers(Snakesandladders.getNumberOfSoldiers().getBoard(), model);
+            loadStatus = loadGameBoard(snakesandladders.getBoard(), model);
+            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
+                return loadStatus;
+            }
+//            loadStatus = loadNumberOfSoldiers(snakesandladders.getNumberOfSoldiers().getBoard(), model);
 //            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
 //                return loadStatus;
 //            }
@@ -109,12 +121,13 @@ public class XML {
             }
 
 //            try {
-                playerNames[i] = players.get(i).getName();
+            playerNames[i] = players.get(i).getName();
 //            } catch (XMLException ex) {
 //                return eXMLLoadStatus.PLAYER_NAME_ERROR;
 //            }
         }
-        
+
+        //Noam: "Can replace with function 'Find' of java" and check number od players
         for (int i = 0; i < playerNames.length; i++) {
             for (int j = i + 1; j < playerNames.length; j++) {
                 if (playerNames[i].equals(playerNames[j])) {
@@ -125,22 +138,22 @@ public class XML {
 
         try {
             for (int i = 0; i < playerNames.length; i++) {
-                
+
                 switch (playerTypes[i]) {
                     case Human:
                         if (players.get(i).getName() != null) {
-                            model.addPlayer(new HumanPlayer(playerNames[i],4)); 
+                            model.addPlayer(new HumanPlayer(playerNames[i], 4));
                         }
                         break;
                     case Computer:
                         if (players.get(i).getName() != null) {
-                            model.addPlayer(new ComputerPlayer(players.get(i).getName(), 4)); 
-                        } 
+                            model.addPlayer(new ComputerPlayer(players.get(i).getName(), 4));
+                        }
                         break;
                     default:
-                        return eXMLLoadStatus.PLAYER_TYPE;                       
-                } 
-                if (players.get(i).getName().equals(currPlayer)){
+                        return eXMLLoadStatus.PLAYER_TYPE;
+                }
+                if (players.get(i).getName().equals(currPlayer)) {
                     model.setCurrPlayer(currPlayer);
                 }
             }
@@ -151,66 +164,33 @@ public class XML {
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
 
-//    private static XMLLoadStatus loadGameInfo(Tictactoe.Game game, GameModel model) {
-//        if (game.getCurrentBoard() != null) {
-//            int col = game.getCurrentBoard().getCol();
-//            int row = game.getCurrentBoard().getRow();
-//            SquareIndex currGame = new SquareIndex(row - 1, col - 1);
-//            try {
-//                model.setGameIndex(currGame);
-//                model.setSelectNextGame(false);
-//            } catch (XMixDrixRunTimeException ex) {
-//                return XMLLoadStatus.WRONG_GAME_INDEX;
-//            }
-//        } else {
-//            model.setSelectNextGame(true);
+    private static eXMLLoadStatus loadGameBoard(Board board, GameModel model) {
+        eXMLLoadStatus loadStatus;
+        int boardSize = board.getSize();
+        List<Ladder> ladders = board.getLadders().getLadder();
+        List<Snake> snakes = board.getSnakes().getSnake();
+        
+        if (boardSize < 5 || boardSize > 8){
+            return eXMLLoadStatus.BOARD_SIZE_ERROR;
+        }
+        
+        if (ladders.size() != snakes.size()) {
+            return eXMLLoadStatus.SNAKES_LADDERS_ERROR;
+        }
+        
+        model.getGame().setO_BoardSize(boardSize);
+        model.initGame();
+        readSnakesAndLadders(board, model);
+        
+
+//        loadStatus = loadBoard(board, model);
+//        if (loadStatus != XMLLoadStatus.LOAD_SUCCESS) {
+//            return loadStatus;
 //        }
-//
-//        XMixDrixChars currPlayerChar;
-//        try {
-//            currPlayerChar = XMixDrixChars.getCharFromXML(game.getCurrentTurn());
-//        } catch (XMLException ex) {
-//            return XMLLoadStatus.CHAR_ERROR;
-//        }
-//
-//        try {
-//            model.setCurrentTurnPlayerFromChar(currPlayerChar);
-//        } catch (XMixDrixRunTimeException ex) {
-//            return XMLLoadStatus.CURR_TURN_PLAYER_ERROR;
-//        }
-//
-//        return XMLLoadStatus.LOAD_SUCCESS;
-//    }
-//
-//    private static void zeroMat(int mat[][], int size) {
-//        for (int i = 0; i < size; i++) {
-//            for (int j = 0; j < size; j++) {
-//                mat[i][j] = 0;
-//            }
-//        }
-//    }
-//
-//    private static XMLLoadStatus loadGameBoards(List<Board> boards, GameModel model) {
-//        XMLLoadStatus loadStatus;
-//        int gameBoards[][] = new int[XMixDrixSingleGame.BOARD_SIZE][XMixDrixSingleGame.BOARD_SIZE];
-//
-//        zeroMat(gameBoards, XMixDrixSingleGame.BOARD_SIZE);
-//
-//        for (Board board : boards) {
-//            if (gameBoards[board.getRow() - 1][board.getCol() - 1] == 1) {
-//                return XMLLoadStatus.DUPLICATE_BOARD;
-//            }
-//            gameBoards[board.getRow() - 1][board.getCol() - 1] = 1;
-//
-//            loadStatus = loadBoard(board, model);
-//            if (loadStatus != XMLLoadStatus.LOAD_SUCCESS) {
-//                return loadStatus;
-//            }
-//        }
-//
-//        return XMLLoadStatus.LOAD_SUCCESS;
-//    }
-//
+
+        return eXMLLoadStatus.LOAD_SUCCESS;
+    }
+
 //    private static XMLLoadStatus loadBoard(Board board, GameModel model) {
 //        SquareIndex gameIndex = new SquareIndex(board.getRow() - 1, board.getCol() - 1);
 //        SquareIndex setCell = new SquareIndex();
@@ -400,4 +380,22 @@ public class XML {
 //
 //        return board;
 //    }
+
+    private static void readSnakesAndLadders(Board board, GameModel model) {
+//        for(Ladder ladder: board.getLadders().getLadder()){
+//            if(LadderIsLegal(ladder)){
+//                //Noam: "Keep from here"
+//                BoardSquare from = model.getGame().getBoardSquare(ladder.getFrom());
+//                BoardSquare to = model.getGame().getBoardSquare(ladder.getTo());
+//                
+//                from.setJumpTo(to);
+//                from.setType(eChars.LADDER_TAIL);
+//                to.setType(eChars.LADDER_HEAD);
+//            }
+//        }
+    }
+
+    private static boolean LadderIsLegal(Ladder ladder) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -44,7 +44,6 @@ public class SnakesAndLaddersSingleGame {
                 m_GameBoard[i][j] = new BoardSquare((m_BoardSize * i) + j + 1);
             }
         }
-        shuffleSnakesAndLadders(m_numOfSnakesAndLadders);
         m_CurrentSquare = m_GameBoard[0][0];
         
         gameWinner = -1;

@@ -29,6 +29,7 @@ public class GameModel implements iWinChecker {
     private int m_numOfSnakesAndLadders;
     private int m_CurrentPlayerIndex;
 
+    
     public GameModel(int o_GameSize, int o_numOfSnakesAndLadders, int o_NumOfPlayers) {
         //TODO: move input valdition to here
         if (o_numOfSnakesAndLadders > 1 || o_numOfSnakesAndLadders < (o_GameSize * o_GameSize) - 2) {
@@ -66,6 +67,7 @@ public class GameModel implements iWinChecker {
 
     public void initNewGame() {
         game.initGame();
+        game.shuffleSnakesAndLadders(m_numOfSnakesAndLadders);
         InitPlayers();
         selectNextGame = true;
     }
