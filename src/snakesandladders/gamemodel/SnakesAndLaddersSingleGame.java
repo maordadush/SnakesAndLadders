@@ -6,8 +6,8 @@
 package snakesandladders.gamemodel;
 
 import java.util.Random;
+import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.players.aPlayer;
-
 
 /**
  *
@@ -22,7 +22,7 @@ public class SnakesAndLaddersSingleGame {
     private int m_numOfSnakesAndLadders;
 
     public SnakesAndLaddersSingleGame(int o_BoardSize, int o_numOfSnakesAndLadders) {
-        if (o_BoardSize > 4 || o_BoardSize < 9){
+        if (o_BoardSize > 4 || o_BoardSize < 9) {
             m_BoardSize = o_BoardSize;
             m_GameBoard = new BoardSquare[m_BoardSize][m_BoardSize];
             m_numOfSnakesAndLadders = o_numOfSnakesAndLadders;
@@ -40,72 +40,34 @@ public class SnakesAndLaddersSingleGame {
 
     public void initGame() {
         for (int i = 0; i < m_BoardSize; i++) {
-            for (int j = 0; j < m_BoardSize ; j++) {
-                m_GameBoard[i][j] = new BoardSquare((m_BoardSize * i) + j + 1);
+            for (int j = 0; j < m_BoardSize; j++) {
+                int squareNumber = (m_BoardSize * i) + j + 1;
+                m_GameBoard[i][j] = new BoardSquare(squareNumber);
             }
         }
         m_CurrentSquare = m_GameBoard[0][0];
-        
+
         gameWinner = -1;
     }
 
     public void shuffleSnakesAndLadders(int o_NumOfSnakesAndLadders) {
-        Random rand = new Random();
-        int maxBoundary = this.m_BoardSize - 1;
+
         for (int i = 0; i < o_NumOfSnakesAndLadders; i++) {
-            //snake head
-            int X = rand.nextInt(maxBoundary - 1) + 1;
-            int Y = rand.nextInt(maxBoundary);
-            while ((X == 0 && Y == 0) || (X == maxBoundary && Y == maxBoundary)
-                    || (m_GameBoard[X][Y].getType() != eChars.NONE)) {
-                X = rand.nextInt(maxBoundary);
-                Y = rand.nextInt(maxBoundary);
+            boolean isSnakePlaced = setSnake(getRandomCell(), getRandomCell());
+            while (!isSnakePlaced) {
+                isSnakePlaced = setSnake(getRandomCell(), getRandomCell());
             }
-            //snake tail 
-            int nextX = X > 1 ? rand.nextInt(X) : 0;
-            int nextY = rand.nextInt(maxBoundary);
-            while ((nextX == 0 && nextY == 0) || (m_GameBoard[nextX][nextY].getType() != eChars.NONE)) {
-                nextX = X > 1 ? rand.nextInt(X) : 0;
-                nextY = rand.nextInt(maxBoundary);
+            boolean isLadderPlaced = setLadder(getRandomCell(), getRandomCell());
+            while (!isLadderPlaced) {
+                isLadderPlaced = setLadder(getRandomCell(), getRandomCell());
             }
-
-            // set snake paramter tail
-            m_GameBoard[X][Y].setType(eChars.SNAKE_HEAD);
-            m_GameBoard[X][Y].setJumpTo(m_GameBoard[nextX][nextY]);
-            m_GameBoard[nextX][nextY].setType(eChars.SNAKE_TAIL);
-            m_GameBoard[X][Y].setLocation(nextX, nextY);
-
-        }
-        
-        for (int i = 0; i < o_NumOfSnakesAndLadders; i++) {
-            //Ladder tail
-            int X = rand.nextInt(maxBoundary - 1);
-            int Y = rand.nextInt(maxBoundary);
-            while ((X == 0 && Y == 0) || (m_GameBoard[X][Y].getType() != eChars.NONE)) {
-                X = rand.nextInt(maxBoundary - 1);
-                Y = rand.nextInt(maxBoundary);
-            }
-            //Ladder head 
-            int nextX = rand.nextInt((maxBoundary) - (X + 1)) + (X + 1);
-            int nextY = rand.nextInt(maxBoundary);
-            while ((nextX == maxBoundary && nextY == maxBoundary) || (m_GameBoard[nextX][nextY].getType() != eChars.NONE)) {
-                nextX = rand.nextInt((maxBoundary) - (X + 1)) + (X + 1);
-                nextY = rand.nextInt(maxBoundary);
-            }
-
-            // set Ladder paramter tail
-            m_GameBoard[X][Y].setType(eChars.LADDER_TAIL);
-            m_GameBoard[X][Y].setJumpTo(m_GameBoard[nextX][nextY]);
-            m_GameBoard[nextX][nextY].setType(eChars.LADDER_HEAD);
-            m_GameBoard[X][Y].setLocation(nextX, nextY);
-
         }
     }
 
     public BoardSquare getCurrentBoardSquare() {
         return m_CurrentSquare;
     }
-    
+
     public void setCurrentBoardSquare(BoardSquare updatedBoardSquere) {
         m_CurrentSquare = updatedBoardSquere;
     }
@@ -114,12 +76,85 @@ public class SnakesAndLaddersSingleGame {
         return m_BoardSize;
     }
 
+//TODO maybe delete this function and replace with the next one
     public BoardSquare getBoardSquare(int i, int j) {
         return m_GameBoard[i][j];
+    }
+
+    public BoardSquare getBoardSquare(int squareNumber) {
+        int boardSize = getO_BoardSize();
+        int x = (boardSize - 1) - ((squareNumber - 1) / boardSize);
+        int y = ((squareNumber - 1) % boardSize);
+        return m_GameBoard[x][y];
     }
 
     public BoardSquare[][] getGame() {
         return m_GameBoard;
     }
+
+    /**
+     *
+     * @param src
+     * @param dest
+     * @return true - snake added successfully , otherwise false.
+     */
+    public BoardSquare getRandomCell() {
+
+        Random rand = new Random();
+        int minVaildSquare = 2;
+        int maxVaildSquare = (m_BoardSize * m_BoardSize) - 1;
+
+        int randomSquare = rand.nextInt(maxVaildSquare - minVaildSquare) + minVaildSquare;
+
+        return getBoardSquare(randomSquare);
+
+    }
+
+    public boolean setSnake(BoardSquare src, BoardSquare dest) {
+
+        int boardSize = getO_BoardSize();
+        int srcSquareNumber = src.getSquareNumber();
+        int destSquareNumber = dest.getSquareNumber();
+
+        if (src == dest) {
+            return false;
+        }
+        if ((src.getType() != eChars.NONE) || (dest.getType() != eChars.NONE)) {
+            return false;
+        }
+        int srcX = (boardSize - 1) - ((srcSquareNumber - 1) / boardSize);
+        int destX = (boardSize - 1) - ((destSquareNumber - 1) / boardSize);
+        if (srcX == destX || srcSquareNumber < destSquareNumber || srcX == 0) {
+            return false;
+        }
+        src.setType(eChars.SNAKE_HEAD);
+        src.setJumpTo(dest);
+        dest.setType(eChars.SNAKE_TAIL);
+
+        return true;
+    }   
     
+    public boolean setLadder(BoardSquare src, BoardSquare dest){
+
+        int boardSize = getO_BoardSize();
+        int srcSquareNumber = src.getSquareNumber();
+        int destSquareNumber = dest.getSquareNumber();
+
+        if (src == dest) {
+            return false;
+        }
+        if ((src.getType() != eChars.NONE) || (dest.getType() != eChars.NONE)) {
+            return false;
+        }
+        int srcX = (boardSize - 1) - ((srcSquareNumber - 1) / boardSize);
+        int destX = (boardSize - 1) - ((destSquareNumber - 1) / boardSize);
+        if (srcX == destX || srcSquareNumber > destSquareNumber || srcX == boardSize - 1) {
+            return false;
+        }
+        src.setType(eChars.LADDER_TAIL);
+        src.setJumpTo(dest);
+        dest.setType(eChars.LADDER_HEAD);
+
+        return true;
+    }       
 }

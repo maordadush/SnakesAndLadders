@@ -11,7 +11,7 @@ import java.awt.Point;
  *
  * @author Noam
  */
-public class BoardSquare extends Point{
+public class BoardSquare extends Point {
     private eChars type = eChars.NONE;
     private int squareNumber; 
     private BoardSquare jumpTo;
@@ -45,5 +45,4 @@ public class BoardSquare extends Point{
         this.type = type;
     }
 
-    
 }

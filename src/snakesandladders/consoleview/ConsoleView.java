@@ -375,9 +375,9 @@ public class ConsoleView {
                 eChars bsType = bs.getType();
                 boardString.append(String.format("%02d", bs.getSquareNumber())).append("|");
                 if (bsType == eChars.LADDER_TAIL || bsType == eChars.SNAKE_HEAD) {
-                    boardString.append(String.format("%02d", bs.getJumpTo().getSquareNumber())).append("|" + bsType + "|");
+                    boardString.append(String.format("%02d", bs.getJumpTo().getSquareNumber())).append("|"); //+ bsType + "|");
                 } else {
-                    boardString.append("--|" + bsType + "|");
+                    boardString.append("--|"); //+ bsType + "|");
                 }
                 for (int k = 0; k < numPlayers; k++) {
                     boardString.append(players.get(k).getNumSoldiersAtSquare(bs));

@@ -228,14 +228,14 @@ public class GameControl {
             switch (playertype) {
                 case Human:
                     playerName = m_consoleView.getPlayerString();
-                    player = new HumanPlayer(playerName, m_gameModel.NUM_OF_SOLDIERS);
+                    player = new HumanPlayer(playerName);
                     for (Soldier s : player.getM_SoldiersList()) {
                         s.setLocationOnBoard(m_gameModel.getCurrGameIndex());
                     }
                     m_gameModel.addPlayer(player);
                     break;
                 case Computer:
-                    player = new ComputerPlayer("Computer", m_gameModel.NUM_OF_SOLDIERS);
+                    player = new ComputerPlayer("Computer");
                     for (Soldier s : player.getM_SoldiersList()) {
                         s.setLocationOnBoard(m_gameModel.getCurrGameIndex());
                     }

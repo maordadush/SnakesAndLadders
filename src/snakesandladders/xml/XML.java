@@ -10,6 +10,8 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -127,78 +129,56 @@ public class XML {
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
 
-    private static eXMLLoadStatus loadPlayers(List<Player> players, String currPlayer, GameModel model) {
-        ePlayerType[] playerTypes = new ePlayerType[players.size()];
-        String[] playerNames = new String[players.size()];
-
-        for (int i = 0; i < playerTypes.length; i++) {
-            try {
-                playerTypes[i] = ePlayerType.GetTypeFromXML(players.get(i).getType());
-            } catch (XMLException ex) {
-                return eXMLLoadStatus.PLAYER_TYPE;
+    private static eXMLLoadStatus loadPlayers(List<Player> players, String currPlayer, GameModel model){
+        for (Player player : players) {
+            switch (player.getType()) {
+                case HUMAN:
+                    try {
+                        model.addPlayer(new HumanPlayer(player.getName()));
+                    } catch (SnakesAndLaddersRunTimeException ex) {
+                        return eXMLLoadStatus.ADD_PLAYER_ERROR;
+                    }
+                    break;
+                case COMPUTER:
+                    try {
+                        model.addPlayer(new ComputerPlayer(player.getName()));
+                    } catch (SnakesAndLaddersRunTimeException ex) {
+                        return eXMLLoadStatus.ADD_PLAYER_ERROR;
+                    }
+                    break;
+                default:
+                    return eXMLLoadStatus.PLAYER_NAME_ERROR;
             }
-
-//            try {
-            playerNames[i] = players.get(i).getName();
-//            } catch (XMLException ex) {
-//                return eXMLLoadStatus.PLAYER_NAME_ERROR;
-//            }
-        }
-
-        //Noam: "Can replace with function 'Find' of java" and check number od players
-        for (int i = 0; i < playerNames.length; i++) {
-            for (int j = i + 1; j < playerNames.length; j++) {
-                if (playerNames[i].equals(playerNames[j])) {
-                    return eXMLLoadStatus.PLAYERS_DUPLICATE_NAME;
-                }
-            }
-        }
-
-        try {
-            for (int i = 0; i < playerNames.length; i++) {
-
-                switch (playerTypes[i]) {
-                    case Human:
-                        if (players.get(i).getName() != null) {
-                            model.addPlayer(new HumanPlayer(playerNames[i], 4));
-                        }
-                        break;
-                    case Computer:
-                        if (players.get(i).getName() != null) {
-                            model.addPlayer(new ComputerPlayer(players.get(i).getName(), 4));
-                        }
-                        break;
-                    default:
-                        return eXMLLoadStatus.PLAYER_TYPE;
-                }
-                if (players.get(i).getName().equals(currPlayer)) {
+            
+            if (player.getName().equals(currPlayer)) {
+                try {
                     model.setCurrPlayer(currPlayer);
+                } catch (SnakesAndLaddersRunTimeException ex) {
+                    return eXMLLoadStatus.CURR_TURN_PLAYER_ERROR;
                 }
             }
-        } catch (SnakesAndLaddersRunTimeException ex) {
-            return eXMLLoadStatus.ADD_PLAYER_ERROR;
         }
-
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
-
+       
     private static eXMLLoadStatus loadGameBoard(Board board, GameModel model) {
         eXMLLoadStatus loadStatus;
         int boardSize = board.getSize();
         List<Ladder> ladders = board.getLadders().getLadder();
         List<Snake> snakes = board.getSnakes().getSnake();
 
+          //init Board
         if (boardSize < 5 || boardSize > 8) {
             return eXMLLoadStatus.BOARD_SIZE_ERROR;
         }
-
+        model.getGame().setO_BoardSize(boardSize);
+        model.initGame();
+        
+        //Init snakes and ladders
         if (ladders.size() != snakes.size()) {
             return eXMLLoadStatus.SNAKES_LADDERS_ERROR;
         }
-
-        model.getGame().setO_BoardSize(boardSize);
-        model.initGame();
-        readSnakesAndLadders(board, model);
+        readSnakesAndLadders(ladders, snakes,  model);
 
 //        loadStatus = loadBoard(board, model);
 //        if (loadStatus != XMLLoadStatus.LOAD_SUCCESS) {
@@ -207,220 +187,30 @@ public class XML {
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
 
-//    private static XMLLoadStatus loadBoard(Board board, GameModel model) {
-//        SquareIndex gameIndex = new SquareIndex(board.getRow() - 1, board.getCol() - 1);
-//        SquareIndex setCell = new SquareIndex();
-//        XMixDrixChars cellChar;
-//        List<Cell> cells = board.getCell();
-//        XMixDrixChars winnerChar;
-//
-//        for (Cell cell : cells) {
-//            setCell.setSquare(cell.getRow() - 1, cell.getCol() - 1);
-//            try {
-//                cellChar = XMixDrixChars.getCharFromXML(cell.getValue());
-//            } catch (XMLException ex) {
-//                return XMLLoadStatus.CHAR_ERROR;
-//            }
-//            try {
-//                model.loadSquareToGame(gameIndex, setCell, cellChar);
-//            } catch (XMixDrixRunTimeException ex) {
-//                return XMLLoadStatus.DUPLICATE_CELLS;
-//            }
-//        }
-//
-//        try {
-//            if (board.getWinner() == null) {
-//                winnerChar = XMixDrixChars.NONE;
-//            } else {
-//                winnerChar = XMixDrixChars.getCharFromXML(board.getWinner());
-//            }
-//        } catch (XMLException ex) {
-//            return XMLLoadStatus.WINNER_ERROR;
-//        }
-//
-//        if (model.validateWinner(gameIndex, winnerChar) == false) {
-//            return XMLLoadStatus.WINNER_ERROR;
-//        }
-//
-//        return XMLLoadStatus.LOAD_SUCCESS;
-//    }
-//
-//    public static XMLSaveStatus saveXML(String savePath, GameModel model) {
-//        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-//        Schema schema;
-//
-//        URL xsdURL = XML.class.getResource(XSD_FOLDER + XSD_FNAME);
-//        if (xsdURL == null) {
-//            return XMLSaveStatus.XSD_FILE_NOT_FOUND;
-//        }
-//
-//        try {
-//            schema = schemaFactory.newSchema(new File(xsdURL.getFile()));
-//        } catch (SAXException ex) {
-//            return XMLSaveStatus.XSD_FILE_NOT_FOUND;
-//        }
-//
-//        try {
-//            JAXBContext jc = JAXBContext.newInstance(Tictactoe.class);
-//            Marshaller u = jc.createMarshaller();
-//            u.setSchema(schema);
-//            u.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-//
-//            File file = new File(savePath);
-//
-//            Tictactoe tictactoe = new Tictactoe();
-//
-//            tictactoe.setPlayers(getPlayer(model));
-//            tictactoe.setGame(getGame(model));
-//            tictactoe.setBoards(getBoards(model));
-//
-//            u.marshal(tictactoe, file);
-//
-//        } catch (JAXBException | XMLException | XMixDrixRunTimeException ex) {
-//            return XMLSaveStatus.GENERAL_ERROR;
-//        }
-//
-//        return XMLSaveStatus.SAVE_SUCCESS;
-//    }
-//
-//    private static GameValue getGameValue(XMixDrixChars playerChar) throws XMLException {
-//        switch (playerChar) {
-//            case X:
-//                return GameValue.X;
-//            case O:
-//                return GameValue.O;
-//            case X_WIN:
-//                return GameValue.X;
-//            case O_WIN:
-//                return GameValue.O;
-//            default:
-//                throw new XMLException("GetGameValue(): Invalid playerChar.");
-//        }
-//    }
-//
-//    private static PlayerType getPlayerType(XMixDrixPlayer player) throws XMLException {
-//        if (player instanceof HumanPlayer) {
-//            return PlayerType.HUMAN;
-//        }
-//        if (player instanceof ComputerPlayer) {
-//            return PlayerType.COMPUTER;
-//        }
-//
-//        throw new XMLException("GetPlayerType(): Invalid playerType.");
-//    }
-//
-//    private static Tictactoe.Players getPlayer(GameModel model) throws XMLException {
-//        Tictactoe.Players ticPlayers = new Tictactoe.Players();
-//        XMixDrixPlayer player;
-//        GameValue gameValue;
-//        PlayerType playerType;
-//        Player addPlayer;
-//
-//        for (int i = 0; i < GameModel.MAX_PLAYERS; i++) {
-//            player = model.getPlayer(i);
-//            gameValue = getGameValue(player.getPlayerChar());
-//            playerType = getPlayerType(player);
-//            addPlayer = new Player();
-//            addPlayer.setType(playerType);
-//            addPlayer.setValue(gameValue);
-//            addPlayer.setName(player.getPlayerName());
-//            ticPlayers.getPlayer().add(addPlayer);
-//        }
-//
-//        return ticPlayers;
-//    }
-//
-//    private static Tictactoe.Game getGame(GameModel model) throws XMLException {
-//        Tictactoe.Game game = new Tictactoe.Game();
-//        Tictactoe.Game.CurrentBoard currBoard = new Tictactoe.Game.CurrentBoard();
-//        SquareIndex currGameIndex = model.getCurrGameIndex();
-//        currBoard.setRow(currGameIndex.getX() + 1);
-//        currBoard.setCol(currGameIndex.getY() + 1);
-//        game.setCurrentBoard(currBoard);
-//
-//        XMixDrixPlayer player = model.getCurrPlayer();
-//        GameValue currTurn = getGameValue(player.getPlayerChar());
-//        game.setCurrentTurn(currTurn);
-//
-//        return game;
-//    }
-//
-//    private static Tictactoe.Boards getBoards(GameModel model) throws XMLException, XMixDrixRunTimeException {
-//        Tictactoe.Boards tictactoeBoards = new Tictactoe.Boards();
-//        Board board;
-//        SquareIndex gameIndex = new SquareIndex();
-//        for (int i = 0; i < XMixDrixSingleGame.BOARD_SIZE; i++) {
-//            for (int j = 0; j < XMixDrixSingleGame.BOARD_SIZE; j++) {
-//                gameIndex.setSquare(i, j);
-//                board = getBoard(gameIndex, model);
-//                if (board != null) {
-//                    tictactoeBoards.getBoard().add(board);
-//                }
-//            }
-//        }
-//
-//        return tictactoeBoards;
-//    }
-//
-//    private static Board getBoard(SquareIndex gameIndex, GameModel model) throws XMLException, XMixDrixRunTimeException {
-//        Cell cell;
-//        GameValue gameValue;
-//        XMixDrixChars gameChar;
-//        SquareIndex squareIndex = new SquareIndex();
-//        Board board = new Board();
-//
-//        board.setRow(gameIndex.getX() + 1);
-//        board.setCol(gameIndex.getY() + 1);
-//
-//        for (int i = 0; i < XMixDrixSingleGame.BOARD_SIZE; i++) {
-//            for (int j = 0; j < XMixDrixSingleGame.BOARD_SIZE; j++) {
-//                squareIndex.setSquare(i, j);
-//                gameChar = model.getGame().getCharFromGame(gameIndex, squareIndex);
-//                if (gameChar != XMixDrixChars.NONE) {
-//                    gameValue = getGameValue(gameChar);
-//                    cell = new Cell();
-//                    cell.setRow(i + 1);
-//                    cell.setCol(j + 1);
-//                    cell.setValue(gameValue);
-//                    board.getCell().add(cell);
-//                }
-//            }
-//        }
-//        gameChar = model.getWinnerFromGame(gameIndex);
-//        if (gameChar != XMixDrixChars.NONE) {
-//            board.setWinner(getGameValue(gameChar));
-//        }
-//        if (board.getCell().isEmpty()) {
-//            return null;
-//        }
-//
-//        return board;
-//    }
-    private static void readSnakesAndLadders(Board board, GameModel model) {
-        for (Ladder ladder : board.getLadders().getLadder()) {
-            if (LadderIsLegal(ladder, model)) {
-//                //Noam: "dadush keep from here - implement set ladders and snakes as you did in shuffle"
-//                BoardSquare from = model.getGame().getBoardSquare(ladder.getFrom());
-//                BoardSquare to = model.getGame().getBoardSquare(ladder.getTo());
-//                
-//                from.setJumpTo(to);
-//                from.setType(eChars.LADDER_TAIL);
-//                to.setType(eChars.LADDER_HEAD);
+
+    private static eXMLLoadStatus readSnakesAndLadders(List<Ladder> ladders, List<Snake> snakes, GameModel model) {
+        BoardSquare from;
+        BoardSquare to;
+        for (Snake snake : snakes) {
+            from = model.GetSingleGame().getBoardSquare(snake.getFrom().intValue());
+            to = model.GetSingleGame().getBoardSquare(snake.getTo().intValue());
+            if (!model.GetSingleGame().setSnake(from, to)) {
+                return eXMLLoadStatus.SNAKES_LADDERS_ERROR;
+            }
+            for (Ladder ladder : ladders) {
+                from = model.GetSingleGame().getBoardSquare(ladder.getFrom().intValue());
+                to = model.GetSingleGame().getBoardSquare(ladder.getTo().intValue());
+                if (!model.GetSingleGame().setLadder(from, to)) {
+                    return eXMLLoadStatus.SNAKES_LADDERS_ERROR;
+                }
             }
         }
+        return eXMLLoadStatus.LOAD_SUCCESS;
     }
+        
 
-    private static boolean LadderIsLegal(Ladder ladder, GameModel model) {
-        //Noam: "Also need to check if ladder head\tail index is not NONE
-        boolean returnedValue = true;
-        if ((ladder.getFrom().intValue() > model.getGame().getO_BoardSize()) ||
-                ladder.getTo().intValue() > model.getGame().getO_BoardSize())           
-            returnedValue = false;
-               
-        return returnedValue;
-    }
-
-    private static eXMLLoadStatus initModel(int o_NumOfPlayers, int o_BoarsSize, int o_NumOfSnakes, int o_NumOfLadders, GameModel model) {
+    private static eXMLLoadStatus initModel(int o_NumOfPlayers, int o_BoarsSize,
+            int o_NumOfSnakes, int o_NumOfLadders, GameModel model) {
         if (o_NumOfLadders != o_NumOfSnakes) {
             return eXMLLoadStatus.SNAKES_LADDERS_ERROR;
         }
@@ -480,4 +270,5 @@ public class XML {
 
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
+
 }
