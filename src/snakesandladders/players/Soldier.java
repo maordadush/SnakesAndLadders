@@ -21,9 +21,16 @@ public class Soldier {
 
     public Soldier(Color color) {
         this.color = color;
-        
+        m_FinishedGame = false;
     }
-    
+
+    public boolean isM_FinishedGame() {
+        return m_FinishedGame;
+    }
+
+    public void setM_FinishedGame(boolean m_FinishedGame) {
+        this.m_FinishedGame = m_FinishedGame;
+    }
     
     public BoardSquare getLocationOnBoard() {
         return locationOnBoard;

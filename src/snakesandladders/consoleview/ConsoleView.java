@@ -512,7 +512,7 @@ public class ConsoleView {
         int input;
 
         displaySoldiersOfPlayer(player);
-        System.out.println("Choose soldier (1-4):");
+        System.out.println("Choose soldier (1-4 that now finished game):");
 
         while (!scanner.hasNextInt()) {
             System.out.println("Inavlid Input. Please enter a number.");
@@ -521,10 +521,10 @@ public class ConsoleView {
 
         input = scanner.nextInt();
 
-        while (input < 1 || input > 4) {
+        while ((input < 1 || input > 4) && (player.getM_SoldiersList()[input-1].isM_FinishedGame())) {
             System.out.println("Not Valid input, Please enter again:");
             displaySoldiersOfPlayer(player);
-            System.out.println("Choose soldier (1-4):");
+            System.out.println("Choose soldier (1-4 that now finished game):");
 
             while (!scanner.hasNextInt()) {
                 System.out.println("Inavlid Input. Please enter a number.");
@@ -544,7 +544,11 @@ public class ConsoleView {
 
         //TODO change i+1 to real soldier id
         for (int i = 0; i < soldierList.length; i++) {
-            playerSoldiersString.append("Soldier " + (i + 1) + ": " + (String.format("%02d", soldierList[i].getLocationOnBoard().getSquareNumber()) + "\t"));
+            if (!soldierList[i].isM_FinishedGame()) {
+                playerSoldiersString.append("Soldier " + (i + 1) + ": " + (String.format("%02d", soldierList[i].getLocationOnBoard().getSquareNumber()) + "\t"));
+            } else {
+                playerSoldiersString.append("Soldier " + (i + 1) + ": " + "FINISHED" + "\t");
+            }
         }
         playerSoldiersString.append(System.lineSeparator());
         System.out.print(playerSoldiersString.toString());

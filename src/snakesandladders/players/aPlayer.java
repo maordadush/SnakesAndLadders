@@ -61,32 +61,33 @@ public abstract class aPlayer {
 
     public void ForwardCurrentSoldier() {
         this.m_CurrentSoldierIndex++;
-        if (this.m_CurrentSoldierIndex >= this.NUM_OF_SOLDIERS){
+        if (this.m_CurrentSoldierIndex >= this.NUM_OF_SOLDIERS) {
             this.m_CurrentSoldierIndex = 0;
         }
         this.m_CurrentSoldier = this.m_SoldiersList[this.m_CurrentSoldierIndex];
     }
 
     public void setCurrentSoldier(int indexOfSoldier) throws SnakesAndLaddersRunTimeException {
-        if(indexOfSoldier > 0 && indexOfSoldier < 5){
-            m_CurrentSoldier = m_SoldiersList[indexOfSoldier-1];
-        }
-        else{
+        if (indexOfSoldier > 0 && indexOfSoldier < 5) {
+            m_CurrentSoldier = m_SoldiersList[indexOfSoldier - 1];
+        } else {
             throw new SnakesAndLaddersRunTimeException("setCurrentSoldier(): Invalid index.");
         }
     }
-    
-    public Soldier GetCurrentSoldier(){
+
+    public Soldier GetCurrentSoldier() {
         return m_CurrentSoldier;
     }
 
     public int randomizeCurrentPlayer() throws SnakesAndLaddersRunTimeException {
         Random rand = new Random();
+        int randomSoldierIndex;
+        do {
+            randomSoldierIndex = rand.nextInt(4) + 1;
 
-        int randomSoldierIndex = rand.nextInt(4) + 1;
+            setCurrentSoldier(randomSoldierIndex);
+        } while (m_SoldiersList[randomSoldierIndex - 1].m_FinishedGame);
 
-        setCurrentSoldier(randomSoldierIndex);
-        
         return randomSoldierIndex;
     }
 }
