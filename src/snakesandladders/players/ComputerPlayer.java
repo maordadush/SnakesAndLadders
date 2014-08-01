@@ -11,7 +11,7 @@ package snakesandladders.players;
  */
 public class ComputerPlayer extends aPlayer {
 
-    public ComputerPlayer(String o_Name, int o_NumOfSoldiers) {
+    public ComputerPlayer(String o_Name) {
         super(o_Name);
     }
 

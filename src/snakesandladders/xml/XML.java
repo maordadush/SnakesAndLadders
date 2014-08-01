@@ -42,16 +42,23 @@ public class XML {
 
     public static final String XSD_FOLDER = "/xsd/";
     public static final String XSD_FNAME = "snakesandladders.xsd";
+    private static int m_GameSize;
+    private static int m_NumOfSnakesAndLadders;
+    private static int m_NumOfPlayers;
+    
+    private static SchemaFactory schemaFactory;
+    private static Schema schema;
+    private static URL xsdURL;
+    private static JAXBContext jc;
+    private static Unmarshaller u;
+    private static File file;
+    private static Snakesandladders snakesandladders;
+    private static eXMLLoadStatus loadStatus;
 
-    public static eXMLLoadStatus loadXML(String xmlPath, GameModel model, int O_NumOfSoldiersToWin) {
-        int m_GameSize;
-        int m_NumOfSnakesAndLadders;
-        int m_NumOfPlayers;
+    public static eXMLLoadStatus initModelFromXml(String xmlPath, GameModel model, int O_NumOfSoldiersToWin) {
+        schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema;
-
-        URL xsdURL = XML.class.getResource(XSD_FOLDER + XSD_FNAME);
+        xsdURL = XML.class.getResource(XSD_FOLDER + XSD_FNAME);
         if (xsdURL == null) {
             return eXMLLoadStatus.XSD_FILE_NOT_FOUND;
         }
@@ -63,15 +70,13 @@ public class XML {
         }
 
         try {
-            JAXBContext jc = JAXBContext.newInstance(Snakesandladders.class);
-            Unmarshaller u = jc.createUnmarshaller();
+            jc = JAXBContext.newInstance(Snakesandladders.class);
+            u = jc.createUnmarshaller();
             u.setSchema(schema);
 
-            File file = new File(xmlPath);
+            file = new File(xmlPath);
 
-            Snakesandladders snakesandladders = (Snakesandladders) u.unmarshal(file);
-
-            eXMLLoadStatus loadStatus;
+            snakesandladders = (Snakesandladders) u.unmarshal(file);
 
             loadStatus = initModel(snakesandladders.getPlayers().getPlayer().size(),
                     snakesandladders.getBoard().getSize(), snakesandladders.getBoard().getSnakes().getSnake().size(),
@@ -80,6 +85,45 @@ public class XML {
             if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
                 return loadStatus;
             }
+            m_GameSize = snakesandladders.getBoard().getSize();
+            m_NumOfPlayers = snakesandladders.getPlayers().getPlayer().size();
+            m_NumOfSnakesAndLadders = snakesandladders.getBoard().getLadders().getLadder().size();
+
+            return eXMLLoadStatus.LOAD_SUCCESS;
+        } catch (JAXBException ex) {
+            if (ex.getLinkedException() instanceof FileNotFoundException) {
+                return eXMLLoadStatus.XML_FILE_NOT_FOUND;
+            }
+            if (ex.getLinkedException() instanceof SAXParseException) {
+                return eXMLLoadStatus.NOT_VALID_XML;
+            }
+            return eXMLLoadStatus.GENERAL_ERROR;
+        }
+    }
+
+    public static eXMLLoadStatus loadXML(String xmlPath, GameModel model, int O_NumOfSoldiersToWin) {
+
+//        schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+//
+//        xsdURL = XML.class.getResource(XSD_FOLDER + XSD_FNAME);
+//        if (xsdURL == null) {
+//            return eXMLLoadStatus.XSD_FILE_NOT_FOUND;
+//        }
+//
+//        try {
+//            schema = schemaFactory.newSchema(new File(xsdURL.getFile()));
+//        } catch (SAXException ex) {
+//            return eXMLLoadStatus.XSD_FILE_NOT_FOUND;
+//        }
+
+//        try {
+//            jc = JAXBContext.newInstance(Snakesandladders.class);
+//            u = jc.createUnmarshaller();
+//            u.setSchema(schema);
+//
+//            file = new File(xmlPath);
+//
+//            snakesandladders = (Snakesandladders) u.unmarshal(file);
 
             loadStatus = loadNumberOfSoldiersToWin(snakesandladders.getNumberOfSoldiers(), O_NumOfSoldiersToWin);
             if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
@@ -103,28 +147,35 @@ public class XML {
             loadStatus = loadCurrentPlayer(snakesandladders.getCurrentPlayer(), model);
             if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
                 return loadStatus;
-            }
-
-            loadStatus = loadPlayers(snakesandladders.getPlayers().getPlayer(), snakesandladders.getCurrentPlayer(), model);
-            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
-                return loadStatus;
-            }
+            }            
 
             loadStatus = loadGameBoard(snakesandladders.getBoard(), model);
             if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
                 return loadStatus;
             }
-        } catch (JAXBException ex) {
-            if (ex.getLinkedException() instanceof FileNotFoundException) {
-                return eXMLLoadStatus.XML_FILE_NOT_FOUND;
-            }
-            if (ex.getLinkedException() instanceof SAXParseException) {
-                return eXMLLoadStatus.NOT_VALID_XML;
-            }
-            return eXMLLoadStatus.GENERAL_ERROR;
-        }
+//        } catch (JAXBException ex) {
+//            if (ex.getLinkedException() instanceof FileNotFoundException) {
+//                return eXMLLoadStatus.XML_FILE_NOT_FOUND;
+//            }
+//            if (ex.getLinkedException() instanceof SAXParseException) {
+//                return eXMLLoadStatus.NOT_VALID_XML;
+//            }
+//            return eXMLLoadStatus.GENERAL_ERROR;
+//        }
 
         return eXMLLoadStatus.LOAD_SUCCESS;
+    }
+
+    public static int getM_NumOfSnakesAndLadders() {
+        return m_NumOfSnakesAndLadders;
+    }
+
+    public static int getM_NumOfPlayers() {
+        return m_NumOfPlayers;
+    }
+
+    public static int getM_GameSize() {
+        return m_GameSize;
     }
 
     private static eXMLLoadStatus loadPlayers(List<Player> players, String currPlayer, GameModel model) {
@@ -160,12 +211,12 @@ public class XML {
                 switch (playerTypes[i]) {
                     case Human:
                         if (players.get(i).getName() != null) {
-                            model.addPlayer(new HumanPlayer(playerNames[i], 4));
+                            model.addPlayer(new HumanPlayer(playerNames[i]));
                         }
                         break;
                     case Computer:
                         if (players.get(i).getName() != null) {
-                            model.addPlayer(new ComputerPlayer(players.get(i).getName(), 4));
+                            model.addPlayer(new ComputerPlayer(players.get(i).getName()));
                         }
                         break;
                     default:
@@ -188,15 +239,6 @@ public class XML {
         List<Ladder> ladders = board.getLadders().getLadder();
         List<Snake> snakes = board.getSnakes().getSnake();
 
-        if (boardSize < 5 || boardSize > 8) {
-            return eXMLLoadStatus.BOARD_SIZE_ERROR;
-        }
-
-        if (ladders.size() != snakes.size()) {
-            return eXMLLoadStatus.SNAKES_LADDERS_ERROR;
-        }
-
-        model.getGame().setO_BoardSize(boardSize);
         model.initGame();
         readSnakesAndLadders(board, model);
 
@@ -413,10 +455,11 @@ public class XML {
     private static boolean LadderIsLegal(Ladder ladder, GameModel model) {
         //Noam: "Also need to check if ladder head\tail index is not NONE
         boolean returnedValue = true;
-        if ((ladder.getFrom().intValue() > model.getGame().getO_BoardSize()) ||
-                ladder.getTo().intValue() > model.getGame().getO_BoardSize())           
+        if ((ladder.getFrom().intValue() > model.getGame().getO_BoardSize())
+                || ladder.getTo().intValue() > model.getGame().getO_BoardSize()) {
             returnedValue = false;
-               
+        }
+
         return returnedValue;
     }
 
@@ -430,8 +473,6 @@ public class XML {
         if (o_BoarsSize < 5 || o_BoarsSize > 8) {
             return eXMLLoadStatus.BOARD_SIZE_ERROR;
         }
-
-        model = new GameModel(o_BoarsSize, o_NumOfLadders, o_NumOfPlayers);
 
         return eXMLLoadStatus.LOAD_SUCCESS;
     }

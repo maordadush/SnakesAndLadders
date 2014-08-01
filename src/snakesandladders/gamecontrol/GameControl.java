@@ -161,7 +161,7 @@ public class GameControl {
         } catch (SnakesAndLaddersRunTimeException ex) {
             m_consoleView.printSnakesAndLaddersRunTimeExceptiom(ex);
         }
-        
+
         m_gameModel.initNewGame();
         initPlayers();
         m_gameModel.selectFirstPlayer();
@@ -182,9 +182,14 @@ public class GameControl {
         eXMLLoadStatus loadStatus;
 
         //Noam: "First Init Table from XML
-
         GameModel modelLoad = null;
         String xmlPath = m_consoleView.getLoadXMLPath();
+        loadStatus = XML.initModelFromXml(xmlPath, modelLoad, m_NumOfSoldiersToWin);
+        if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
+            m_consoleView.displayXMLLoadError(loadStatus);
+            return loadStatus;
+        }
+        modelLoad = new GameModel(XML.getM_GameSize(), XML.getM_NumOfSnakesAndLadders(), XML.getM_NumOfSnakesAndLadders());
         loadStatus = XML.loadXML(xmlPath, modelLoad, m_NumOfSoldiersToWin);
 
         if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
@@ -228,14 +233,14 @@ public class GameControl {
             switch (playertype) {
                 case Human:
                     playerName = m_consoleView.getPlayerString();
-                    player = new HumanPlayer(playerName, m_gameModel.NUM_OF_SOLDIERS);
+                    player = new HumanPlayer(playerName);
                     for (Soldier s : player.getM_SoldiersList()) {
                         s.setLocationOnBoard(m_gameModel.getCurrGameIndex());
                     }
                     m_gameModel.addPlayer(player);
                     break;
                 case Computer:
-                    player = new ComputerPlayer("Computer", m_gameModel.NUM_OF_SOLDIERS);
+                    player = new ComputerPlayer("Computer");
                     for (Soldier s : player.getM_SoldiersList()) {
                         s.setLocationOnBoard(m_gameModel.getCurrGameIndex());
                     }
@@ -304,7 +309,7 @@ public class GameControl {
         player.ForwardCurrentSoldier();
         return boardToMove;
     }
-    
+
     public int getNumOfSoldiersToWin() {
         return m_NumOfSoldiersToWin;
     }
@@ -312,7 +317,7 @@ public class GameControl {
     public void setNumOfSoldiersToWin(int m_NumOfSoldiersToWin) {
         this.m_NumOfSoldiersToWin = m_NumOfSoldiersToWin;
     }
-    
+
     public boolean hasGameWon() {
         boolean returnValue = false;
         for (aPlayer player : getPlayers()) {
