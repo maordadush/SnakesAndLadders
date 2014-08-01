@@ -15,17 +15,21 @@ import snakesandladders.players.aPlayer;
  */
 public class SnakesAndLaddersSingleGame {
 
+    private static final int MIN_SQUARE_NUM = 1;
+    private int  MAX_SQUARE_NUM;
     private int m_BoardSize = 0;
     private BoardSquare m_GameBoard[][];
     private int gameWinner;
     private BoardSquare m_CurrentSquare;
     private int m_numOfSnakesAndLadders;
+    
 
     public SnakesAndLaddersSingleGame(int o_BoardSize, int o_numOfSnakesAndLadders) {
         if (o_BoardSize > 4 || o_BoardSize < 9) {
             m_BoardSize = o_BoardSize;
             m_GameBoard = new BoardSquare[m_BoardSize][m_BoardSize];
             m_numOfSnakesAndLadders = o_numOfSnakesAndLadders;
+            MAX_SQUARE_NUM = m_BoardSize * m_BoardSize;
         } else {
             throw new UnsupportedOperationException("Illeagal board size"); //To change body of generated methods, choose Tools | Templates.
 
@@ -82,6 +86,8 @@ public class SnakesAndLaddersSingleGame {
     }
 
     public BoardSquare getBoardSquare(int squareNumber) {
+        if (squareNumber < MIN_SQUARE_NUM || squareNumber > MAX_SQUARE_NUM)
+            return null;
         int boardSize = getO_BoardSize();
         int x = (boardSize - 1) - ((squareNumber - 1) / boardSize);
         int y = ((squareNumber - 1) % boardSize);
