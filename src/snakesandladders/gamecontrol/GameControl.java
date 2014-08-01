@@ -100,14 +100,14 @@ public class GameControl {
     private void runSingleGame() throws SnakesAndLaddersRunTimeException {
         eGameMenu gameOption;
         aPlayer player;
-        BoardSquare currGameIndex;
+        //BoardSquare currGameIndex;
 
         while (!hasGameWon()) {
-            currGameIndex = m_gameModel.getCurrGameIndex();
+            //currGameIndex = m_gameModel.getCurrGameIndex();
             player = m_gameModel.getCurrPlayer();
 
             m_consoleView.ClearScreen();
-            m_consoleView.displayCurrPlayerAndGameIndex(currGameIndex, player);
+            m_consoleView.displayCurrPlayer(player);
             m_consoleView.printGame(GetSingleGame(), getPlayers());
             if (player instanceof ComputerPlayer) {
                 makeMove();
@@ -225,6 +225,7 @@ public class GameControl {
         ePlayerType playertype;
         String playerName;
         int playerNumOfSoldiersToWin;
+        int compIndex = 0;
 
         for (int i = 0; i < m_gameModel.getNumOfPlayers(); i++) {
             playertype = m_consoleView.getPlayerType(i);
@@ -239,7 +240,8 @@ public class GameControl {
                     m_gameModel.addPlayer(player);
                     break;
                 case Computer:
-                    player = new ComputerPlayer("Computer");
+                    player = new ComputerPlayer("Computer" + compIndex);
+                    compIndex++;
                     for (Soldier s : player.getM_SoldiersList()) {
                         s.setLocationOnBoard(m_gameModel.getCurrGameIndex());
                     }
@@ -288,7 +290,7 @@ public class GameControl {
             boardToMove = GetSingleGame().getBoardSquare(yToMove, xToMove);
         } else {
             yToMove += 1;
-            xToMove = boardSize - xToMove + 1;
+            xToMove = xToMove - boardSize + 1;
             boardToMove = GetSingleGame().getBoardSquare(yToMove, xToMove);
         }
         if ((xToMove >= boardSize) && (yToMove >= boardSize)) {

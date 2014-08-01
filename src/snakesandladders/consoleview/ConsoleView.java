@@ -396,17 +396,16 @@ public class ConsoleView {
         System.out.print(boardString.toString());
     }
 
-    //Noam - Check ablut selectNextGame
-    public void displayCurrPlayerAndGameIndex(BoardSquare index, aPlayer player) {
-        int x = (int) index.getX();
-        int y = (int) index.getY();
-
-        System.out.print(player.getPlayerName());
-        System.out.println(" your current index is:" + "(" + x + "," + y + ")");
-
-        System.out.println();
-    }
-
+//    //Noam - Check ablut selectNextGame
+//    public void displayCurrPlayerAndGameIndex(BoardSquare index, aPlayer player) {
+//        int x = (int) index.getX();
+//        int y = (int) index.getY();
+//
+//        System.out.print(player.getPlayerName());
+//        System.out.println(" your current index is:" + "(" + x + "," + y + ")");
+//
+//        System.out.println();
+//    }
     public void displayWinner(String name) {
         System.out.println("The winner is: " + name);
     }
@@ -463,7 +462,7 @@ public class ConsoleView {
 
         while (input < 2 || input > 4) {
             System.out.println("Not Valid input, Please enter again:");
-            showMainMenu();
+            showNumOfPlayersMenu();
 
             while (!scanner.hasNextInt()) {
                 System.out.println("Inavlid Input. Please enter a number.");
@@ -472,7 +471,6 @@ public class ConsoleView {
 
             input = scanner.nextInt();
         }
-
         return input;
     }
 
@@ -571,6 +569,10 @@ public class ConsoleView {
 
     public void printCurrentSoldier(int soldierIndex) {
         System.out.println("Current playing soldier: " + soldierIndex);
+    }
+
+    public void displayCurrPlayer(aPlayer player) {
+        System.out.println(player.getPlayerName() + " is now playing.");
     }
 
 }
