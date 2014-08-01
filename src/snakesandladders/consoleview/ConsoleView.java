@@ -396,24 +396,20 @@ public class ConsoleView {
         System.out.print(boardString.toString());
     }
 
-    //Noam - Check ablut selectNextGame
-    public void displayCurrPlayerAndGameIndex(BoardSquare index, aPlayer player, boolean selectNextGame) {
-        int x = (int) index.getX();
-        int y = (int) index.getY();
-
-        System.out.print(player.getPlayerName());
-        System.out.println(" your current index is:" + "(" + x + "," + y + ")");
-
-        System.out.println();
-    }
-
+//    //Noam - Check ablut selectNextGame
+//    public void displayCurrPlayerAndGameIndex(BoardSquare index, aPlayer player) {
+//        int x = (int) index.getX();
+//        int y = (int) index.getY();
+//
+//        System.out.print(player.getPlayerName());
+//        System.out.println(" your current index is:" + "(" + x + "," + y + ")");
+//
+//        System.out.println();
+//    }
     public void displayWinner(String name) {
         System.out.println("The winner is: " + name);
     }
 
-//    public void displayNoWinner() {
-//        System.out.println("The game is Tie");
-//    }
 //    public void displayLastMove(XMixDrixPlayer player, SquareIndex move, SquareIndex gameIndex) {
 //        System.out.println(player.getPlayerName() + " last move: " + move.getX() + " " + move.getY()
 //                + ", in game: " + gameIndex.getX() + " " + gameIndex.getY());
@@ -466,7 +462,7 @@ public class ConsoleView {
 
         while (input < 2 || input > 4) {
             System.out.println("Not Valid input, Please enter again:");
-            showMainMenu();
+            showNumOfPlayersMenu();
 
             while (!scanner.hasNextInt()) {
                 System.out.println("Inavlid Input. Please enter a number.");
@@ -475,7 +471,6 @@ public class ConsoleView {
 
             input = scanner.nextInt();
         }
-
         return input;
     }
 
@@ -512,6 +507,36 @@ public class ConsoleView {
         System.out.println("Second, please write the number of snakes and ladders:");
     }
 
+    public int GetSoldierToPlayWith(aPlayer player) {
+        Scanner scanner = new Scanner(System.in);
+        int input;
+
+        displaySoldiersOfPlayer(player);
+        System.out.println("Choose soldier (1-4):");
+
+        while (!scanner.hasNextInt()) {
+            System.out.println("Inavlid Input. Please enter a number.");
+            scanner.next();
+        }
+
+        input = scanner.nextInt();
+
+        while (input < 1 || input > 4) {
+            System.out.println("Not Valid input, Please enter again:");
+            displaySoldiersOfPlayer(player);
+            System.out.println("Choose soldier (1-4):");
+
+            while (!scanner.hasNextInt()) {
+                System.out.println("Inavlid Input. Please enter a number.");
+                scanner.next();
+            }
+
+            input = scanner.nextInt();
+        }
+
+        return input;
+    }
+
     public void displaySoldiersOfPlayer(aPlayer player) {
         Soldier[] soldierList = player.getM_SoldiersList();
         StringBuilder playerSoldiersString = new StringBuilder();
@@ -540,6 +565,14 @@ public class ConsoleView {
 
     public void displayXMLLoadError(eXMLLoadStatus loadStatus) {
         System.out.println("Error loading game from XML: " + loadStatus.toString());
+    }
+
+    public void printCurrentSoldier(int soldierIndex) {
+        System.out.println("Current playing soldier: " + soldierIndex);
+    }
+
+    public void displayCurrPlayer(aPlayer player) {
+        System.out.println(player.getPlayerName() + " is now playing.");
     }
 
 }

@@ -100,14 +100,14 @@ public class GameControl {
     private void runSingleGame() throws SnakesAndLaddersRunTimeException {
         eGameMenu gameOption;
         aPlayer player;
-        BoardSquare currGameIndex;
+        //BoardSquare currGameIndex;
 
         while (!hasGameWon()) {
-            currGameIndex = m_gameModel.getCurrGameIndex();
+            //currGameIndex = m_gameModel.getCurrGameIndex();
             player = m_gameModel.getCurrPlayer();
 
             m_consoleView.ClearScreen();
-            m_consoleView.displayCurrPlayerAndGameIndex(currGameIndex, player, m_gameModel.GetSelectNextGame());
+            m_consoleView.displayCurrPlayer(player);
             m_consoleView.printGame(GetSingleGame(), getPlayers());
             if (player instanceof ComputerPlayer) {
                 makeMove();
@@ -118,7 +118,6 @@ public class GameControl {
                     gameOption = m_consoleView.getGameOption();
                     switch (gameOption) {
                         case MAKE_MOVE:
-                            m_consoleView.displaySoldiersOfPlayer(player);
                             makeMove();
                             m_gameModel.forwardPlayer();
                             break;
@@ -161,7 +160,7 @@ public class GameControl {
         } catch (SnakesAndLaddersRunTimeException ex) {
             m_consoleView.printSnakesAndLaddersRunTimeExceptiom(ex);
         }
-        
+
         m_gameModel.initNewGame();
         initPlayers();
         m_gameModel.selectFirstPlayer();
@@ -182,9 +181,14 @@ public class GameControl {
         eXMLLoadStatus loadStatus;
 
         //Noam: "First Init Table from XML
-
         GameModel modelLoad = null;
         String xmlPath = m_consoleView.getLoadXMLPath();
+        loadStatus = XML.initModelFromXml(xmlPath, modelLoad, m_NumOfSoldiersToWin);
+        if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
+            m_consoleView.displayXMLLoadError(loadStatus);
+            return loadStatus;
+        }
+        modelLoad = new GameModel(XML.getM_GameSize(), XML.getM_NumOfSnakesAndLadders(), XML.getM_NumOfSnakesAndLadders());
         loadStatus = XML.loadXML(xmlPath, modelLoad, m_NumOfSoldiersToWin);
 
         if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
@@ -221,6 +225,7 @@ public class GameControl {
         ePlayerType playertype;
         String playerName;
         int playerNumOfSoldiersToWin;
+        int compIndex = 0;
 
         for (int i = 0; i < m_gameModel.getNumOfPlayers(); i++) {
             playertype = m_consoleView.getPlayerType(i);
@@ -235,7 +240,8 @@ public class GameControl {
                     m_gameModel.addPlayer(player);
                     break;
                 case Computer:
-                    player = new ComputerPlayer("Computer");
+                    player = new ComputerPlayer("Computer" + compIndex);
+                    compIndex++;
                     for (Soldier s : player.getM_SoldiersList()) {
                         s.setLocationOnBoard(m_gameModel.getCurrGameIndex());
                     }
@@ -259,7 +265,12 @@ public class GameControl {
 
         if (player instanceof ComputerPlayer) {
             m_consoleView.LetComputerPlay();
+            m_consoleView.displaySoldiersOfPlayer(player);
+            int soldierIndex = player.randomizeCurrentPlayer();
+            m_consoleView.printCurrentSoldier(soldierIndex);
         } else {
+            int indexOfSoldier = m_consoleView.GetSoldierToPlayWith(player);
+            player.setCurrentSoldier(indexOfSoldier);
             m_consoleView.ThrowCube();
         }
         cubeAnswer = cube.throwCube();
@@ -279,7 +290,7 @@ public class GameControl {
             boardToMove = GetSingleGame().getBoardSquare(yToMove, xToMove);
         } else {
             yToMove += 1;
-            xToMove = boardSize - xToMove + 1;
+            xToMove = xToMove - boardSize + 1;
             boardToMove = GetSingleGame().getBoardSquare(yToMove, xToMove);
         }
         if ((xToMove >= boardSize) && (yToMove >= boardSize)) {
@@ -301,10 +312,10 @@ public class GameControl {
                 break;
         }
         m_gameModel.setMove(player, boardToMove);
-        player.ForwardCurrentSoldier();
+        //player.ForwardCurrentSoldier(); - Noam: "Now get current soldier from user"
         return boardToMove;
     }
-    
+
     public int getNumOfSoldiersToWin() {
         return m_NumOfSoldiersToWin;
     }
@@ -312,7 +323,7 @@ public class GameControl {
     public void setNumOfSoldiersToWin(int m_NumOfSoldiersToWin) {
         this.m_NumOfSoldiersToWin = m_NumOfSoldiersToWin;
     }
-    
+
     public boolean hasGameWon() {
         boolean returnValue = false;
         for (aPlayer player : getPlayers()) {

@@ -16,7 +16,7 @@ public class Cube {
     public int throwCube() {
         Random rand = new Random();
 
-        int randomNum = rand.nextInt(5) + 1;
+        int randomNum = rand.nextInt(6) + 1;
 
         return randomNum;
     }

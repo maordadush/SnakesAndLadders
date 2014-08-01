@@ -8,6 +8,8 @@ package snakesandladders.players;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamemodel.BoardSquare;
 
 /**
@@ -63,5 +65,28 @@ public abstract class aPlayer {
             this.m_CurrentSoldierIndex = 0;
         }
         this.m_CurrentSoldier = this.m_SoldiersList[this.m_CurrentSoldierIndex];
+    }
+
+    public void setCurrentSoldier(int indexOfSoldier) throws SnakesAndLaddersRunTimeException {
+        if(indexOfSoldier > 0 && indexOfSoldier < 5){
+            m_CurrentSoldier = m_SoldiersList[indexOfSoldier-1];
+        }
+        else{
+            throw new SnakesAndLaddersRunTimeException("setCurrentSoldier(): Invalid index.");
+        }
+    }
+    
+    public Soldier GetCurrentSoldier(){
+        return m_CurrentSoldier;
+    }
+
+    public int randomizeCurrentPlayer() throws SnakesAndLaddersRunTimeException {
+        Random rand = new Random();
+
+        int randomSoldierIndex = rand.nextInt(4) + 1;
+
+        setCurrentSoldier(randomSoldierIndex);
+        
+        return randomSoldierIndex;
     }
 }

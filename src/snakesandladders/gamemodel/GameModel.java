@@ -23,7 +23,6 @@ public class GameModel implements iWinChecker {
     private List<aPlayer> players;
     private SnakesAndLaddersSingleGame game;
     private aPlayer currTurnPlayer;
-    private boolean selectNextGame;
     private String saveGamePath;
     private int m_NumOfPlayers;
     private int m_numOfSnakesAndLadders;
@@ -69,7 +68,6 @@ public class GameModel implements iWinChecker {
         game.initGame();
         game.shuffleSnakesAndLadders(m_numOfSnakesAndLadders);
         InitPlayers();
-        selectNextGame = true;
     }
 
     public BoardSquare getCurrGameIndex() {
@@ -112,17 +110,12 @@ public class GameModel implements iWinChecker {
     public void initGame() {
         game.initGame();
         selectFirstPlayer();
-        selectNextGame = true;
     }
 
     public void selectFirstPlayer() {
         Random rand = new Random();
         int i = rand.nextInt(getNumOfPlayers());
         currTurnPlayer = getPlayers().get(i);
-    }
-
-    public boolean GetSelectNextGame() {
-        return selectNextGame;
     }
 
     public SnakesAndLaddersSingleGame getGame() {
