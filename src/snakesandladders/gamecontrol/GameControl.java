@@ -282,24 +282,36 @@ public class GameControl {
 
     private BoardSquare move(aPlayer player, int cubeAnswer) throws SnakesAndLaddersRunTimeException {
         BoardSquare boardToMove;
-        int xToMove = (int) player.getCurrentSoldier().getLocationOnBoard().getX() + cubeAnswer;
-        int yToMove = (int) player.getCurrentSoldier().getLocationOnBoard().getY();
-        int boardSize = GetSingleGame().getO_BoardSize() - 1;
+        Soldier currentSoldier = player.GetCurrentSoldier();
+        int oldPlyerIndex = currentSoldier.getLocationOnBoard().getSquareNumber();
+        int newPlayerIndex = oldPlyerIndex + cubeAnswer;
 
-        if (xToMove <= boardSize) {
-            boardToMove = GetSingleGame().getBoardSquare(yToMove, xToMove);
-        } else {
-            yToMove += 1;
-            xToMove = xToMove - boardSize + 1;
-            boardToMove = GetSingleGame().getBoardSquare(yToMove, xToMove);
+        if (newPlayerIndex < (m_gameModel.GetSingleGame().getO_BoardSize()* 2)) {
+            boardToMove = m_gameModel.GetSingleGame().getBoardSquare(newPlayerIndex);
+            currentSoldier.setLocationOnBoard(boardToMove);
         }
-        if ((xToMove >= boardSize) && (yToMove >= boardSize)) {
-            boardToMove = GetSingleGame().getBoardSquare(boardSize, boardSize);
+        else{
+            boardToMove = m_gameModel.GetSingleGame().getBoardSquare( m_gameModel.GetSingleGame().getO_BoardSize()-1);
+            currentSoldier.setLocationOnBoard(boardToMove);
         }
-
-        if (boardToMove == null) {
-            throw new SnakesAndLaddersRunTimeException("move(): Error board move.");
-        }
+//        int xToMove = (int) player.getCurrentSoldier().getLocationOnBoard().getX() + cubeAnswer;
+//        int yToMove = (int) player.getCurrentSoldier().getLocationOnBoard().getY();
+//        int boardSize = GetSingleGame().getO_BoardSize() - 1;
+//
+//        if (xToMove <= boardSize) {
+//            boardToMove = GetSingleGame().getBoardSquare(yToMove, xToMove);
+//        } else {
+//            yToMove += 1;
+//            xToMove = xToMove - boardSize + 1;
+//            boardToMove = GetSingleGame().getBoardSquare(yToMove, xToMove);
+//        }
+//        if ((xToMove >= boardSize) && (yToMove >= boardSize)) {
+//            boardToMove = GetSingleGame().getBoardSquare(boardSize, boardSize);
+//        }
+//
+//        if (boardToMove == null) {
+//            throw new SnakesAndLaddersRunTimeException("move(): Error board move.");
+//        }
 
         switch (boardToMove.getType()) {
             case LADDER_TAIL:
