@@ -118,7 +118,6 @@ public class GameControl {
                     gameOption = m_consoleView.getGameOption();
                     switch (gameOption) {
                         case MAKE_MOVE:
-                            m_consoleView.displaySoldiersOfPlayer(player);
                             makeMove();
                             m_gameModel.forwardPlayer();
                             break;
@@ -264,7 +263,12 @@ public class GameControl {
 
         if (player instanceof ComputerPlayer) {
             m_consoleView.LetComputerPlay();
+            m_consoleView.displaySoldiersOfPlayer(player);
+            int soldierIndex = player.randomizeCurrentPlayer();
+            m_consoleView.printCurrentSoldier(soldierIndex);
         } else {
+            int indexOfSoldier = m_consoleView.GetSoldierToPlayWith(player);
+            player.setCurrentSoldier(indexOfSoldier);
             m_consoleView.ThrowCube();
         }
         cubeAnswer = cube.throwCube();
@@ -306,7 +310,7 @@ public class GameControl {
                 break;
         }
         m_gameModel.setMove(player, boardToMove);
-        player.ForwardCurrentSoldier();
+        //player.ForwardCurrentSoldier(); - Noam: "Now get current soldier from user"
         return boardToMove;
     }
 

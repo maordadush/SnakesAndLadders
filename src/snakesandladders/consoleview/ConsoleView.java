@@ -509,6 +509,36 @@ public class ConsoleView {
         System.out.println("Second, please write the number of snakes and ladders:");
     }
 
+    public int GetSoldierToPlayWith(aPlayer player) {
+        Scanner scanner = new Scanner(System.in);
+        int input;
+
+        displaySoldiersOfPlayer(player);
+        System.out.println("Choose soldier (1-4):");
+
+        while (!scanner.hasNextInt()) {
+            System.out.println("Inavlid Input. Please enter a number.");
+            scanner.next();
+        }
+
+        input = scanner.nextInt();
+
+        while (input < 1 || input > 4) {
+            System.out.println("Not Valid input, Please enter again:");
+            displaySoldiersOfPlayer(player);
+            System.out.println("Choose soldier (1-4):");
+
+            while (!scanner.hasNextInt()) {
+                System.out.println("Inavlid Input. Please enter a number.");
+                scanner.next();
+            }
+
+            input = scanner.nextInt();
+        }
+
+        return input;
+    }
+
     public void displaySoldiersOfPlayer(aPlayer player) {
         Soldier[] soldierList = player.getM_SoldiersList();
         StringBuilder playerSoldiersString = new StringBuilder();
@@ -537,6 +567,10 @@ public class ConsoleView {
 
     public void displayXMLLoadError(eXMLLoadStatus loadStatus) {
         System.out.println("Error loading game from XML: " + loadStatus.toString());
+    }
+
+    public void printCurrentSoldier(int soldierIndex) {
+        System.out.println("Current playing soldier: " + soldierIndex);
     }
 
 }
