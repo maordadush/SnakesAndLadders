@@ -17,6 +17,14 @@ public class SnakesAndLaddersSingleGame {
 
     private static final int MIN_SQUARE_NUM = 1;
     private int  MAX_SQUARE_NUM;
+
+    public static int getMIN_SQUARE_NUM() {
+        return MIN_SQUARE_NUM;
+    }
+
+    public int getMAX_SQUARE_NUM() {
+        return MAX_SQUARE_NUM;
+    }
     private int m_BoardSize = 0;
     private BoardSquare m_GameBoard[][];
     private int gameWinner;
@@ -89,8 +97,8 @@ public class SnakesAndLaddersSingleGame {
         if (squareNumber < MIN_SQUARE_NUM || squareNumber > MAX_SQUARE_NUM)
             return null;
         int boardSize = getO_BoardSize();
-        int x = (boardSize - 1) - ((squareNumber - 1) / boardSize);
-        int y = ((squareNumber - 1) % boardSize);
+        int x = (squareNumber - 1) / boardSize;
+        int y = (squareNumber - 1) % boardSize;
         return m_GameBoard[x][y];
     }
 

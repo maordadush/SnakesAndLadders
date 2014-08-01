@@ -260,17 +260,6 @@ public class XML {
     }
         
 
-    private static boolean LadderIsLegal(Ladder ladder, GameModel model) {
-        //Noam: "Also need to check if ladder head\tail index is not NONE
-        boolean returnedValue = true;
-        if ((ladder.getFrom().intValue() > model.getGame().getO_BoardSize())
-                || ladder.getTo().intValue() > model.getGame().getO_BoardSize()) {
-            returnedValue = false;
-        }
-
-        return returnedValue;
-    }
-
     private static eXMLLoadStatus initModel(int o_NumOfPlayers, int o_BoarsSize, int o_NumOfSnakes, int o_NumOfLadders, GameModel model) {
         if (o_NumOfLadders != o_NumOfSnakes) {
             return eXMLLoadStatus.SNAKES_LADDERS_ERROR;
@@ -295,28 +284,13 @@ public class XML {
     }
 
     private static eXMLLoadStatus loadSoldiers(List<Cell> o_CellsList, GameModel o_Model) {
-        for (Cell cell : o_CellsList) {
-            for (Soldiers soldier : cell.getSoldiers()) {
-                for (aPlayer player : o_Model.getPlayers()) {
-                    if (player.getPlayerName().equals(soldier.getPlayerName())) {
-                        for (int i = 0; i < soldier.getCount(); i++) {
-//                            //Noam: "Dadush - write getBoardSquare that get only 1 number of index"
-//                            player.getCurrentSoldier().setLocationOnBoard(o_Model.getGame().getBoardSquare(cell.getNumber());
-                            player.ForwardCurrentSoldier();
-                        }
-                    }
-                }
-            }
+           for (Cell cell : o_CellsList) {
+               
+            
         }
-
-        for (aPlayer player : o_Model.getPlayers()) {
-            if (player.getM_SoldiersList().length != 4) {
-                return eXMLLoadStatus.ILLIGAL_NUM_OF_SOLDIERS;
-            }
-        }
-        return eXMLLoadStatus.LOAD_SUCCESS;
+           return null;
     }
-
+        
     private static eXMLLoadStatus loadCurrentPlayer(String o_CurrentPlayer, GameModel model) {
         for (aPlayer player : model.getPlayers()) {
             if (player.getPlayerName().equals(o_CurrentPlayer)) {
