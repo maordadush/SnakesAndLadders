@@ -397,7 +397,7 @@ public class ConsoleView {
     }
 
     //Noam - Check ablut selectNextGame
-    public void displayCurrPlayerAndGameIndex(BoardSquare index, aPlayer player, boolean selectNextGame) {
+    public void displayCurrPlayerAndGameIndex(BoardSquare index, aPlayer player) {
         int x = (int) index.getX();
         int y = (int) index.getY();
 
@@ -411,9 +411,6 @@ public class ConsoleView {
         System.out.println("The winner is: " + name);
     }
 
-//    public void displayNoWinner() {
-//        System.out.println("The game is Tie");
-//    }
 //    public void displayLastMove(XMixDrixPlayer player, SquareIndex move, SquareIndex gameIndex) {
 //        System.out.println(player.getPlayerName() + " last move: " + move.getX() + " " + move.getY()
 //                + ", in game: " + gameIndex.getX() + " " + gameIndex.getY());

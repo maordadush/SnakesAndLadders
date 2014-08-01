@@ -107,7 +107,7 @@ public class GameControl {
             player = m_gameModel.getCurrPlayer();
 
             m_consoleView.ClearScreen();
-            m_consoleView.displayCurrPlayerAndGameIndex(currGameIndex, player, m_gameModel.GetSelectNextGame());
+            m_consoleView.displayCurrPlayerAndGameIndex(currGameIndex, player);
             m_consoleView.printGame(GetSingleGame(), getPlayers());
             if (player instanceof ComputerPlayer) {
                 makeMove();
