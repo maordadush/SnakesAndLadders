@@ -286,7 +286,7 @@ public class GameControl {
         int oldPlyerIndex = currentSoldier.getLocationOnBoard().getSquareNumber();
         int newPlayerIndex = oldPlyerIndex + cubeAnswer;
 
-        if (newPlayerIndex < (m_gameModel.GetSingleGame().getO_BoardSize()* 2)) {
+        if (newPlayerIndex < (m_gameModel.GetSingleGame().getMAX_SQUARE_NUM())) {
             boardToMove = m_gameModel.GetSingleGame().getBoardSquare(newPlayerIndex);
             currentSoldier.setLocationOnBoard(boardToMove);
         }
