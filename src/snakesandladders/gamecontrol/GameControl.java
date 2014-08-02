@@ -285,7 +285,7 @@ public class GameControl {
             boardToMove = m_gameModel.GetSingleGame().getBoardSquare(newPlayerIndex);
             currentSoldier.setLocationOnBoard(boardToMove);
         } else {
-            boardToMove = m_gameModel.GetSingleGame().getBoardSquare(m_gameModel.GetSingleGame().getO_BoardSize() - 1);
+            boardToMove = m_gameModel.GetSingleGame().getBoardSquare(m_gameModel.GetSingleGame().getMAX_SQUARE_NUM());
             currentSoldier.setLocationOnBoard(boardToMove);
             currentSoldier.setM_FinishedGame(true);
         }

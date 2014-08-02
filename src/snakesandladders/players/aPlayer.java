@@ -40,6 +40,7 @@ public abstract class aPlayer {
     public String getPlayerName() {
         return m_PlayerName;
     }
+
     public int getPlayerID() {
         return playerID;
     }
@@ -96,6 +97,7 @@ public abstract class aPlayer {
             }
         }
     }
+
     public Soldier getSoldier(int i) throws SnakesAndLaddersRunTimeException {
         if (i < 0 || i > NUM_OF_SOLDIERS - 1) {
             throw new SnakesAndLaddersRunTimeException("getSoldier: Illegal number of soldiers");
@@ -112,18 +114,23 @@ public abstract class aPlayer {
         StringBuilder playerSoldiersString = new StringBuilder();
         playerSoldiersString.append("Player: " + this.getPlayerName() + "\t");
         for (Soldier soldier : m_SoldiersList) {
-            playerSoldiersString.append("Soldier " + soldier.getSoldierID() + ": "
-                    + (String.format("%02d", soldier.getLocationOnBoard().getSquareNumber()) + "\t"));
+            if (!soldier.m_FinishedGame) {
+                playerSoldiersString.append("Soldier " + soldier.getSoldierID() + ": "
+                        + (String.format("%02d", soldier.getLocationOnBoard().getSquareNumber()) + "\t"));
+            } else {
+                playerSoldiersString.append("Soldier " + soldier.getSoldierID() + ": "
+                        + (String.format("FINISHED" + "\t")));
+            }
         }
         playerSoldiersString.append(System.lineSeparator());
         return playerSoldiersString.toString();
     }
-    
-    public void initSoldiers(BoardSquare location){
+
+    public void initSoldiers(BoardSquare location) {
         int solderID = 1;
         for (int i = 0; i < NUM_OF_SOLDIERS; i++) {
             m_SoldiersList.add(new Soldier(this.getColor(), solderID++, location));
-            
+
         }
     }
 
