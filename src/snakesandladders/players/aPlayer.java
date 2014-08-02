@@ -66,7 +66,7 @@ public abstract class aPlayer {
         if (indexOfSoldier < 0 || indexOfSoldier > NUM_OF_SOLDIERS - 1) {
             throw new SnakesAndLaddersRunTimeException("setCurrentSoldier(): Invalid index.");
         }
-        m_CurrentSoldier = m_SoldiersList.get(indexOfSoldier);
+        m_CurrentSoldier = m_SoldiersList.get(indexOfSoldier - 1);
     }
 
     public Soldier GetCurrentSoldier() {
@@ -76,7 +76,7 @@ public abstract class aPlayer {
     public int randomizeCurrentPlayer() throws SnakesAndLaddersRunTimeException {
         Random rand = new Random();
 
-        int randomSoldierIndex = rand.nextInt(3);
+        int randomSoldierIndex = rand.nextInt(3) + 1;
 
         setCurrentSoldier(randomSoldierIndex);
 
@@ -88,7 +88,7 @@ public abstract class aPlayer {
             throw new SnakesAndLaddersRunTimeException("placeSoldierOnBoard: soldiers list is not initilaize");
         }
         for (Soldier soldier : m_SoldiersList) {
-            if (soldier.getLocationOnBoard().getSquareNumber() == 0) {
+            if (soldier.getLocationOnBoard().getSquareNumber() == 1) {
                 soldier.setLocationOnBoard(location);
                 break;
             }
