@@ -283,10 +283,10 @@ public class GameControl {
         if (newPlayerIndex < (m_gameModel.GetSingleGame().getMAX_SQUARE_NUM())) {
             boardToMove = m_gameModel.GetSingleGame().getBoardSquare(newPlayerIndex);
             currentSoldier.setLocationOnBoard(boardToMove);
-        }
-        else{
-            boardToMove = m_gameModel.GetSingleGame().getBoardSquare( m_gameModel.GetSingleGame().getO_BoardSize()-1);
+        } else {
+            boardToMove = m_gameModel.GetSingleGame().getBoardSquare(m_gameModel.GetSingleGame().getO_BoardSize() - 1);
             currentSoldier.setLocationOnBoard(boardToMove);
+            currentSoldier.setM_FinishedGame(true);
         }
 
         switch (boardToMove.getType()) {
@@ -315,10 +315,17 @@ public class GameControl {
     //TODO fixit
     public boolean hasGameWon() {
         boolean returnValue = false;
+        int winningCount = 0;
         for (aPlayer player : getPlayers()) {
-            if (getNumOfSoldiersToWin() == 0) {
-                returnValue = true;
+            for (Soldier soldier : player.getM_SoldiersList()) {
+                if (soldier.isM_FinishedGame()) {
+                    winningCount++;
+                }
+                if (winningCount == getNumOfSoldiersToWin()) {
+                    return true;
+                }
             }
+            winningCount = 0;
         }
         return false;
     }

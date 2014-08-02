@@ -429,7 +429,7 @@ public class ConsoleView {
 
         input = scanner.nextInt();
 
-        while (input < 1 || input > 4) {
+        while ((input < 1 || input > 4) && (player.getM_SoldiersList()[input-1].isM_FinishedGame())) {
             System.out.println("Not Valid input, Please enter again:");
             System.out.println(player);
             System.out.println("Choose soldier (1-4):");
