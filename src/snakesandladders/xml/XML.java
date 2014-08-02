@@ -47,7 +47,7 @@ public class XML {
     private static int m_GameSize;
     private static int m_NumOfSnakesAndLadders;
     private static int m_NumOfPlayers;
-    
+
     private static SchemaFactory schemaFactory;
     private static Schema schema;
     private static URL xsdURL;
@@ -89,7 +89,8 @@ public class XML {
             }
             m_GameSize = snakesandladders.getBoard().getSize();
             m_NumOfPlayers = snakesandladders.getPlayers().getPlayer().size();
-            m_NumOfSnakesAndLadders = snakesandladders.getBoard().getLadders().getLadder().size();
+            m_NumOfSnakesAndLadders = snakesandladders.getBoard().getLadders().getLadder().size()
+                    + snakesandladders.getBoard().getSnakes().getSnake().size();
 
             return eXMLLoadStatus.LOAD_SUCCESS;
         } catch (JAXBException ex) {
@@ -104,66 +105,32 @@ public class XML {
     }
 
     public static eXMLLoadStatus loadXML(String xmlPath, GameModel model, int O_NumOfSoldiersToWin) {
+        
+        loadStatus = loadNumberOfSoldiersToWin(snakesandladders.getNumberOfSoldiers(), O_NumOfSoldiersToWin);
+        if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
+            return loadStatus;
+        }
+        
+        loadStatus = loadPlayers(snakesandladders.getPlayers().getPlayer(), snakesandladders.getCurrentPlayer(), model);
+        if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
+            return loadStatus;
+        }
+        
+        loadStatus = loadGameBoard(snakesandladders.getBoard(), model);
+        if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
+            return loadStatus;
+        }
 
-//        schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-//
-//        xsdURL = XML.class.getResource(XSD_FOLDER + XSD_FNAME);
-//        if (xsdURL == null) {
-//            return eXMLLoadStatus.XSD_FILE_NOT_FOUND;
-//        }
-//
-//        try {
-//            schema = schemaFactory.newSchema(new File(xsdURL.getFile()));
-//        } catch (SAXException ex) {
-//            return eXMLLoadStatus.XSD_FILE_NOT_FOUND;
-//        }
+        loadStatus = loadSoldiers(snakesandladders.getBoard().getCells().getCell(), model);
+        if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
+            return loadStatus;
+        }
 
-//        try {
-//            jc = JAXBContext.newInstance(Snakesandladders.class);
-//            u = jc.createUnmarshaller();
-//            u.setSchema(schema);
-//
-//            file = new File(xmlPath);
-//
-//            snakesandladders = (Snakesandladders) u.unmarshal(file);
+        loadStatus = loadCurrentPlayer(snakesandladders.getCurrentPlayer(), model);
+        if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
+            return loadStatus;
+        }
 
-            loadStatus = loadNumberOfSoldiersToWin(snakesandladders.getNumberOfSoldiers(), O_NumOfSoldiersToWin);
-            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
-                return loadStatus;
-            }
-
-            loadStatus = loadPlayers(snakesandladders.getPlayers().getPlayer(), snakesandladders.getCurrentPlayer(), model);
-            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
-                return loadStatus;
-            }
-
-            loadStatus = loadSoldiers(snakesandladders.getBoard().getCells().getCell(), model);
-            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
-                return loadStatus;
-            }
-
-//            loadStatus = loadGameName(Snakesandladders.getName(), model);
-//            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
-//                return loadStatus;
-//            }
-            loadStatus = loadCurrentPlayer(snakesandladders.getCurrentPlayer(), model);
-            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
-                return loadStatus;
-            }            
-
-            loadStatus = loadGameBoard(snakesandladders.getBoard(), model);
-            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
-                return loadStatus;
-            }
-//        } catch (JAXBException ex) {
-//            if (ex.getLinkedException() instanceof FileNotFoundException) {
-//                return eXMLLoadStatus.XML_FILE_NOT_FOUND;
-//            }
-//            if (ex.getLinkedException() instanceof SAXParseException) {
-//                return eXMLLoadStatus.NOT_VALID_XML;
-//            }
-//            return eXMLLoadStatus.GENERAL_ERROR;
-//        }
 
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
@@ -180,7 +147,7 @@ public class XML {
         return m_GameSize;
     }
 
-    private static eXMLLoadStatus loadPlayers(List<Player> players, String currPlayer, GameModel model){
+    private static eXMLLoadStatus loadPlayers(List<Player> players, String currPlayer, GameModel model) {
         for (Player player : players) {
             switch (player.getType()) {
                 case HUMAN:
@@ -200,7 +167,7 @@ public class XML {
                 default:
                     return eXMLLoadStatus.PLAYER_NAME_ERROR;
             }
-            
+
             if (player.getName().equals(currPlayer)) {
                 try {
                     model.setCurrPlayer(currPlayer);
@@ -211,14 +178,14 @@ public class XML {
         }
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
-       
+
     private static eXMLLoadStatus loadGameBoard(Board board, GameModel model) {
         eXMLLoadStatus loadStatus;
         int boardSize = board.getSize();
         List<Ladder> ladders = board.getLadders().getLadder();
         List<Snake> snakes = board.getSnakes().getSnake();
 
-          //init Board
+        //init Board
         if (boardSize < 5 || boardSize > 8) {
             return eXMLLoadStatus.BOARD_SIZE_ERROR;
         }
@@ -229,36 +196,30 @@ public class XML {
         if (ladders.size() != snakes.size()) {
             return eXMLLoadStatus.SNAKES_LADDERS_ERROR;
         }
-        readSnakesAndLadders(ladders, snakes,  model);
+        readSnakesAndLadders(ladders, snakes, model);
 
-//        loadStatus = loadBoard(board, model);
-//        if (loadStatus != XMLLoadStatus.LOAD_SUCCESS) {
-//            return loadStatus;
-//        }
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
-
 
     private static eXMLLoadStatus readSnakesAndLadders(List<Ladder> ladders, List<Snake> snakes, GameModel model) {
         BoardSquare from;
         BoardSquare to;
         for (Snake snake : snakes) {
-            from = model.GetSingleGame().getBoardSquare(snake.getFrom().intValue());
-            to = model.GetSingleGame().getBoardSquare(snake.getTo().intValue());
-            if (!model.GetSingleGame().setSnake(from, to)) {
+            from = model.getGame().getBoardSquare(snake.getFrom().intValue());
+            to = model.getGame().getBoardSquare(snake.getTo().intValue());
+            if (!model.getGame().setSnake(from, to)) {
                 return eXMLLoadStatus.SNAKES_LADDERS_ERROR;
             }
-            for (Ladder ladder : ladders) {
-                from = model.GetSingleGame().getBoardSquare(ladder.getFrom().intValue());
-                to = model.GetSingleGame().getBoardSquare(ladder.getTo().intValue());
-                if (!model.GetSingleGame().setLadder(from, to)) {
-                    return eXMLLoadStatus.SNAKES_LADDERS_ERROR;
-                }
+        }
+        for (Ladder ladder : ladders) {
+            from = model.getGame().getBoardSquare(ladder.getFrom().intValue());
+            to = model.getGame().getBoardSquare(ladder.getTo().intValue());
+            if (!model.getGame().setLadder(from, to)) {
+                return eXMLLoadStatus.SNAKES_LADDERS_ERROR;
             }
         }
-        return eXMLLoadStatus.LOAD_SUCCESS;
-    }
-        
+    return eXMLLoadStatus.LOAD_SUCCESS ;
+}
 
     private static eXMLLoadStatus initModel(int o_NumOfPlayers, int o_BoarsSize, int o_NumOfSnakes, int o_NumOfLadders, GameModel model) {
         if (o_NumOfLadders != o_NumOfSnakes) {
@@ -283,14 +244,25 @@ public class XML {
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
 
-    private static eXMLLoadStatus loadSoldiers(List<Cell> o_CellsList, GameModel o_Model) {
-           for (Cell cell : o_CellsList) {
-               
-            
+    private static eXMLLoadStatus loadSoldiers(List<Cell> o_CellsList, GameModel model) {
+        for (aPlayer player : model.getPlayers()) {
+            player.initSoldiers(model.getCurrGameIndex());
         }
-           return null;
+        for (Cell cell : o_CellsList) {
+            List<Soldiers> soldiersList = cell.getSoldiers();
+            BoardSquare currCell = model.getGame().getBoardSquare(cell.getNumber().intValue());
+            for (Soldiers soldier : soldiersList) {
+                aPlayer player = model.getPlayerByName(soldier.getPlayerName());
+                try {
+                    player.placeSoldierOnBoard(currCell);
+                } catch (SnakesAndLaddersRunTimeException ex) {
+                    return eXMLLoadStatus.SOLDIER_LIST_NOT_INITED;
+                }
+            }
+        }
+        return eXMLLoadStatus.LOAD_SUCCESS;
     }
-        
+
     private static eXMLLoadStatus loadCurrentPlayer(String o_CurrentPlayer, GameModel model) {
         for (aPlayer player : model.getPlayers()) {
             if (player.getPlayerName().equals(o_CurrentPlayer)) {

@@ -188,7 +188,7 @@ public class GameControl {
             m_consoleView.displayXMLLoadError(loadStatus);
             return loadStatus;
         }
-        modelLoad = new GameModel(XML.getM_GameSize(), XML.getM_NumOfSnakesAndLadders(), XML.getM_NumOfSnakesAndLadders());
+        modelLoad = new GameModel(XML.getM_GameSize(), XML.getM_NumOfSnakesAndLadders(), XML.getM_NumOfPlayers());
         loadStatus = XML.loadXML(xmlPath, modelLoad, m_NumOfSoldiersToWin);
 
         if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
@@ -225,7 +225,6 @@ public class GameControl {
         ePlayerType playertype;
         String playerName;
         int playerNumOfSoldiersToWin;
-        int compIndex = 0;
 
         for (int i = 0; i < m_gameModel.getNumOfPlayers(); i++) {
             playertype = m_consoleView.getPlayerType(i);
@@ -234,17 +233,12 @@ public class GameControl {
                 case Human:
                     playerName = m_consoleView.getPlayerString();
                     player = new HumanPlayer(playerName);
-                    for (Soldier s : player.getM_SoldiersList()) {
-                        s.setLocationOnBoard(m_gameModel.getCurrGameIndex());
-                    }
+                    player.initSoldiers(m_gameModel.getCurrGameIndex());
                     m_gameModel.addPlayer(player);
                     break;
                 case Computer:
-                    player = new ComputerPlayer("Computer" + compIndex);
-                    compIndex++;
-                    for (Soldier s : player.getM_SoldiersList()) {
-                        s.setLocationOnBoard(m_gameModel.getCurrGameIndex());
-                    }
+                    player = new ComputerPlayer("Computer");
+                    player.initSoldiers(m_gameModel.getCurrGameIndex());
                     m_gameModel.addPlayer(player);
                     break;
                 default:
@@ -265,7 +259,7 @@ public class GameControl {
 
         if (player instanceof ComputerPlayer) {
             m_consoleView.LetComputerPlay();
-            m_consoleView.displaySoldiersOfPlayer(player);
+            System.out.println(player);
             int soldierIndex = player.randomizeCurrentPlayer();
             m_consoleView.printCurrentSoldier(soldierIndex);
         } else {
@@ -294,24 +288,6 @@ public class GameControl {
             boardToMove = m_gameModel.GetSingleGame().getBoardSquare( m_gameModel.GetSingleGame().getO_BoardSize()-1);
             currentSoldier.setLocationOnBoard(boardToMove);
         }
-//        int xToMove = (int) player.getCurrentSoldier().getLocationOnBoard().getX() + cubeAnswer;
-//        int yToMove = (int) player.getCurrentSoldier().getLocationOnBoard().getY();
-//        int boardSize = GetSingleGame().getO_BoardSize() - 1;
-//
-//        if (xToMove <= boardSize) {
-//            boardToMove = GetSingleGame().getBoardSquare(yToMove, xToMove);
-//        } else {
-//            yToMove += 1;
-//            xToMove = xToMove - boardSize + 1;
-//            boardToMove = GetSingleGame().getBoardSquare(yToMove, xToMove);
-//        }
-//        if ((xToMove >= boardSize) && (yToMove >= boardSize)) {
-//            boardToMove = GetSingleGame().getBoardSquare(boardSize, boardSize);
-//        }
-//
-//        if (boardToMove == null) {
-//            throw new SnakesAndLaddersRunTimeException("move(): Error board move.");
-//        }
 
         switch (boardToMove.getType()) {
             case LADDER_TAIL:
@@ -336,6 +312,7 @@ public class GameControl {
         this.m_NumOfSoldiersToWin = m_NumOfSoldiersToWin;
     }
 
+    //TODO fixit
     public boolean hasGameWon() {
         boolean returnValue = false;
         for (aPlayer player : getPlayers()) {
@@ -343,6 +320,6 @@ public class GameControl {
                 returnValue = true;
             }
         }
-        return returnValue;
+        return false;
     }
 }

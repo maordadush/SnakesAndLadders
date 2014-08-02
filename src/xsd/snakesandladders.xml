@@ -8,8 +8,8 @@
     <board size="5">
         <cells>
             <cell number="1">
-                <soldiers playerName="john" count="1"/>
-                <soldiers playerName="paul" count="2"/>
+                <soldiers playerName="john" count="3"/>
+                <soldiers playerName="paul" count="4"/>
             </cell>
             <cell number="2">
                 <soldiers playerName="john" count="1"/>
@@ -20,7 +20,7 @@
             <ladder from="6" to="13"/>
         </ladders>
         <snakes>
-            <snake from="6" to="3"/>
+            <snake from="19" to="3"/>
             <snake from="14" to="7"/>
         </snakes>
     </board>

@@ -136,8 +136,8 @@ public class SnakesAndLaddersSingleGame {
         if ((src.getType() != eChars.NONE) || (dest.getType() != eChars.NONE)) {
             return false;
         }
-        int srcX = (boardSize - 1) - ((srcSquareNumber - 1) / boardSize);
-        int destX = (boardSize - 1) - ((destSquareNumber - 1) / boardSize);
+        int srcX = (srcSquareNumber - 1) / boardSize;
+        int destX = (destSquareNumber - 1) / boardSize;
         if (srcX == destX || srcSquareNumber < destSquareNumber || srcX == 0) {
             return false;
         }
@@ -160,8 +160,8 @@ public class SnakesAndLaddersSingleGame {
         if ((src.getType() != eChars.NONE) || (dest.getType() != eChars.NONE)) {
             return false;
         }
-        int srcX = (boardSize - 1) - ((srcSquareNumber - 1) / boardSize);
-        int destX = (boardSize - 1) - ((destSquareNumber - 1) / boardSize);
+        int srcX = (srcSquareNumber - 1) / boardSize;
+        int destX = (destSquareNumber - 1) / boardSize;
         if (srcX == destX || srcSquareNumber > destSquareNumber || srcX == boardSize - 1) {
             return false;
         }

@@ -7,6 +7,7 @@
 package snakesandladders.players;
 
 import java.awt.Color;
+import java.util.concurrent.atomic.AtomicInteger;
 import snakesandladders.gamemodel.BoardSquare;
 
 /**
@@ -18,10 +19,16 @@ public class Soldier {
     boolean m_FinishedGame;
     private BoardSquare locationOnBoard;
     Color color;
-
-    public Soldier(Color color) {
+    private int soldierID;
+    
+    public Soldier(Color color, int soldierID, BoardSquare location) {
+        this.locationOnBoard = location;
         this.color = color;
-        
+        this.soldierID = soldierID;
+    }
+
+    public int getSoldierID() {
+        return soldierID;
     }
     
     

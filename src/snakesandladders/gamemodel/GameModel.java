@@ -39,7 +39,8 @@ public class GameModel implements iWinChecker {
 
         if (o_NumOfPlayers > 1 || o_NumOfPlayers < 5) {
             m_NumOfPlayers = o_NumOfPlayers;
-            players = new ArrayList<>();
+            //players = new ArrayList<>();
+            players = new ArrayList<>(m_NumOfPlayers);
         } else {
             throw new UnsupportedOperationException("Illeagal number of players"); //To change body of generated methods, choose Tools | Templates.
 
@@ -156,5 +157,13 @@ public class GameModel implements iWinChecker {
 
     public void setMove(aPlayer player, BoardSquare move) {
         player.getCurrentSoldier().setLocationOnBoard(move);
+    }
+       
+    public aPlayer getPlayerByName(String name){
+        for (aPlayer player : getPlayers()) {
+            if (player.getPlayerName().equalsIgnoreCase(name))
+                return player;
+        }
+        return null;
     }
 }

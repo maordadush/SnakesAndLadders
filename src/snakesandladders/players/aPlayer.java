@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamemodel.BoardSquare;
 
@@ -20,28 +21,30 @@ public abstract class aPlayer {
 
     public final int NUM_OF_SOLDIERS = 4;
     String m_PlayerName;
-    Soldier[] m_SoldiersList;
+    List<Soldier> m_SoldiersList;
+    static AtomicInteger nextId = new AtomicInteger();
+    private int playerID;
     Color color;
     int m_CurrentSoldierIndex;
     private Soldier m_CurrentSoldier;
 
     protected aPlayer(String o_Name) {
         this.m_PlayerName = o_Name;
-        m_SoldiersList = new Soldier[NUM_OF_SOLDIERS];
+        m_SoldiersList = new ArrayList<>(NUM_OF_SOLDIERS);
         this.color = Color.decode(Integer.toString(this.hashCode()));
-        for (int i = 0; i < m_SoldiersList.length; i++) {
-            m_SoldiersList[i] = new Soldier(this.color);
-        }
         this.m_CurrentSoldierIndex = 0;
-        this.m_CurrentSoldier = m_SoldiersList[m_CurrentSoldierIndex];
-
+        //this.m_CurrentSoldier = m_SoldiersList<m_CurrentSoldierIndex];
+        playerID = nextId.incrementAndGet();
     }
 
     public String getPlayerName() {
         return m_PlayerName;
     }
+    public int getPlayerID() {
+        return playerID;
+    }
 
-    public Soldier[] getM_SoldiersList() {
+    public List<Soldier> getM_SoldiersList() {
         return m_SoldiersList;
     }
 
@@ -59,34 +62,71 @@ public abstract class aPlayer {
         return m_CurrentSoldier;
     }
 
-    public void ForwardCurrentSoldier() {
-        this.m_CurrentSoldierIndex++;
-        if (this.m_CurrentSoldierIndex >= this.NUM_OF_SOLDIERS){
-            this.m_CurrentSoldierIndex = 0;
-        }
-        this.m_CurrentSoldier = this.m_SoldiersList[this.m_CurrentSoldierIndex];
-    }
-
     public void setCurrentSoldier(int indexOfSoldier) throws SnakesAndLaddersRunTimeException {
-        if(indexOfSoldier > 0 && indexOfSoldier < 5){
-            m_CurrentSoldier = m_SoldiersList[indexOfSoldier-1];
-        }
-        else{
+        if (indexOfSoldier < 0 || indexOfSoldier > NUM_OF_SOLDIERS - 1) {
             throw new SnakesAndLaddersRunTimeException("setCurrentSoldier(): Invalid index.");
         }
+        m_CurrentSoldier = m_SoldiersList.get(indexOfSoldier);
     }
-    
-    public Soldier GetCurrentSoldier(){
+
+    public Soldier GetCurrentSoldier() {
         return m_CurrentSoldier;
     }
 
     public int randomizeCurrentPlayer() throws SnakesAndLaddersRunTimeException {
         Random rand = new Random();
 
-        int randomSoldierIndex = rand.nextInt(4) + 1;
+        int randomSoldierIndex = rand.nextInt(3);
 
         setCurrentSoldier(randomSoldierIndex);
-        
+
         return randomSoldierIndex;
     }
+
+    public void placeSoldierOnBoard(BoardSquare location) throws SnakesAndLaddersRunTimeException {
+        if (!isSoldierListInited()) {
+            throw new SnakesAndLaddersRunTimeException("placeSoldierOnBoard: soldiers list is not initilaize");
+        }
+        for (Soldier soldier : m_SoldiersList) {
+            if (soldier.getLocationOnBoard().getSquareNumber() == 0) {
+                soldier.setLocationOnBoard(location);
+                break;
+            }
+        }
+    }
+    public Soldier getSoldier(int i) throws SnakesAndLaddersRunTimeException {
+        if (i < 0 || i > NUM_OF_SOLDIERS - 1) {
+            throw new SnakesAndLaddersRunTimeException("getSoldier: Illegal number of soldiers");
+        }
+        return this.getM_SoldiersList().get(i);
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder playerSoldiersString = new StringBuilder();
+        playerSoldiersString.append("Player: " + this.getPlayerName() + "\t");
+        for (Soldier soldier : m_SoldiersList) {
+            playerSoldiersString.append("Soldier " + soldier.getSoldierID() + ": "
+                    + (String.format("%02d", soldier.getLocationOnBoard().getSquareNumber()) + "\t"));
+        }
+        playerSoldiersString.append(System.lineSeparator());
+        return playerSoldiersString.toString();
+    }
+    
+    public void initSoldiers(BoardSquare location){
+        int solderID = 1;
+        for (int i = 0; i < NUM_OF_SOLDIERS; i++) {
+            m_SoldiersList.add(new Soldier(this.getColor(), solderID++, location));
+            
+        }
+    }
+
+    private boolean isSoldierListInited() {
+        return m_SoldiersList.size() == NUM_OF_SOLDIERS;
+    }
+
 }

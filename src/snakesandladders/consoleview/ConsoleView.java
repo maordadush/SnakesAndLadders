@@ -196,58 +196,6 @@ public class ConsoleView {
         return scanner.next();
     }
 
-//    public SquareIndex getSquareInput() {
-//        Scanner scanner = new Scanner(System.in);
-//        SquareIndex index;
-//        int x;
-//        int y;
-//
-//        while (!scanner.hasNextInt()) {
-//            System.out.println("Inavlid Input. Please enter a number.");
-//            scanner.next();
-//        }
-//
-//        x = scanner.nextInt();
-//
-//        while (!scanner.hasNextInt()) {
-//            System.out.println("Inavlid Input. Please enter a number.");
-//            scanner.next();
-//        }
-//
-//        y = scanner.nextInt();
-//
-//        index = new SquareIndex(x, y);
-//
-//        return index;
-//    }
-//    public SquareIndex getNextMove() {
-//        SquareIndex move;
-//
-//        System.out.println("Enter where you want to make a move: x y (x/y between 0-"
-//                + (XMixDrixSingleGame.BOARD_SIZE - 1) + ")");
-//
-//        move = getSquareInput();
-//        while (!XMixDrixSingleGame.isSquareIndexValid(move)) {
-//            System.out.println("Inavlid move input, please enter again.");
-//            move = getSquareInput();
-//        }
-//
-//        return move;
-//    }
-//    public SquareIndex getGameIndex() {
-//        SquareIndex gameIndex;
-//
-//        System.out.println("Choose a game for next move: x y (x/y between 0-"
-//                + (XMixDrixSingleGame.BOARD_SIZE - 1) + ")");
-//
-//        gameIndex = getSquareInput();
-//        while (!XMixDrixSingleGame.isSquareIndexValid(gameIndex)) {
-//            System.out.println("Inavlid gameIndex input, please enter again.");
-//            gameIndex = getSquareInput();
-//        }
-//
-//        return gameIndex;
-//    }
     private void showGameOption() {
         System.out.println("Please Enter Your Selection:");
         System.out.println("1. Make a move.");
@@ -342,27 +290,6 @@ public class ConsoleView {
         }
     }
 
-//    public void printChar(XMixDrixChars printChar) throws XMixDrixRunTimeException {
-//        switch (printChar) {
-//            case X:
-//                System.out.print("x");
-//                break;
-//            case O:
-//                System.out.print("o");
-//                break;
-//            case X_WIN:
-//                System.out.print("X");
-//                break;
-//            case O_WIN:
-//                System.out.print("O");
-//                break;
-//            case NONE:
-//                System.out.print(" ");
-//                break;
-//            default:
-//                throw new XMixDrixRunTimeException("PrintChar(): Not valid char input.");
-//        }
-//    }
     public void printGame(SnakesAndLaddersSingleGame o_Game, List<aPlayer> o_Players) throws SnakesAndLaddersRunTimeException {
         int singleGameBoardSize = o_Game.getO_BoardSize();
         List<aPlayer> players = o_Players;
@@ -386,9 +313,9 @@ public class ConsoleView {
             }
             boardString.append(System.lineSeparator());
         }
-        boardString.append("--------------------------------------------------------------").append(System.lineSeparator());
+        boardString.append("-----------------------------------------------------------------------").append(System.lineSeparator());
         for (aPlayer player : players) {
-            boardString.append("Player " + (players.indexOf(player) + 1) + ": " + player.getPlayerName() + "\t");
+            boardString.append("Player " + player.getPlayerID() + ": " + player.getPlayerName() + "\t");
         }
         boardString.append(System.lineSeparator());
 
@@ -396,31 +323,14 @@ public class ConsoleView {
         System.out.print(boardString.toString());
     }
 
-//    //Noam - Check ablut selectNextGame
-//    public void displayCurrPlayerAndGameIndex(BoardSquare index, aPlayer player) {
-//        int x = (int) index.getX();
-//        int y = (int) index.getY();
-//
-//        System.out.print(player.getPlayerName());
-//        System.out.println(" your current index is:" + "(" + x + "," + y + ")");
-//
-//        System.out.println();
-//    }
     public void displayWinner(String name) {
         System.out.println("The winner is: " + name);
     }
 
-//    public void displayLastMove(XMixDrixPlayer player, SquareIndex move, SquareIndex gameIndex) {
-//        System.out.println(player.getPlayerName() + " last move: " + move.getX() + " " + move.getY()
-//                + ", in game: " + gameIndex.getX() + " " + gameIndex.getY());
-//    }
     public void printSnakesAndLaddersRunTimeExceptiom(SnakesAndLaddersRunTimeException ex) {
         System.out.println(ex.toString() + ": \n" + ex.getMessage());
     }
 
-//    public void displayXMLLoadErro(XMLLoadStatus loadStatus) {
-//        System.out.println("Error loading game from XML: " + loadStatus.toString());
-//    }
     public String getLoadXMLPath() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter full XML path to load game:");
@@ -435,9 +345,7 @@ public class ConsoleView {
         return scanner.next();
     }
 
-//    public void displayXMLSaveError(XMLSaveStatus saveStatus) {
-//        System.out.println("Error saving game to XML: " + saveStatus.toString());
-//    }
+
     public void displayXMLSavedSuccessfully(String savePath) {
         System.out.println("Game SaveSuccessfully to: " + savePath);
     }
@@ -511,7 +419,7 @@ public class ConsoleView {
         Scanner scanner = new Scanner(System.in);
         int input;
 
-        displaySoldiersOfPlayer(player);
+        System.out.println(player);
         System.out.println("Choose soldier (1-4):");
 
         while (!scanner.hasNextInt()) {
@@ -523,7 +431,7 @@ public class ConsoleView {
 
         while (input < 1 || input > 4) {
             System.out.println("Not Valid input, Please enter again:");
-            displaySoldiersOfPlayer(player);
+            System.out.println(player);
             System.out.println("Choose soldier (1-4):");
 
             while (!scanner.hasNextInt()) {
@@ -538,16 +446,7 @@ public class ConsoleView {
     }
 
     public void displaySoldiersOfPlayer(aPlayer player) {
-        Soldier[] soldierList = player.getM_SoldiersList();
-        StringBuilder playerSoldiersString = new StringBuilder();
-        playerSoldiersString.append("Player" + ": " + player.getPlayerName() + "\t");
-
-        //TODO change i+1 to real soldier id
-        for (int i = 0; i < soldierList.length; i++) {
-            playerSoldiersString.append("Soldier " + (i + 1) + ": " + (String.format("%02d", soldierList[i].getLocationOnBoard().getSquareNumber()) + "\t"));
-        }
-        playerSoldiersString.append(System.lineSeparator());
-        System.out.print(playerSoldiersString.toString());
+       
     }
 
     public void PrintCubeAnswer(int cubeAnswer) {
