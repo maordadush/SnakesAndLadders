@@ -47,6 +47,7 @@ public class XML {
     private static int m_GameSize;
     private static int m_NumOfSnakesAndLadders;
     private static int m_NumOfPlayers;
+    private static int m_NumOfSoldiersToWin;
 
     private static SchemaFactory schemaFactory;
     private static Schema schema;
@@ -57,7 +58,7 @@ public class XML {
     private static Snakesandladders snakesandladders;
     private static eXMLLoadStatus loadStatus;
 
-    public static eXMLLoadStatus initModelFromXml(String xmlPath, GameModel model, int O_NumOfSoldiersToWin) {
+    public static eXMLLoadStatus initModelFromXml(String xmlPath, GameModel model) {
         schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
         xsdURL = XML.class.getResource(XSD_FOLDER + XSD_FNAME);
@@ -91,7 +92,13 @@ public class XML {
             m_NumOfPlayers = snakesandladders.getPlayers().getPlayer().size();
             m_NumOfSnakesAndLadders = snakesandladders.getBoard().getLadders().getLadder().size()
                     + snakesandladders.getBoard().getSnakes().getSnake().size();
-
+            
+            loadStatus = loadNumberOfSoldiersToWin(snakesandladders.getNumberOfSoldiers());
+            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
+                return loadStatus;
+            }
+            m_NumOfSoldiersToWin = snakesandladders.getNumberOfSoldiers();
+            
             return eXMLLoadStatus.LOAD_SUCCESS;
         } catch (JAXBException ex) {
             if (ex.getLinkedException() instanceof FileNotFoundException) {
@@ -105,17 +112,12 @@ public class XML {
     }
 
     public static eXMLLoadStatus loadXML(String xmlPath, GameModel model, int O_NumOfSoldiersToWin) {
-        
-        loadStatus = loadNumberOfSoldiersToWin(snakesandladders.getNumberOfSoldiers(), O_NumOfSoldiersToWin);
-        if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
-            return loadStatus;
-        }
-        
+
         loadStatus = loadPlayers(snakesandladders.getPlayers().getPlayer(), snakesandladders.getCurrentPlayer(), model);
         if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
             return loadStatus;
         }
-        
+
         loadStatus = loadGameBoard(snakesandladders.getBoard(), model);
         if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
             return loadStatus;
@@ -131,7 +133,6 @@ public class XML {
             return loadStatus;
         }
 
-
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
 
@@ -145,6 +146,10 @@ public class XML {
 
     public static int getM_GameSize() {
         return m_GameSize;
+    }
+
+    public static int getM_NumOfSoldiersToWin() {
+        return m_NumOfSoldiersToWin;
     }
 
     private static eXMLLoadStatus loadPlayers(List<Player> players, String currPlayer, GameModel model) {
@@ -191,7 +196,7 @@ public class XML {
         }
         model.getGame().setO_BoardSize(boardSize);
         model.initGame();
-        
+
         //Init snakes and ladders
         if (ladders.size() != snakes.size()) {
             return eXMLLoadStatus.SNAKES_LADDERS_ERROR;
@@ -218,8 +223,8 @@ public class XML {
                 return eXMLLoadStatus.SNAKES_LADDERS_ERROR;
             }
         }
-    return eXMLLoadStatus.LOAD_SUCCESS ;
-}
+        return eXMLLoadStatus.LOAD_SUCCESS;
+    }
 
     private static eXMLLoadStatus initModel(int o_NumOfPlayers, int o_BoarsSize, int o_NumOfSnakes, int o_NumOfLadders, GameModel model) {
         if (o_NumOfLadders != o_NumOfSnakes) {
@@ -235,12 +240,11 @@ public class XML {
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
 
-    private static eXMLLoadStatus loadNumberOfSoldiersToWin(int o_NumberOfSoldiers, int o_LocalNumOfSoldiersToWin) {
+    private static eXMLLoadStatus loadNumberOfSoldiersToWin(int o_NumberOfSoldiers) {
         if (o_NumberOfSoldiers > 4 || o_NumberOfSoldiers < 1) {
             return eXMLLoadStatus.SOLDIERS_TO_WIN_ERROR;
         }
 
-        o_LocalNumOfSoldiersToWin = o_NumberOfSoldiers;
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
 

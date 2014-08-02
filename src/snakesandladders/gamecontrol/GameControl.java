@@ -183,11 +183,12 @@ public class GameControl {
         //Noam: "First Init Table from XML
         GameModel modelLoad = null;
         String xmlPath = m_consoleView.getLoadXMLPath();
-        loadStatus = XML.initModelFromXml(xmlPath, modelLoad, m_NumOfSoldiersToWin);
+        loadStatus = XML.initModelFromXml(xmlPath, modelLoad);
         if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
             m_consoleView.displayXMLLoadError(loadStatus);
             return loadStatus;
         }
+        m_NumOfSoldiersToWin = XML.getM_NumOfSoldiersToWin();
         modelLoad = new GameModel(XML.getM_GameSize(), XML.getM_NumOfSnakesAndLadders(), XML.getM_NumOfPlayers());
         loadStatus = XML.loadXML(xmlPath, modelLoad, m_NumOfSoldiersToWin);
 
