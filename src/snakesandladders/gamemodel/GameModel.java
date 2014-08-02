@@ -49,7 +49,7 @@ public class GameModel implements iWinChecker {
         saveGamePath = null;
     }
 
-    public void InitPlayers() {
+    public void deinitPlayers() {
         players.clear();
     }
 
@@ -68,7 +68,7 @@ public class GameModel implements iWinChecker {
     public void initNewGame() {
         game.initGame();
         game.shuffleSnakesAndLadders(m_numOfSnakesAndLadders);
-        InitPlayers();
+        deinitPlayers();
     }
 
     public BoardSquare getCurrGameIndex() {

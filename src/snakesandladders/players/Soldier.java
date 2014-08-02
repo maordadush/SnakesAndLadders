@@ -25,11 +25,11 @@ public class Soldier {
         this.locationOnBoard = location;
         this.color = color;
         this.soldierID = soldierID;
+         m_FinishedGame = false;
     }
 
     public int getSoldierID() {
         return soldierID;
-        m_FinishedGame = false;
     }
 
     public boolean isM_FinishedGame() {

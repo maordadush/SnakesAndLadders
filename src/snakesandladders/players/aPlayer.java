@@ -77,10 +77,10 @@ public abstract class aPlayer {
         Random rand = new Random();
         int randomSoldierIndex;
         do {
-            randomSoldierIndex = rand.nextInt(4) + 1;
+            randomSoldierIndex = rand.nextInt(3) + 1;
 
             setCurrentSoldier(randomSoldierIndex);
-        } while (m_SoldiersList[randomSoldierIndex - 1].m_FinishedGame);
+        } while (m_SoldiersList.get(randomSoldierIndex - 1).m_FinishedGame);
 
         return randomSoldierIndex;
     }
