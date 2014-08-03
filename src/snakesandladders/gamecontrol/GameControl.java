@@ -107,6 +107,7 @@ public class GameControl {
             player = m_gameModel.getCurrPlayer();
 
             m_consoleView.ClearScreen();
+            m_consoleView.printGameName(m_gameModel.getM_GameName());
             m_consoleView.displayCurrPlayer(player);
             m_consoleView.printGame(GetSingleGame(), getPlayers());
             if (player instanceof ComputerPlayer) {

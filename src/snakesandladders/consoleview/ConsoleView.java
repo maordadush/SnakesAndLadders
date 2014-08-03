@@ -70,7 +70,7 @@ public class ConsoleView {
         }
         input = scanner.nextInt();
         // TODO: Check Verified snakes And Ladders
-        while ((input < 1) || (input > (boardSize * boardSize) / 5) ) {
+        while ((input < 1) || (input > (boardSize * boardSize) / 5)) {
             System.out.println("Not Valid input, Please enter again:");
             showMenuSnakesAndLaddersSize();
 
@@ -344,7 +344,6 @@ public class ConsoleView {
         return scanner.next();
     }
 
-
     public void displayXMLSavedSuccessfully(String savePath) {
         System.out.println("Game SaveSuccessfully to: " + savePath);
     }
@@ -445,7 +444,7 @@ public class ConsoleView {
     }
 
     public void displaySoldiersOfPlayer(aPlayer player) {
-       
+
     }
 
     public void PrintCubeAnswer(int cubeAnswer) {
@@ -471,6 +470,10 @@ public class ConsoleView {
 
     public void displayCurrPlayer(aPlayer player) {
         System.out.println(player.getPlayerName() + " is now playing.");
+    }
+
+    public void printGameName(String m_GameName) {
+        System.out.println("Game name: " + m_GameName);
     }
 
 }
