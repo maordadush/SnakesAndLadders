@@ -15,7 +15,7 @@ import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
 import snakesandladders.gamemodel.eChars;
 import snakesandladders.players.Soldier;
-import snakesandladders.players.aPlayer;
+import snakesandladders.players.Player;
 import snakesandladders.players.ePlayerType;
 import snakesandladders.xml.eXMLLoadStatus;
 
@@ -181,9 +181,9 @@ public class ConsoleView {
 
         switch (type) {
             case 1:
-                return ePlayerType.Human;
+                return ePlayerType.HUMAN;
             case 2:
-                return ePlayerType.Computer;
+                return ePlayerType.COMPUTER;
             default:
                 throw new SnakesAndLaddersRunTimeException("GetPlayerType(): Invalid PlayerType input");
         }
@@ -290,9 +290,9 @@ public class ConsoleView {
         }
     }
 
-    public void printGame(SnakesAndLaddersSingleGame o_Game, List<aPlayer> o_Players) throws SnakesAndLaddersRunTimeException {
+    public void printGame(SnakesAndLaddersSingleGame o_Game, List<Player> o_Players) throws SnakesAndLaddersRunTimeException {
         int singleGameBoardSize = o_Game.getO_BoardSize();
-        List<aPlayer> players = o_Players;
+        List<Player> players = o_Players;
         int numPlayers = players.size();
         StringBuilder boardString = new StringBuilder();
 
@@ -314,7 +314,7 @@ public class ConsoleView {
             boardString.append(System.lineSeparator());
         }
         boardString.append("-----------------------------------------------------------------------").append(System.lineSeparator());
-        for (aPlayer player : players) {
+        for (Player player : players) {
             boardString.append("Player " + player.getPlayerID() + ": " + player.getPlayerName() + "\t");
         }
         boardString.append(System.lineSeparator());
@@ -395,7 +395,7 @@ public class ConsoleView {
         System.out.println("The game is Tie");
     }
 
-    public void displayLastMove(aPlayer player, BoardSquare move) {
+    public void displayLastMove(Player player, BoardSquare move) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -415,7 +415,7 @@ public class ConsoleView {
         System.out.println("Second, please write the number of snakes and ladders:");
     }
 
-    public int GetSoldierToPlayWith(aPlayer player) {
+    public int GetSoldierToPlayWith(Player player) {
         Scanner scanner = new Scanner(System.in);
         int input;
 
@@ -445,7 +445,7 @@ public class ConsoleView {
         return input;
     }
 
-    public void displaySoldiersOfPlayer(aPlayer player) {
+    public void displaySoldiersOfPlayer(Player player) {
        
     }
 
@@ -470,7 +470,7 @@ public class ConsoleView {
         System.out.println("Current playing soldier: " + soldierIndex);
     }
 
-    public void displayCurrPlayer(aPlayer player) {
+    public void displayCurrPlayer(Player player) {
         System.out.println(player.getPlayerName() + " is now playing.");
     }
 

@@ -9,8 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
-import snakesandladders.players.aPlayer;
-import snakesandladders.xml.XMLException;
+import snakesandladders.players.Player;
 
 /**
  *
@@ -20,16 +19,16 @@ public class GameModel implements iWinChecker {
 
     public static final int MAX_PLAYERS = 4;
     public static final int NUM_OF_SOLDIERS = 4;
-    private List<aPlayer> players;
+    private List<Player> players;
     private SnakesAndLaddersSingleGame game;
-    private aPlayer currTurnPlayer;
+    private Player currTurnPlayer;
     private String saveGamePath;
     private int m_NumOfPlayers;
     private int m_numOfSnakesAndLadders;
     private int m_CurrentPlayerIndex;
+    private int m_NumOfSoldiersToWin;
 
-    
-    public GameModel(int o_GameSize, int o_numOfSnakesAndLadders, int o_NumOfPlayers) {
+    public GameModel(int o_GameSize, int o_numOfSnakesAndLadders, int o_NumOfPlayers, int o_numOfSoldiersToWin) {
         //TODO: move input valdition to here
         if (o_numOfSnakesAndLadders > 1 || o_numOfSnakesAndLadders < (o_GameSize * o_GameSize) - 2) {
             m_numOfSnakesAndLadders = o_numOfSnakesAndLadders;
@@ -43,8 +42,8 @@ public class GameModel implements iWinChecker {
             players = new ArrayList<>(m_NumOfPlayers);
         } else {
             throw new UnsupportedOperationException("Illeagal number of players"); //To change body of generated methods, choose Tools | Templates.
-
         }
+        setM_NumOfSoldiersToWin(o_numOfSoldiersToWin);
         game = new SnakesAndLaddersSingleGame(o_GameSize, o_numOfSnakesAndLadders);
         saveGamePath = null;
     }
@@ -56,7 +55,7 @@ public class GameModel implements iWinChecker {
     @Override
     public boolean checkWinner(int numOfSoldiersToWin) {
         Boolean returnedValue = false;
-        aPlayer winningPlayer = getWinnerPlayer(numOfSoldiersToWin);
+        Player winningPlayer = getWinnerPlayer(numOfSoldiersToWin);
 
         if (winningPlayer != null) {
             returnedValue = true;
@@ -75,18 +74,18 @@ public class GameModel implements iWinChecker {
         return game.getCurrentBoardSquare();
     }
 
-    public aPlayer getCurrPlayer() {
+    public Player getCurrPlayer() {
         return currTurnPlayer;
     }
 
-    public void setCurrPlayer(aPlayer o_CurrPlayer) {
+    public void setCurrPlayer(Player o_CurrPlayer) {
         currTurnPlayer = o_CurrPlayer;
     }
 
     public void setCurrPlayer(String o_CurrPlayerName) throws SnakesAndLaddersRunTimeException {
-        aPlayer foundPlayer = null;
-       
-        for (aPlayer player : players) {
+        Player foundPlayer = null;
+
+        for (Player player : players) {
             if (player.getPlayerName().equals(o_CurrPlayerName)) {
                 foundPlayer = player;
             }
@@ -123,13 +122,13 @@ public class GameModel implements iWinChecker {
         return this.game;
     }
 
-    public List<aPlayer> getPlayers() {
+    public List<Player> getPlayers() {
         return players;
     }
 
-    public aPlayer getWinnerPlayer(int numOfSoldiersToWin) {
-        aPlayer playerToReturn = null;
-        for (aPlayer player : players) {
+    public Player getWinnerPlayer(int numOfSoldiersToWin) {
+        Player playerToReturn = null;
+        for (Player player : players) {
             if (player.getNumSoldiersAtSquare(game.getBoardSquare(game.getO_BoardSize() - 1, game.getO_BoardSize() - 1))
                     == numOfSoldiersToWin) {
                 playerToReturn = player;
@@ -147,7 +146,7 @@ public class GameModel implements iWinChecker {
         return this.game;
     }
 
-    public void addPlayer(aPlayer player) throws SnakesAndLaddersRunTimeException {
+    public void addPlayer(Player player) throws SnakesAndLaddersRunTimeException {
         if (players.size() < getNumOfPlayers()) {
             players.add(player);
         } else {
@@ -155,15 +154,27 @@ public class GameModel implements iWinChecker {
         }
     }
 
-    public void setMove(aPlayer player, BoardSquare move) {
+    public void setMove(Player player, BoardSquare move) {
         player.getCurrentSoldier().setLocationOnBoard(move);
     }
-       
-    public aPlayer getPlayerByName(String name){
-        for (aPlayer player : getPlayers()) {
-            if (player.getPlayerName().equalsIgnoreCase(name))
+
+    public Player getPlayerByName(String name) {
+        for (Player player : getPlayers()) {
+            if (player.getPlayerName().equalsIgnoreCase(name)) {
                 return player;
+            }
         }
         return null;
+    }
+
+    public int getM_NumOfSoldiersToWin() {
+        return m_NumOfSoldiersToWin;
+    }
+
+    public void setM_NumOfSoldiersToWin(int m_NumOfSoldiersToWin) {
+        if (m_NumOfSoldiersToWin < 1 || m_NumOfSoldiersToWin > 4) {
+            throw new UnsupportedOperationException("Illeagal number of soldiers"); //To change body of generated methods, choose Tools | Templates.
+        }
+        this.m_NumOfSoldiersToWin = m_NumOfSoldiersToWin;
     }
 }

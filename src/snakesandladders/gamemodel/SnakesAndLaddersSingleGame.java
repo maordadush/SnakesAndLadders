@@ -7,7 +7,7 @@ package snakesandladders.gamemodel;
 
 import java.util.Random;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
-import snakesandladders.players.aPlayer;
+import snakesandladders.players.Player;
 
 /**
  *
