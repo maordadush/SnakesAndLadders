@@ -358,7 +358,7 @@ public class XML {
                 }
                 cells.getCell().add(cell);
             }
-
+            newBoard.setCells(cells);
         }
         return newBoard;
     }
