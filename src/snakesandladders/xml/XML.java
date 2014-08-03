@@ -188,6 +188,11 @@ public class XML {
                 }
             }
         }
+
+        if (model.getCurrPlayer() == null) {
+            return eXMLLoadStatus.CURR_TURN_PLAYER_ERROR;
+        }
+        
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
 
