@@ -27,8 +27,9 @@ public class GameModel implements iWinChecker {
     private int m_NumOfPlayers;
     private int m_numOfSnakesAndLadders;
     private int m_CurrentPlayerIndex;
+    private String m_GameName;
+    private int m_GameNameIndex = 0;
 
-    
     public GameModel(int o_GameSize, int o_numOfSnakesAndLadders, int o_NumOfPlayers) {
         //TODO: move input valdition to here
         if (o_numOfSnakesAndLadders > 1 || o_numOfSnakesAndLadders < (o_GameSize * o_GameSize) - 2) {
@@ -47,6 +48,8 @@ public class GameModel implements iWinChecker {
         }
         game = new SnakesAndLaddersSingleGame(o_GameSize, o_numOfSnakesAndLadders);
         saveGamePath = null;
+        m_GameName = "Game " + m_GameNameIndex;
+        m_GameNameIndex++;
     }
 
     public void deinitPlayers() {
@@ -85,7 +88,7 @@ public class GameModel implements iWinChecker {
 
     public void setCurrPlayer(String o_CurrPlayerName) throws SnakesAndLaddersRunTimeException {
         aPlayer foundPlayer = null;
-       
+
         for (aPlayer player : players) {
             if (player.getPlayerName().equals(o_CurrPlayerName)) {
                 foundPlayer = player;
@@ -96,6 +99,14 @@ public class GameModel implements iWinChecker {
         } else {
             throw new SnakesAndLaddersRunTimeException("setCurrPlayer(): player found error.");
         }
+    }
+
+    public String getM_GameName() {
+        return m_GameName;
+    }
+
+    public void setM_GameName(String m_GameName) {
+        this.m_GameName = m_GameName;
     }
 
     public void forwardPlayer() {
@@ -158,11 +169,12 @@ public class GameModel implements iWinChecker {
     public void setMove(aPlayer player, BoardSquare move) {
         player.getCurrentSoldier().setLocationOnBoard(move);
     }
-       
-    public aPlayer getPlayerByName(String name){
+
+    public aPlayer getPlayerByName(String name) {
         for (aPlayer player : getPlayers()) {
-            if (player.getPlayerName().equalsIgnoreCase(name))
+            if (player.getPlayerName().equalsIgnoreCase(name)) {
                 return player;
+            }
         }
         return null;
     }

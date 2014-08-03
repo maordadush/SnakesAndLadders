@@ -86,13 +86,16 @@ public abstract class aPlayer {
         return randomSoldierIndex;
     }
 
-    public void placeSoldierOnBoard(BoardSquare location) throws SnakesAndLaddersRunTimeException {
+    public void placeSoldierOnBoard(BoardSquare location, int maxBoardIndex) throws SnakesAndLaddersRunTimeException {
         if (!isSoldierListInited()) {
             throw new SnakesAndLaddersRunTimeException("placeSoldierOnBoard: soldiers list is not initilaize");
         }
         for (Soldier soldier : m_SoldiersList) {
             if (soldier.getLocationOnBoard().getSquareNumber() == 1) {
                 soldier.setLocationOnBoard(location);
+                if(location.getSquareNumber() == maxBoardIndex){
+                    soldier.setM_FinishedGame(true);
+                }
                 break;
             }
         }

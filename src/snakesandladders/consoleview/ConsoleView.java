@@ -14,7 +14,6 @@ import snakesandladders.gamecontrol.eStartMenu;
 import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
 import snakesandladders.gamemodel.eChars;
-import snakesandladders.players.Soldier;
 import snakesandladders.players.aPlayer;
 import snakesandladders.players.ePlayerType;
 import snakesandladders.xml.eXMLLoadStatus;
@@ -71,7 +70,7 @@ public class ConsoleView {
         }
         input = scanner.nextInt();
         // TODO: Check Verified snakes And Ladders
-        while (input < 1 || input > (boardSize * boardSize) - 2) {
+        while ((input < 1) || (input > (boardSize * boardSize) / 5) ) {
             System.out.println("Not Valid input, Please enter again:");
             showMenuSnakesAndLaddersSize();
 
@@ -412,7 +411,7 @@ public class ConsoleView {
     }
 
     private void showMenuSnakesAndLaddersSize() {
-        System.out.println("Second, please write the number of snakes and ladders:");
+        System.out.println("Second, please write the number of snakes and ladders (max: 20% of board):");
     }
 
     public int GetSoldierToPlayWith(aPlayer player) {
