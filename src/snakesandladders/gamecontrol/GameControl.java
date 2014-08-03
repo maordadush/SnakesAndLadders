@@ -12,12 +12,13 @@ import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.gamemodel.Cube;
 import snakesandladders.gamemodel.GameModel;
 import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
-import snakesandladders.players.Player;
+import snakesandladders.players.SinglePlayer;
 import snakesandladders.players.Soldier;
 import snakesandladders.players.ePlayerType;
 import static snakesandladders.players.ePlayerType.COMPUTER;
 import snakesandladders.xml.XML;
 import snakesandladders.xml.eXMLLoadStatus;
+import snakesandladders.xml.eXMLSaveStatus;
 
 /**
  *
@@ -27,7 +28,6 @@ public class GameControl {
 
     private ConsoleView m_consoleView;
     private GameModel m_gameModel;
-    
 
     public GameControl() {
         m_consoleView = new ConsoleView();
@@ -98,7 +98,7 @@ public class GameControl {
 
     private void runSingleGame() throws SnakesAndLaddersRunTimeException {
         eGameMenu gameOption;
-        Player player;
+        SinglePlayer player;
         //BoardSquare currGameIndex;
 
         while (!hasGameWon()) {
@@ -121,7 +121,17 @@ public class GameControl {
                             m_gameModel.forwardPlayer();
                             break;
                         case SAVE_GAME:
-                            //             saveGame();
+//                           if (m_gameModel.getSaveGamePath() == null) {
+//                                saveGameAs();
+//                            } else {
+                                eXMLSaveStatus saveStatus;
+                                saveStatus = XML.saveXML("c:\\users\\maor\\desktop\\game.xml", m_gameModel);
+//                                if (saveStatus != eXMLSaveStatus.SAVE_SUCCESS) {
+//                                    m_consoleView.displayXMLSaveError(saveStatus);
+//                                } else {
+//                                    m_consoleView.displayXMLSavedSuccessfully(m_gameModel.getSaveGamePath());
+//                                }
+                            
                             gameOption = eGameMenu.CHOOSE;
                             break;
                         case SAVE_GAME_AS:
@@ -138,15 +148,15 @@ public class GameControl {
         }
 
         if (hasGameWon()) {
-            Player winnerPlayer = m_gameModel.getWinnerPlayer(m_gameModel.getM_NumOfSoldiersToWin());
+            SinglePlayer winnerPlayer = m_gameModel.getWinnerPlayer(m_gameModel.getM_NumOfSoldiersToWin());
             m_consoleView.displayWinner(winnerPlayer.getPlayerName());
         } else {
             m_consoleView.displayNoWinner();
         }
-        
+
     }
 
-    public List<Player> getPlayers() {
+    public List<SinglePlayer> getPlayers() {
         return m_gameModel.getPlayers();
     }
 
@@ -221,7 +231,7 @@ public class GameControl {
     }
 
     private void initPlayers() throws SnakesAndLaddersRunTimeException {
-        Player player;
+        SinglePlayer player;
         ePlayerType playertype;
         String playerName;
         int playerNumOfSoldiersToWin;
@@ -232,13 +242,19 @@ public class GameControl {
             switch (playertype) {
                 case HUMAN:
                     playerName = m_consoleView.getPlayerString();
-                    player = new Player(playerName,playertype);
+                    player = new SinglePlayer(playerName, playertype);
                     player.initSoldiers(m_gameModel.getCurrGameIndex());
+                    for (Soldier soldier : player.getM_SoldiersList()) {
+                        m_gameModel.getCurrGameIndex().getPlayers().add(player);
+                    }
                     m_gameModel.addPlayer(player);
                     break;
                 case COMPUTER:
-                    player = new Player("Computer",playertype);
+                    player = new SinglePlayer("Computer", playertype);
                     player.initSoldiers(m_gameModel.getCurrGameIndex());
+                    for (Soldier soldier : player.getM_SoldiersList()) {
+                        m_gameModel.getCurrGameIndex().getPlayers().add(player);
+                    }
                     m_gameModel.addPlayer(player);
                     break;
                 default:
@@ -255,7 +271,7 @@ public class GameControl {
         BoardSquare nextMove;
         int cubeAnswer;
         Cube cube = new Cube();
-        Player player = m_gameModel.getCurrPlayer();
+        SinglePlayer player = m_gameModel.getCurrPlayer();
 
         if (player.getType() == COMPUTER) {
             m_consoleView.LetComputerPlay();
@@ -274,7 +290,7 @@ public class GameControl {
         return nextMove;
     }
 
-    private BoardSquare move(Player player, int cubeAnswer) throws SnakesAndLaddersRunTimeException {
+    private BoardSquare move(SinglePlayer player, int cubeAnswer) throws SnakesAndLaddersRunTimeException {
         BoardSquare boardToMove;
         Soldier currentSoldier = player.GetCurrentSoldier();
         int oldPlyerIndex = currentSoldier.getLocationOnBoard().getSquareNumber();
@@ -306,9 +322,9 @@ public class GameControl {
 
     //TODO fixit
     public boolean hasGameWon() {
-        
+
         int winningCount = 0;
-        for (Player player : getPlayers()) {
+        for (SinglePlayer player : getPlayers()) {
             for (Soldier soldier : player.getM_SoldiersList()) {
                 if (soldier.isM_FinishedGame()) {
                     winningCount++;

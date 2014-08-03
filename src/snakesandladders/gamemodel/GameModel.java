@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
-import snakesandladders.players.Player;
+import snakesandladders.players.SinglePlayer;
 
 /**
  *
@@ -19,9 +19,9 @@ public class GameModel implements iWinChecker {
 
     public static final int MAX_PLAYERS = 4;
     public static final int NUM_OF_SOLDIERS = 4;
-    private List<Player> players;
+    private List<SinglePlayer> players;
     private SnakesAndLaddersSingleGame game;
-    private Player currTurnPlayer;
+    private SinglePlayer currTurnPlayer;
     private String saveGamePath;
     private int m_NumOfPlayers;
     private int m_numOfSnakesAndLadders;
@@ -55,7 +55,7 @@ public class GameModel implements iWinChecker {
     @Override
     public boolean checkWinner(int numOfSoldiersToWin) {
         Boolean returnedValue = false;
-        Player winningPlayer = getWinnerPlayer(numOfSoldiersToWin);
+        SinglePlayer winningPlayer = getWinnerPlayer(numOfSoldiersToWin);
 
         if (winningPlayer != null) {
             returnedValue = true;
@@ -74,18 +74,18 @@ public class GameModel implements iWinChecker {
         return game.getCurrentBoardSquare();
     }
 
-    public Player getCurrPlayer() {
+    public SinglePlayer getCurrPlayer() {
         return currTurnPlayer;
     }
 
-    public void setCurrPlayer(Player o_CurrPlayer) {
+    public void setCurrPlayer(SinglePlayer o_CurrPlayer) {
         currTurnPlayer = o_CurrPlayer;
     }
 
     public void setCurrPlayer(String o_CurrPlayerName) throws SnakesAndLaddersRunTimeException {
-        Player foundPlayer = null;
+        SinglePlayer foundPlayer = null;
 
-        for (Player player : players) {
+        for (SinglePlayer player : players) {
             if (player.getPlayerName().equals(o_CurrPlayerName)) {
                 foundPlayer = player;
             }
@@ -122,13 +122,13 @@ public class GameModel implements iWinChecker {
         return this.game;
     }
 
-    public List<Player> getPlayers() {
+    public List<SinglePlayer> getPlayers() {
         return players;
     }
 
-    public Player getWinnerPlayer(int numOfSoldiersToWin) {
-        Player playerToReturn = null;
-        for (Player player : players) {
+    public SinglePlayer getWinnerPlayer(int numOfSoldiersToWin) {
+        SinglePlayer playerToReturn = null;
+        for (SinglePlayer player : players) {
             if (player.getNumSoldiersAtSquare(game.getBoardSquare(game.getO_BoardSize() - 1, game.getO_BoardSize() - 1))
                     == numOfSoldiersToWin) {
                 playerToReturn = player;
@@ -146,7 +146,7 @@ public class GameModel implements iWinChecker {
         return this.game;
     }
 
-    public void addPlayer(Player player) throws SnakesAndLaddersRunTimeException {
+    public void addPlayer(SinglePlayer player) throws SnakesAndLaddersRunTimeException {
         if (players.size() < getNumOfPlayers()) {
             players.add(player);
         } else {
@@ -154,12 +154,12 @@ public class GameModel implements iWinChecker {
         }
     }
 
-    public void setMove(Player player, BoardSquare move) {
+    public void setMove(SinglePlayer player, BoardSquare move) {
         player.getCurrentSoldier().setLocationOnBoard(move);
     }
 
-    public Player getPlayerByName(String name) {
-        for (Player player : getPlayers()) {
+    public SinglePlayer getPlayerByName(String name) {
+        for (SinglePlayer player : getPlayers()) {
             if (player.getPlayerName().equalsIgnoreCase(name)) {
                 return player;
             }

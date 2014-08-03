@@ -7,7 +7,7 @@ package snakesandladders.gamemodel;
 
 import java.util.Random;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
-import snakesandladders.players.Player;
+import snakesandladders.players.SinglePlayer;
 
 /**
  *
@@ -102,7 +102,7 @@ public class SnakesAndLaddersSingleGame {
         return m_GameBoard[x][y];
     }
 
-    public BoardSquare[][] getGame() {
+    public BoardSquare[][] getGameBoard() {
         return m_GameBoard;
     }
 

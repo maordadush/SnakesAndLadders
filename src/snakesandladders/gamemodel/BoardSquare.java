@@ -5,24 +5,37 @@
  */
 package snakesandladders.gamemodel;
 
-import java.awt.Point;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import snakesandladders.players.SinglePlayer;
+import snakesandladders.players.Soldier;
+
 
 /**
  *
  * @author Noam
  */
-public class BoardSquare extends Point{
+public class BoardSquare{
     private eChars type = eChars.NONE;
     private int squareNumber; 
     private BoardSquare jumpTo;
+    private List<SinglePlayer> players;
+
 
     BoardSquare(int squareNumber) {
        this.squareNumber = squareNumber;
+       this.players = new ArrayList<SinglePlayer>();
     }
+
 
 
     public BoardSquare getJumpTo() {
         return jumpTo;
+    }
+
+    public List<SinglePlayer> getPlayers() {
+        return players;
     }
 
     public void setJumpTo(BoardSquare jumpTo) {
@@ -44,5 +57,6 @@ public class BoardSquare extends Point{
     public void setType(eChars type) {
         this.type = type;
     }
+    
 
 }

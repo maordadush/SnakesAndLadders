@@ -17,7 +17,7 @@ import snakesandladders.gamemodel.BoardSquare;
  *
  * @author Noam
  */
-public class Player {
+public class SinglePlayer {
 
     public final int NUM_OF_SOLDIERS = 4;
     String m_PlayerName;
@@ -29,7 +29,7 @@ public class Player {
     private Soldier m_CurrentSoldier;
     ePlayerType type;
 
-    public Player(String o_Name, ePlayerType type) {
+    public SinglePlayer(String o_Name, ePlayerType type) {
         this.m_PlayerName = o_Name;
         this.type = type;
         m_SoldiersList = new ArrayList<>(NUM_OF_SOLDIERS);
@@ -79,6 +79,7 @@ public class Player {
     public ePlayerType getType() {
         return type;
     }
+
 
     public int randomizeCurrentPlayer() throws SnakesAndLaddersRunTimeException {
         Random rand = new Random();
