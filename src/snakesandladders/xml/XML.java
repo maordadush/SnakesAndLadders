@@ -118,7 +118,7 @@ public class XML {
             return loadStatus;
         }
 
-        loadStatus = loadGameBoard(snakesandladders.getBoard(), model);
+        loadStatus = loadGameBoard(snakesandladders.getBoard(), snakesandladders.getName(), model);
         if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
             return loadStatus;
         }
@@ -153,7 +153,14 @@ public class XML {
     }
 
     private static eXMLLoadStatus loadPlayers(List<Player> players, String currPlayer, GameModel model) {
+        boolean playerExist = false;
+
         for (Player player : players) {
+            playerExist = findPlayerInArray(player, model.getPlayers());
+            if (playerExist) {
+                return eXMLLoadStatus.PLAYERS_DUPLICATE_NAME;
+            }
+
             switch (player.getType()) {
                 case HUMAN:
                     try {
@@ -184,8 +191,7 @@ public class XML {
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
 
-    private static eXMLLoadStatus loadGameBoard(Board board, GameModel model) {
-        eXMLLoadStatus loadStatus;
+    private static eXMLLoadStatus loadGameBoard(Board board, String gameName, GameModel model) {
         int boardSize = board.getSize();
         List<Ladder> ladders = board.getLadders().getLadder();
         List<Snake> snakes = board.getSnakes().getSnake();
@@ -194,6 +200,7 @@ public class XML {
         if (boardSize < 5 || boardSize > 8) {
             return eXMLLoadStatus.BOARD_SIZE_ERROR;
         }
+        model.setM_GameName(gameName);
         model.getGame().setO_BoardSize(boardSize);
         model.initGame();
 
@@ -278,6 +285,15 @@ public class XML {
         }
 
         return eXMLLoadStatus.LOAD_SUCCESS;
+    }
+
+    private static boolean findPlayerInArray(Player player, List<aPlayer> players) {
+        for (aPlayer currPlayer : players) {
+            if (currPlayer.getPlayerName().equals(player.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

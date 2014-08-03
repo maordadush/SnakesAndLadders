@@ -110,31 +110,27 @@ public class GameControl {
             m_consoleView.printGameName(m_gameModel.getM_GameName());
             m_consoleView.displayCurrPlayer(player);
             m_consoleView.printGame(GetSingleGame(), getPlayers());
-            if (player instanceof ComputerPlayer) {
-                makeMove();
-                m_gameModel.forwardPlayer();
-            } else {
-                gameOption = eGameMenu.CHOOSE;
-                while (gameOption == eGameMenu.CHOOSE) {
-                    gameOption = m_consoleView.getGameOption();
-                    switch (gameOption) {
-                        case MAKE_MOVE:
-                            makeMove();
-                            m_gameModel.forwardPlayer();
-                            break;
-                        case SAVE_GAME:
-                            //             saveGame();
-                            gameOption = eGameMenu.CHOOSE;
-                            break;
-                        case SAVE_GAME_AS:
-                            //           saveGameAs();
-                            gameOption = eGameMenu.CHOOSE;
-                            break;
-                        case EXIT_CURRENT_GAME:
-                            return;
-                        default:
-                            throw new SnakesAndLaddersRunTimeException("runSingleGame(): Invalid gameOption input.");
-                    }
+
+            gameOption = eGameMenu.CHOOSE;
+            while (gameOption == eGameMenu.CHOOSE) {
+                gameOption = m_consoleView.getGameOption();
+                switch (gameOption) {
+                    case MAKE_MOVE:
+                        makeMove();
+                        m_gameModel.forwardPlayer();
+                        break;
+                    case SAVE_GAME:
+                        //             saveGame();
+                        gameOption = eGameMenu.CHOOSE;
+                        break;
+                    case SAVE_GAME_AS:
+                        //           saveGameAs();
+                        gameOption = eGameMenu.CHOOSE;
+                        break;
+                    case EXIT_CURRENT_GAME:
+                        return;
+                    default:
+                        throw new SnakesAndLaddersRunTimeException("runSingleGame(): Invalid gameOption input.");
                 }
             }
         }
@@ -227,21 +223,23 @@ public class GameControl {
         ePlayerType playertype;
         String playerName;
         int playerNumOfSoldiersToWin;
+        int computerIndex = 0;
 
         for (int i = 0; i < m_gameModel.getNumOfPlayers(); i++) {
             playertype = m_consoleView.getPlayerType(i);
 
             switch (playertype) {
                 case Human:
-                    playerName = m_consoleView.getPlayerString();
+                    playerName = m_consoleView.getPlayerString(m_gameModel.getPlayers());
                     player = new HumanPlayer(playerName);
                     player.initSoldiers(m_gameModel.getCurrGameIndex());
                     m_gameModel.addPlayer(player);
                     break;
                 case Computer:
-                    player = new ComputerPlayer("Computer");
+                    player = new ComputerPlayer("Computer" + computerIndex);
                     player.initSoldiers(m_gameModel.getCurrGameIndex());
                     m_gameModel.addPlayer(player);
+                    computerIndex++;
                     break;
                 default:
                     throw new SnakesAndLaddersRunTimeException("InitPlayers(): Invalid PlayerType Input");

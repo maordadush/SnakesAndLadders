@@ -188,11 +188,22 @@ public class ConsoleView {
         }
     }
 
-    public String getPlayerString() {
+    public String getPlayerString(List<aPlayer> playersList) {
         Scanner scanner = new Scanner(System.in);
+        boolean playerExist = false;
+        String playerName;
+        do {
+            System.out.println("Enter Player Name.");
+            playerName = scanner.next();
+            playerExist = findPlayerInArray(playerName, playersList);
 
-        System.out.println("Enter Player Name.");
-        return scanner.next();
+            if (playerExist) {
+                System.out.println("Current player name is already used. Enter different name.");
+            }
+        } while (playerExist);
+
+        return playerName;
+
     }
 
     private void showGameOption() {
@@ -474,6 +485,15 @@ public class ConsoleView {
 
     public void printGameName(String m_GameName) {
         System.out.println("Game name: " + m_GameName);
+    }
+
+    private boolean findPlayerInArray(String playerName, List<aPlayer> playersList) {
+        for (aPlayer player : playersList) {
+            if (player.getPlayerName().equals(playerName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
