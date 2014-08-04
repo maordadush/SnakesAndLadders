@@ -26,7 +26,8 @@ public class GameModel implements iWinChecker {
     private int m_NumOfPlayers;
     private int m_numOfSnakesAndLadders;
     private int m_CurrentPlayerIndex;
-    private int m_NumOfSoldiersToWin;
+    private String m_GameName;
+    private int m_GameNameIndex = 0;
 
     public GameModel(int o_GameSize, int o_numOfSnakesAndLadders, int o_NumOfPlayers, int o_numOfSoldiersToWin) {
         //TODO: move input valdition to here
@@ -46,6 +47,8 @@ public class GameModel implements iWinChecker {
         setM_NumOfSoldiersToWin(o_numOfSoldiersToWin);
         game = new SnakesAndLaddersSingleGame(o_GameSize, o_numOfSnakesAndLadders);
         saveGamePath = null;
+        m_GameName = "Game " + m_GameNameIndex;
+        m_GameNameIndex++;
     }
 
     public void deinitPlayers() {
@@ -95,6 +98,14 @@ public class GameModel implements iWinChecker {
         } else {
             throw new SnakesAndLaddersRunTimeException("setCurrPlayer(): player found error.");
         }
+    }
+
+    public String getM_GameName() {
+        return m_GameName;
+    }
+
+    public void setM_GameName(String m_GameName) {
+        this.m_GameName = m_GameName;
     }
 
     public void forwardPlayer() {

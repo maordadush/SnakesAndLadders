@@ -91,6 +91,12 @@ public class XML {
                     + snakesandladders.getBoard().getSnakes().getSnake().size();
             m_NumOfSoldiersToWin = snakesandladders.getNumberOfSoldiers();
 
+            loadStatus = loadNumberOfSoldiersToWin(snakesandladders.getNumberOfSoldiers());
+            if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
+                return loadStatus;
+            }
+            m_NumOfSoldiersToWin = snakesandladders.getNumberOfSoldiers();
+
             return eXMLLoadStatus.LOAD_SUCCESS;
         } catch (JAXBException ex) {
             if (ex.getLinkedException() instanceof FileNotFoundException) {
@@ -110,7 +116,7 @@ public class XML {
             return loadStatus;
         }
 
-        loadStatus = loadGameBoard(snakesandladders.getBoard(), model);
+        loadStatus = loadGameBoard(snakesandladders.getBoard(), snakesandladders.getName(), model);
         if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
             return loadStatus;
         }
@@ -144,8 +150,15 @@ public class XML {
         return m_NumOfSoldiersToWin;
     }
 
-    private static eXMLLoadStatus loadPlayers(List<Players.Player> players, String currPlayer, GameModel model) {
-        for (Players.Player player : players) {
+    private static eXMLLoadStatus loadPlayers(List<Player> players, String currPlayer, GameModel model) {
+        boolean playerExist = false;
+
+        for (Player player : players) {
+            playerExist = findPlayerInArray(player, model.getPlayers());
+            if (playerExist) {
+                return eXMLLoadStatus.PLAYERS_DUPLICATE_NAME;
+            }
+
             switch (player.getType()) {
                 case HUMAN:
                     try {
@@ -173,11 +186,15 @@ public class XML {
                 }
             }
         }
+
+        if (model.getCurrPlayer() == null) {
+            return eXMLLoadStatus.CURR_TURN_PLAYER_ERROR;
+        }
+        
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
 
-    private static eXMLLoadStatus loadGameBoard(Board board, GameModel model) {
-        eXMLLoadStatus loadStatus;
+    private static eXMLLoadStatus loadGameBoard(Board board, String gameName, GameModel model) {
         int boardSize = board.getSize();
         List<Ladder> ladders = board.getLadders().getLadder();
         List<Snake> snakes = board.getSnakes().getSnake();
@@ -186,6 +203,7 @@ public class XML {
         if (boardSize < 5 || boardSize > 8) {
             return eXMLLoadStatus.BOARD_SIZE_ERROR;
         }
+        model.setM_GameName(gameName);
         model.getGame().setO_BoardSize(boardSize);
         model.initGame();
 
@@ -219,14 +237,22 @@ public class XML {
     }
 
     private static eXMLLoadStatus initModel(int o_NumOfPlayers, int o_BoarsSize, int o_NumOfSnakes, int o_NumOfLadders, GameModel model) {
-        if (o_NumOfLadders != o_NumOfSnakes) {
-            return eXMLLoadStatus.SNAKES_LADDERS_ERROR;
-        }
         if (o_NumOfPlayers < 2 || o_NumOfPlayers > 4) {
             return eXMLLoadStatus.ADD_PLAYER_ERROR;
         }
         if (o_BoarsSize < 5 || o_BoarsSize > 8) {
             return eXMLLoadStatus.BOARD_SIZE_ERROR;
+        }
+        if (o_NumOfLadders != o_NumOfSnakes || o_NumOfLadders > o_BoarsSize * o_BoarsSize / 5) {
+            return eXMLLoadStatus.SNAKES_LADDERS_ERROR;
+        }
+
+        return eXMLLoadStatus.LOAD_SUCCESS;
+    }
+
+    private static eXMLLoadStatus loadNumberOfSoldiersToWin(int o_NumberOfSoldiers) {
+        if (o_NumberOfSoldiers > 4 || o_NumberOfSoldiers < 1) {
+            return eXMLLoadStatus.SOLDIERS_TO_WIN_ERROR;
         }
 
         return eXMLLoadStatus.LOAD_SUCCESS;
@@ -383,6 +409,13 @@ public class XML {
         newBoard.setLadders(ladders);
         newBoard.setSnakes(snakes);
         return newBoard;
+    private static boolean findPlayerInArray(Player player, List<aPlayer> players) {
+        for (aPlayer currPlayer : players) {
+            if (currPlayer.getPlayerName().equals(player.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

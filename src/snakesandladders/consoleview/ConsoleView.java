@@ -71,7 +71,7 @@ public class ConsoleView {
         }
         input = scanner.nextInt();
         // TODO: Check Verified snakes And Ladders
-        while (input < 1 || input > (boardSize * boardSize) - 2) {
+        while ((input < 1) || (input > (boardSize * boardSize) / 5)) {
             System.out.println("Not Valid input, Please enter again:");
             showMenuSnakesAndLaddersSize();
 
@@ -189,11 +189,22 @@ public class ConsoleView {
         }
     }
 
-    public String getPlayerString() {
+    public String getPlayerString(List<aPlayer> playersList) {
         Scanner scanner = new Scanner(System.in);
+        boolean playerExist = false;
+        String playerName;
+        do {
+            System.out.println("Enter Player Name.");
+            playerName = scanner.next();
+            playerExist = findPlayerInArray(playerName, playersList);
 
-        System.out.println("Enter Player Name.");
-        return scanner.next();
+            if (playerExist) {
+                System.out.println("Current player name is already used. Enter different name.");
+            }
+        } while (playerExist);
+
+        return playerName;
+
     }
 
     private void showGameOption() {
@@ -345,7 +356,6 @@ public class ConsoleView {
         return scanner.next();
     }
 
-
     public void displayXMLSavedSuccessfully(String savePath) {
         System.out.println("Game SaveSuccessfully to: " + savePath);
     }
@@ -412,7 +422,7 @@ public class ConsoleView {
     }
 
     private void showMenuSnakesAndLaddersSize() {
-        System.out.println("Second, please write the number of snakes and ladders:");
+        System.out.println("Second, please write the number of snakes and ladders (max: 20% of board):");
     }
 
     public int GetSoldierToPlayWith(SinglePlayer player) {
@@ -429,7 +439,7 @@ public class ConsoleView {
 
         input = scanner.nextInt();
 
-        while ((input < 1 || input > 4) && (player.getM_SoldiersList().get(input - 1).isM_FinishedGame())) {
+        while ((input < 1 || input > 4) || (player.getM_SoldiersList().get(input - 1).isM_FinishedGame())) {
             System.out.println("Not Valid input, Please enter again:");
             System.out.println(player);
             System.out.println("Choose soldier (1-4):");
@@ -472,6 +482,19 @@ public class ConsoleView {
 
     public void displayCurrPlayer(SinglePlayer player) {
         System.out.println(player.getPlayerName() + " is now playing.");
+    }
+
+    public void printGameName(String m_GameName) {
+        System.out.println("Game name: " + m_GameName);
+    }
+
+    private boolean findPlayerInArray(String playerName, List<aPlayer> playersList) {
+        for (aPlayer player : playersList) {
+            if (player.getPlayerName().equals(playerName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

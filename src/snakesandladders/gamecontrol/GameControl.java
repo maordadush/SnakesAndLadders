@@ -106,43 +106,30 @@ public class GameControl {
             player = m_gameModel.getCurrPlayer();
 
             m_consoleView.ClearScreen();
+            m_consoleView.printGameName(m_gameModel.getM_GameName());
             m_consoleView.displayCurrPlayer(player);
             m_consoleView.printGame(GetSingleGame(), getPlayers());
-            if (player.getType() == COMPUTER) {
-                makeMove();
-                m_gameModel.forwardPlayer();
-            } else {
-                gameOption = eGameMenu.CHOOSE;
-                while (gameOption == eGameMenu.CHOOSE) {
-                    gameOption = m_consoleView.getGameOption();
-                    switch (gameOption) {
-                        case MAKE_MOVE:
-                            makeMove();
-                            m_gameModel.forwardPlayer();
-                            break;
-                        case SAVE_GAME:
-//                           if (m_gameModel.getSaveGamePath() == null) {
-//                                saveGameAs();
-//                            } else {
-                                eXMLSaveStatus saveStatus;
-                                saveStatus = XML.saveXML("c:\\users\\maor\\desktop\\game.xml", m_gameModel);
-//                                if (saveStatus != eXMLSaveStatus.SAVE_SUCCESS) {
-//                                    m_consoleView.displayXMLSaveError(saveStatus);
-//                                } else {
-//                                    m_consoleView.displayXMLSavedSuccessfully(m_gameModel.getSaveGamePath());
-//                                }
-                            
-                            gameOption = eGameMenu.CHOOSE;
-                            break;
-                        case SAVE_GAME_AS:
-                            //           saveGameAs();
-                            gameOption = eGameMenu.CHOOSE;
-                            break;
-                        case EXIT_CURRENT_GAME:
-                            return;
-                        default:
-                            throw new SnakesAndLaddersRunTimeException("runSingleGame(): Invalid gameOption input.");
-                    }
+
+            gameOption = eGameMenu.CHOOSE;
+            while (gameOption == eGameMenu.CHOOSE) {
+                gameOption = m_consoleView.getGameOption();
+                switch (gameOption) {
+                    case MAKE_MOVE:
+                        makeMove();
+                        m_gameModel.forwardPlayer();
+                        break;
+                    case SAVE_GAME:
+                        //             saveGame();
+                        gameOption = eGameMenu.CHOOSE;
+                        break;
+                    case SAVE_GAME_AS:
+                        //           saveGameAs();
+                        gameOption = eGameMenu.CHOOSE;
+                        break;
+                    case EXIT_CURRENT_GAME:
+                        return;
+                    default:
+                        throw new SnakesAndLaddersRunTimeException("runSingleGame(): Invalid gameOption input.");
                 }
             }
         }
@@ -235,6 +222,7 @@ public class GameControl {
         ePlayerType playertype;
         String playerName;
         int playerNumOfSoldiersToWin;
+        int computerIndex = 0;
 
         for (int i = 0; i < m_gameModel.getNumOfPlayers(); i++) {
             playertype = m_consoleView.getPlayerType(i);
@@ -252,6 +240,7 @@ public class GameControl {
                     player.initSoldiers(m_gameModel.getCurrGameIndex());
                     m_gameModel.getCurrGameIndex().getPlayers().add(player);
                     m_gameModel.addPlayer(player);
+                    computerIndex++;
                     break;
                 default:
                     throw new SnakesAndLaddersRunTimeException("InitPlayers(): Invalid PlayerType Input");
@@ -296,7 +285,7 @@ public class GameControl {
             boardToMove = m_gameModel.GetSingleGame().getBoardSquare(newPlayerIndex);
             currentSoldier.setLocationOnBoard(boardToMove);
         } else {
-            boardToMove = m_gameModel.GetSingleGame().getBoardSquare(m_gameModel.GetSingleGame().getO_BoardSize() - 1);
+            boardToMove = m_gameModel.GetSingleGame().getBoardSquare(m_gameModel.GetSingleGame().getMAX_SQUARE_NUM());
             currentSoldier.setLocationOnBoard(boardToMove);
             currentSoldier.setM_FinishedGame(true);
         }
