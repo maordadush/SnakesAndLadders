@@ -25,6 +25,7 @@ import org.xml.sax.SAXParseException;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.gamemodel.GameModel;
+import snakesandladders.gamemodel.eChars;
 import snakesandladders.players.SinglePlayer;
 import snakesandladders.players.Soldier;
 import snakesandladders.players.ePlayerType;
@@ -335,31 +336,52 @@ public class XML {
 
     private static Board getBoard(GameModel model) throws XMLException {
         Board newBoard = new Board();
+        Cells cells = new Cells();
+        Snakes snakes = new Snakes();
+        Ladders ladders = new Ladders();
         int boardSize = model.getGame().getO_BoardSize();
         // set the board size
         newBoard.setSize(boardSize);
         for (int i = 0; i < boardSize; i++) {
-            Cells cells = new Cells();
             for (int j = 0; j < boardSize; j++) {
-                Cell cell = new Cell();
                 BoardSquare currBoardSquare = model.getGame().getBoardSquare(i, j);
-                cell.setNumber(BigInteger.valueOf(currBoardSquare.getSquareNumber()));
-                for (SinglePlayer player : currBoardSquare.getPlayers()) {
-                    int numSoldiersAtSquare = 0;
-                    for (Soldier soldier : player.getM_SoldiersList()) {
-                        if (soldier.getLocationOnBoard() == currBoardSquare) {
-                            numSoldiersAtSquare++;
+                if (!currBoardSquare.getPlayers().isEmpty()) {
+                    Cell cell = new Cell();
+                    cell.setNumber(BigInteger.valueOf(currBoardSquare.getSquareNumber()));
+                    for (SinglePlayer player : currBoardSquare.getPlayers()) {
+                        int numSoldiersAtSquare = 0;
+                        for (Soldier soldier : player.getM_SoldiersList()) {
+                            if (soldier.getLocationOnBoard() == currBoardSquare) {
+                                numSoldiersAtSquare++;
+                            }
+                        }
+                        if (numSoldiersAtSquare > 0) {
+                            Cell.Soldiers newPlayer = new Cell.Soldiers();
+                            newPlayer.setPlayerName(player.getPlayerName());
+                            newPlayer.setCount(numSoldiersAtSquare);
+                            cell.getSoldiers().add(newPlayer);
                         }
                     }
-                    Cell.Soldiers newSoldier = new Cell.Soldiers();
-                    newSoldier.setPlayerName(player.getPlayerName());
-                    newSoldier.setCount(numSoldiersAtSquare);
-                    cell.getSoldiers().add(newSoldier);
+                    cells.getCell().add(cell);
                 }
-                cells.getCell().add(cell);
+                // add ladders or snakes
+                eChars currCellType = currBoardSquare.getType();
+                if (currCellType == eChars.SNAKE_HEAD) {
+                    Snake newSnake = new Snake();
+                    newSnake.setFrom(BigInteger.valueOf(currBoardSquare.getSquareNumber()));
+                    newSnake.setTo(BigInteger.valueOf(currBoardSquare.getJumpTo().getSquareNumber()));
+                    snakes.getSnake().add(newSnake);
+                } else if (currCellType == eChars.LADDER_TAIL) {
+                    Ladder newLadder = new Ladder();
+                    newLadder.setFrom(BigInteger.valueOf(currBoardSquare.getSquareNumber()));
+                    newLadder.setTo(BigInteger.valueOf(currBoardSquare.getJumpTo().getSquareNumber()));
+                    ladders.getLadder().add(newLadder);
+                }
             }
-            newBoard.setCells(cells);
         }
+        newBoard.setCells(cells);
+        newBoard.setLadders(ladders);
+        newBoard.setSnakes(snakes);
         return newBoard;
     }
 

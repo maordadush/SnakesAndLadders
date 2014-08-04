@@ -244,17 +244,13 @@ public class GameControl {
                     playerName = m_consoleView.getPlayerString();
                     player = new SinglePlayer(playerName, playertype);
                     player.initSoldiers(m_gameModel.getCurrGameIndex());
-                    for (Soldier soldier : player.getM_SoldiersList()) {
-                        m_gameModel.getCurrGameIndex().getPlayers().add(player);
-                    }
+                    m_gameModel.getCurrGameIndex().getPlayers().add(player);
                     m_gameModel.addPlayer(player);
                     break;
                 case COMPUTER:
                     player = new SinglePlayer("Computer", playertype);
                     player.initSoldiers(m_gameModel.getCurrGameIndex());
-                    for (Soldier soldier : player.getM_SoldiersList()) {
-                        m_gameModel.getCurrGameIndex().getPlayers().add(player);
-                    }
+                    m_gameModel.getCurrGameIndex().getPlayers().add(player);
                     m_gameModel.addPlayer(player);
                     break;
                 default:
