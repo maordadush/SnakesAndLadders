@@ -189,4 +189,13 @@ public class GameModel implements iWinChecker {
         }
         this.m_NumOfSoldiersToWin = m_NumOfSoldiersToWin;
     }
+
+    public String getSaveGamePath() {
+        return saveGamePath;
+    }
+
+    public void setSaveGamePath(String path) {
+        saveGamePath = path;
+    }
+
 }

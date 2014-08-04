@@ -154,7 +154,7 @@ public class XML {
 
     private static eXMLLoadStatus loadPlayers(List<Player> players, String currPlayer, GameModel model) {
         boolean playerExist = false;
-
+        
         for (Player player : players) {
             playerExist = findPlayerInArray(player, model.getPlayers());
             if (playerExist) {
@@ -319,7 +319,7 @@ public class XML {
 
             Snakesandladders snakesandladders = new Snakesandladders();
 
-            snakesandladders.setName("snakesAndLaddersdadush");//(getGameName(model));
+            snakesandladders.setName(getGameName(model));
             snakesandladders.setNumberOfSoldiers(getNumOfSoldiers(model));
             snakesandladders.setCurrentPlayer(getCurrPlayer(model));
             snakesandladders.setPlayers(getPlayer(model));
@@ -335,7 +335,7 @@ public class XML {
     }
 
     private static String getGameName(GameModel model) throws XMLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return model.getM_GameName();
     }
 
     private static int getNumOfSoldiers(GameModel model) throws XMLException {

@@ -14,10 +14,11 @@ import snakesandladders.gamecontrol.eStartMenu;
 import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
 import snakesandladders.gamemodel.eChars;
-import snakesandladders.players.Soldier;
 import snakesandladders.players.SinglePlayer;
+import snakesandladders.players.Soldier;
 import snakesandladders.players.ePlayerType;
 import snakesandladders.xml.eXMLLoadStatus;
+import snakesandladders.xml.eXMLSaveStatus;
 
 /**
  *
@@ -456,7 +457,7 @@ public class ConsoleView {
     }
 
     public void displaySoldiersOfPlayer(SinglePlayer player) {
-       
+
     }
 
     public void PrintCubeAnswer(int cubeAnswer) {
@@ -495,6 +496,10 @@ public class ConsoleView {
             }
         }
         return false;
+    }
+
+    public void displayXMLSaveError(eXMLSaveStatus saveStatus) {
+        System.out.println("Error saving game to XML: " + saveStatus.toString());
     }
 
 }

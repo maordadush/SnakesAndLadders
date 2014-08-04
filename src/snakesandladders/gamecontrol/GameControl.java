@@ -119,21 +119,11 @@ public class GameControl {
                         m_gameModel.forwardPlayer();
                         break;
                     case SAVE_GAME:
-                        //                           if (m_gameModel.getSaveGamePath() == null) {
-//                                saveGameAs();
-//                            } else {
-                        eXMLSaveStatus saveStatus;
-                        saveStatus = XML.saveXML("c:\\users\\maor\\desktop\\game.xml", m_gameModel);
-//                                if (saveStatus != eXMLSaveStatus.SAVE_SUCCESS) {
-//                                    m_consoleView.displayXMLSaveError(saveStatus);
-//                                } else {
-//                                    m_consoleView.displayXMLSavedSuccessfully(m_gameModel.getSaveGamePath());
-//                                }
-
+                        saveGame();
                         gameOption = eGameMenu.CHOOSE;
                         break;
                     case SAVE_GAME_AS:
-                        //           saveGameAs();
+                        saveGameAs();
                         gameOption = eGameMenu.CHOOSE;
                         break;
                     case EXIT_CURRENT_GAME:
@@ -186,7 +176,8 @@ public class GameControl {
 
     private eXMLLoadStatus loadGame() throws SnakesAndLaddersRunTimeException {
         eXMLLoadStatus loadStatus;
-
+        SinglePlayer player = m_gameModel.getCurrPlayer();
+        player = null;
         //Noam: "First Init Table from XML
         GameModel modelLoad = null;
         String xmlPath = m_consoleView.getLoadXMLPath();
@@ -220,11 +211,31 @@ public class GameControl {
     }
 
     private void saveGame() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (m_gameModel.getSaveGamePath() == null) {
+            saveGameAs();
+        } else {
+            eXMLSaveStatus saveStatus;
+            saveStatus = XML.saveXML(m_gameModel.getSaveGamePath(), m_gameModel);
+            if (saveStatus != eXMLSaveStatus.SAVE_SUCCESS) {
+                m_consoleView.displayXMLSaveError(saveStatus);
+            } else {
+                m_consoleView.displayXMLSavedSuccessfully(m_gameModel.getSaveGamePath());
+            }
+        }
+
     }
 
     private void saveGameAs() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String savePath = m_consoleView.getSaveXMLPath();
+        eXMLSaveStatus saveStatus;
+        saveStatus = XML.saveXML(savePath, m_gameModel);
+
+        if (saveStatus == eXMLSaveStatus.SAVE_SUCCESS) {
+            m_gameModel.setSaveGamePath(savePath);
+            m_consoleView.displayXMLSavedSuccessfully(savePath);
+        } else {
+            m_consoleView.displayXMLSaveError(saveStatus);
+        }
     }
 
     private void initPlayers() throws SnakesAndLaddersRunTimeException {

@@ -60,6 +60,14 @@ public class SinglePlayer {
         return numSoldiers;
     }
 
+    public static AtomicInteger getNextId() {
+        return nextId;
+    }
+
+    public static void setNextId(AtomicInteger nextId) {
+        SinglePlayer.nextId = nextId;
+    }
+    
     public Soldier getCurrentSoldier() {
         return m_CurrentSoldier;
     }
