@@ -189,7 +189,7 @@ public class ConsoleView {
         }
     }
 
-    public String getPlayerString(List<aPlayer> playersList) {
+    public String getPlayerString(List<SinglePlayer> playersList) {
         Scanner scanner = new Scanner(System.in);
         boolean playerExist = false;
         String playerName;
@@ -488,8 +488,8 @@ public class ConsoleView {
         System.out.println("Game name: " + m_GameName);
     }
 
-    private boolean findPlayerInArray(String playerName, List<aPlayer> playersList) {
-        for (aPlayer player : playersList) {
+    private boolean findPlayerInArray(String playerName, List<SinglePlayer> playersList) {
+        for (SinglePlayer player : playersList) {
             if (player.getPlayerName().equals(playerName)) {
                 return true;
             }

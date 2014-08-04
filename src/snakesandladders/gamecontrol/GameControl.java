@@ -119,7 +119,17 @@ public class GameControl {
                         m_gameModel.forwardPlayer();
                         break;
                     case SAVE_GAME:
-                        //             saveGame();
+                        //                           if (m_gameModel.getSaveGamePath() == null) {
+//                                saveGameAs();
+//                            } else {
+                        eXMLSaveStatus saveStatus;
+                        saveStatus = XML.saveXML("c:\\users\\maor\\desktop\\game.xml", m_gameModel);
+//                                if (saveStatus != eXMLSaveStatus.SAVE_SUCCESS) {
+//                                    m_consoleView.displayXMLSaveError(saveStatus);
+//                                } else {
+//                                    m_consoleView.displayXMLSavedSuccessfully(m_gameModel.getSaveGamePath());
+//                                }
+
                         gameOption = eGameMenu.CHOOSE;
                         break;
                     case SAVE_GAME_AS:
@@ -229,14 +239,14 @@ public class GameControl {
 
             switch (playertype) {
                 case HUMAN:
-                    playerName = m_consoleView.getPlayerString();
+                    playerName = m_consoleView.getPlayerString(m_gameModel.getPlayers());
                     player = new SinglePlayer(playerName, playertype);
                     player.initSoldiers(m_gameModel.getCurrGameIndex());
                     m_gameModel.getCurrGameIndex().getPlayers().add(player);
                     m_gameModel.addPlayer(player);
                     break;
                 case COMPUTER:
-                    player = new SinglePlayer("Computer", playertype);
+                    player = new SinglePlayer("Computer" + computerIndex, playertype);
                     player.initSoldiers(m_gameModel.getCurrGameIndex());
                     m_gameModel.getCurrGameIndex().getPlayers().add(player);
                     m_gameModel.addPlayer(player);

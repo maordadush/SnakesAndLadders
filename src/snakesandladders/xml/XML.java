@@ -30,7 +30,9 @@ import snakesandladders.players.SinglePlayer;
 import snakesandladders.players.Soldier;
 import snakesandladders.players.ePlayerType;
 import snl.*;
+import snl.Cell.Soldiers;
 import snl.Ladders.Ladder;
+import snl.Players.Player;
 import snl.Snakes.Snake;
 
 /**
@@ -190,7 +192,7 @@ public class XML {
         if (model.getCurrPlayer() == null) {
             return eXMLLoadStatus.CURR_TURN_PLAYER_ERROR;
         }
-        
+
         return eXMLLoadStatus.LOAD_SUCCESS;
     }
 
@@ -260,12 +262,14 @@ public class XML {
 
     private static eXMLLoadStatus loadSoldiers(List<Cell> o_CellsList, GameModel model) {
         for (Cell cell : o_CellsList) {
-            List<Cell.Soldiers> soldiersList = cell.getSoldiers();
+            List<Soldiers> soldiersList = cell.getSoldiers();
             BoardSquare currCell = model.getGame().getBoardSquare(cell.getNumber().intValue());
-            for (Cell.Soldiers soldier : soldiersList) {
+            for (Soldiers soldier : soldiersList) {
                 SinglePlayer player = model.getPlayerByName(soldier.getPlayerName());
-                Soldier newSoldier = new Soldier(player.getColor(), player.getPlayerID(), currCell);
-                player.getM_SoldiersList().add(newSoldier);
+                for (int i = 0; i < soldier.getCount(); i++) {
+                    Soldier newSoldier = new Soldier(player.getColor(), player.getPlayerID(), currCell);
+                    player.getM_SoldiersList().add(newSoldier);
+                }
                 currCell.getPlayers().add(player);
             }
         }
@@ -409,8 +413,10 @@ public class XML {
         newBoard.setLadders(ladders);
         newBoard.setSnakes(snakes);
         return newBoard;
-    private static boolean findPlayerInArray(Player player, List<aPlayer> players) {
-        for (aPlayer currPlayer : players) {
+    }
+
+    private static boolean findPlayerInArray(Player player, List<SinglePlayer> players) {
+        for (SinglePlayer currPlayer : players) {
             if (currPlayer.getPlayerName().equals(player.getName())) {
                 return true;
             }
