@@ -176,8 +176,7 @@ public class GameControl {
 
     private eXMLLoadStatus loadGame() throws SnakesAndLaddersRunTimeException {
         eXMLLoadStatus loadStatus;
-        SinglePlayer player = m_gameModel.getCurrPlayer();
-        player = null;
+        
         //Noam: "First Init Table from XML
         GameModel modelLoad = null;
         String xmlPath = m_consoleView.getLoadXMLPath();
