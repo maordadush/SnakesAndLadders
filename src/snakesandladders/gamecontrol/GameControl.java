@@ -5,7 +5,6 @@
  */
 package snakesandladders.gamecontrol;
 
-import java.util.ArrayList;
 import java.util.List;
 import snakesandladders.consoleview.ConsoleView;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
@@ -99,18 +98,17 @@ public class GameControl {
     private void runSingleGame() throws SnakesAndLaddersRunTimeException {
         eGameMenu gameOption;
         SinglePlayer player;
-
+        m_consoleView.ClearScreen();
+        
+        player = m_gameModel.getCurrPlayer();
+        m_consoleView.displayCurrPlayer(player);
         while (!hasGameWon()) {
-            player = m_gameModel.getCurrPlayer();
-
-            m_consoleView.ClearScreen();
-            m_consoleView.printGameName(m_gameModel.getM_GameName());
-            m_consoleView.displayCurrPlayer(player);
-            m_consoleView.printGame(GetSingleGame(), getPlayers());
 
             gameOption = eGameMenu.CHOOSE;
             while (gameOption == eGameMenu.CHOOSE) {
                 gameOption = m_consoleView.getGameOption();
+                m_consoleView.ClearScreen();
+
                 switch (gameOption) {
                     case MAKE_MOVE:
                         makeMove();
@@ -203,9 +201,11 @@ public class GameControl {
         BoardSquare move;
 
         move = selectSquareToFill();
-        m_gameModel.GetSingleGame().setCurrentBoardSquare(move);
+        m_gameModel.getGame().setCurrentBoardSquare(move);
 
         m_consoleView.printGame(GetSingleGame(), getPlayers());
+        m_consoleView.waitForEnter();
+        m_consoleView.ClearScreen();
     }
 
     private void saveGame() {
@@ -267,7 +267,7 @@ public class GameControl {
     }
 
     public SnakesAndLaddersSingleGame GetSingleGame() {
-        return m_gameModel.GetSingleGame();
+        return m_gameModel.getGame();
     }
 
     private BoardSquare selectSquareToFill() throws SnakesAndLaddersRunTimeException {
@@ -280,13 +280,14 @@ public class GameControl {
 
         if (player.getType() == COMPUTER) {
             m_consoleView.LetComputerPlay();
-            System.out.println(player);
+            m_consoleView.PrintCubeAnswer(cubeAnswer);
+            m_consoleView.PrintPlayer(player);
             int soldierIndex = player.randomizeCurrentPlayer();
             m_consoleView.printCurrentSoldier(soldierIndex);
         } else {
+            m_consoleView.PrintCubeAnswer(cubeAnswer);
             int indexOfSoldier = m_consoleView.GetSoldierToPlayWith(player);
             player.setCurrentSoldier(indexOfSoldier);
-            m_consoleView.PrintCubeAnswer(cubeAnswer);
         }
 
         nextMove = move(player, cubeAnswer);
@@ -301,10 +302,10 @@ public class GameControl {
         int oldPlyerIndex = originSquare.getSquareNumber();
         int newPlayerIndex = oldPlyerIndex + cubeAnswer;
 
-        if (newPlayerIndex < (m_gameModel.GetSingleGame().getMAX_SQUARE_NUM())) {
-            boardToMove = m_gameModel.GetSingleGame().getBoardSquare(newPlayerIndex);
+        if (newPlayerIndex < (m_gameModel.getGame().getMAX_SQUARE_NUM())) {
+            boardToMove = m_gameModel.getGame().getBoardSquare(newPlayerIndex);
         } else {
-            boardToMove = m_gameModel.GetSingleGame().getBoardSquare(m_gameModel.GetSingleGame().getMAX_SQUARE_NUM());
+            boardToMove = m_gameModel.getGame().getBoardSquare(m_gameModel.getGame().getMAX_SQUARE_NUM());
             currentSoldier.setM_FinishedGame(true);
         }
 
@@ -318,8 +319,7 @@ public class GameControl {
             case NONE:
                 break;
         }
-        
-        
+
         boardToMove.getPlayers().add(player);
         //check if exist soldiers in origin square
         if (!player.atSquare(originSquare)) {
@@ -344,17 +344,6 @@ public class GameControl {
             winningCount = 0;
         }
         return false;
-    }
-
-    private void setPlayersPosition() {
-        for (SinglePlayer player : m_gameModel.getPlayers()) {
-            for (Soldier soldier : player.getM_SoldiersList()) {
-                soldier.setLocationOnBoard(m_gameModel.getCurrGameIndex());
-                if (m_gameModel.getCurrGameIndex().getSquareNumber() < m_gameModel.GetSingleGame().getMAX_SQUARE_NUM()) {
-                    soldier.setM_FinishedGame(false);
-                }
-            }
-        }
     }
 
     private void restartGame() throws SnakesAndLaddersRunTimeException {
