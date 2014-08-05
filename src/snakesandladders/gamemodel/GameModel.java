@@ -20,11 +20,12 @@ public class GameModel implements iWinChecker {
     public static final int MAX_PLAYERS = 4;
     public static final int NUM_OF_SOLDIERS = 4;
     private List<SinglePlayer> players;
-    private SnakesAndLaddersSingleGame game;
+    private final SnakesAndLaddersSingleGame game;
     private SinglePlayer currTurnPlayer;
     private String saveGamePath;
     private int m_NumOfPlayers;
     private int m_numOfSnakesAndLadders;
+
     private int m_CurrentPlayerIndex;
     private String m_GameName;
     private int m_GameNameIndex = 0;
@@ -40,7 +41,6 @@ public class GameModel implements iWinChecker {
 
         if (o_NumOfPlayers > 1 || o_NumOfPlayers < 5) {
             m_NumOfPlayers = o_NumOfPlayers;
-            //players = new ArrayList<>();
             players = new ArrayList<>(m_NumOfPlayers);
         } else {
             throw new UnsupportedOperationException("Illeagal number of players"); //To change body of generated methods, choose Tools | Templates.
@@ -141,8 +141,8 @@ public class GameModel implements iWinChecker {
     public SinglePlayer getWinnerPlayer(int numOfSoldiersToWin) {
         SinglePlayer playerToReturn = null;
         for (SinglePlayer player : players) {
-            if (player.getNumSoldiersAtSquare(game.getBoardSquare(game.getO_BoardSize() - 1, game.getO_BoardSize() - 1))
-                    == numOfSoldiersToWin) {
+            if (player.getNumSoldiersAtSquare(game.getBoardSquare(game.getMAX_SQUARE_NUM()))
+                    >= numOfSoldiersToWin) {
                 playerToReturn = player;
             }
         }
@@ -198,4 +198,7 @@ public class GameModel implements iWinChecker {
         saveGamePath = path;
     }
 
+    public int getM_numOfSnakesAndLadders() {
+        return m_numOfSnakesAndLadders;
+    }
 }

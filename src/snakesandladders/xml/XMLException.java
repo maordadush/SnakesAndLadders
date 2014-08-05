@@ -17,6 +17,6 @@ public class XMLException extends Exception {
 
     @Override
     public String toString() {
-        return "XMLException"; //To change body of generated methods, choose Tools | Templates.
+        return "XMLException";
     }
 }

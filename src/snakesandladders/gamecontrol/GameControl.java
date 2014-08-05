@@ -5,6 +5,7 @@
  */
 package snakesandladders.gamecontrol;
 
+import java.util.ArrayList;
 import java.util.List;
 import snakesandladders.consoleview.ConsoleView;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
@@ -26,9 +27,9 @@ import snakesandladders.xml.eXMLSaveStatus;
  */
 public class GameControl {
 
-    private ConsoleView m_consoleView;
+    private final ConsoleView m_consoleView;
     private GameModel m_gameModel;
-
+    
     public GameControl() {
         m_consoleView = new ConsoleView();
     }
@@ -75,8 +76,11 @@ public class GameControl {
                 endGameOption = m_consoleView.getEndGameOption();
                 switch (endGameOption) {
                     case RESTART_GAME:
-                        m_gameModel.initGame();
-                        m_gameModel.GetSingleGame().shuffleSnakesAndLadders(m_gameModel.getM_NumOfSoldiersToWin());
+                        List<BoardSquare> specialBs = new ArrayList<>();
+                        copyLadderAndSnakesToList(m_gameModel.GetSingleGame());
+                        m_gameModel.GetSingleGame().initGame();
+                        copyFromListToLaddersAndSnakes(specialBs);
+                        setPlayersPosition();
                         break;
                     case START_NEW_GAME:
                         createNewGame();
@@ -99,10 +103,8 @@ public class GameControl {
     private void runSingleGame() throws SnakesAndLaddersRunTimeException {
         eGameMenu gameOption;
         SinglePlayer player;
-        //BoardSquare currGameIndex;
 
         while (!hasGameWon()) {
-            //currGameIndex = m_gameModel.getCurrGameIndex();
             player = m_gameModel.getCurrPlayer();
 
             m_consoleView.ClearScreen();
@@ -149,10 +151,12 @@ public class GameControl {
 
     private void createNewGame() throws SnakesAndLaddersRunTimeException {
         try {
+
             int boardSize = m_consoleView.GetBoardSize();
             int numOfSnakesAndLadders = m_consoleView.getNumOfSnakesAndLadders(boardSize);
             int numOfPlayers = m_consoleView.GetNumOfPlayers();
             int numOfSoldiersToWin = m_consoleView.GetNumOfSoldiersToWin();
+
             m_gameModel = new GameModel(boardSize, numOfSnakesAndLadders, numOfPlayers, numOfSoldiersToWin);
         } catch (SnakesAndLaddersRunTimeException ex) {
             m_consoleView.printSnakesAndLaddersRunTimeExceptiom(ex);
@@ -176,9 +180,9 @@ public class GameControl {
 
     private eXMLLoadStatus loadGame() throws SnakesAndLaddersRunTimeException {
         eXMLLoadStatus loadStatus;
-        //Noam: "First Init Table from XML
         GameModel modelLoad = null;
         String xmlPath = m_consoleView.getLoadXMLPath();
+
         loadStatus = XML.initModelFromXml(xmlPath, modelLoad);
         if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
             m_consoleView.displayXMLLoadError(loadStatus);
@@ -199,12 +203,10 @@ public class GameControl {
 
     private void makeMove() throws SnakesAndLaddersRunTimeException {
         BoardSquare move;
-        //aPlayer player = m_gameModel.getCurrPlayer();
 
         move = selectSquareToFill();
         m_gameModel.GetSingleGame().setCurrentBoardSquare(move);
 
-        //m_consoleView.displayLastMove(player, move); - Noam: "Check if needed"
         m_consoleView.printGame(GetSingleGame(), getPlayers());
     }
 
@@ -240,7 +242,6 @@ public class GameControl {
         SinglePlayer player;
         ePlayerType playertype;
         String playerName;
-        int playerNumOfSoldiersToWin;
         int computerIndex = 0;
 
         for (int i = 0; i < m_gameModel.getNumOfPlayers(); i++) {
@@ -320,11 +321,9 @@ public class GameControl {
                 break;
         }
         m_gameModel.setMove(player, boardToMove);
-        //player.ForwardCurrentSoldier(); - Noam: "Now get current soldier from user"
         return boardToMove;
     }
 
-    //TODO fixit
     public boolean hasGameWon() {
 
         int winningCount = 0;
@@ -340,5 +339,24 @@ public class GameControl {
             winningCount = 0;
         }
         return false;
+    }
+
+    private void setPlayersPosition() {
+        for (SinglePlayer player : m_gameModel.getPlayers()){
+            for (Soldier soldier : player.getM_SoldiersList()){
+                soldier.setLocationOnBoard(m_gameModel.getCurrGameIndex());
+                if (m_gameModel.getCurrGameIndex().getSquareNumber() < m_gameModel.GetSingleGame().getMAX_SQUARE_NUM()){
+                    soldier.setM_FinishedGame(false);
+                }
+            }
+        }
+    }
+
+    private void copyLadderAndSnakesToList(SnakesAndLaddersSingleGame GetSingleGame) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void copyFromListToLaddersAndSnakes(List<BoardSquare> specialBs) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

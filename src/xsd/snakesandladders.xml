@@ -11,7 +11,7 @@
                 <soldiers playerName="john" count="3"/>
                 <soldiers playerName="paul" count="4"/>
             </cell>
-            <cell number="2">
+            <cell number="25">
                 <soldiers playerName="john" count="1"/>
             </cell>
         </cells>
