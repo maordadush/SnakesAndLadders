@@ -303,19 +303,8 @@ public class GameControl {
 
         if (newPlayerIndex < (m_gameModel.GetSingleGame().getMAX_SQUARE_NUM())) {
             boardToMove = m_gameModel.GetSingleGame().getBoardSquare(newPlayerIndex);
-            currentSoldier.setLocationOnBoard(boardToMove);
-            boardToMove.getPlayers().add(player);
-            if (!player.atSquare(originSquare)) {
-                originSquare.getPlayers().remove(player);
-            }
-
         } else {
             boardToMove = m_gameModel.GetSingleGame().getBoardSquare(m_gameModel.GetSingleGame().getMAX_SQUARE_NUM());
-            currentSoldier.setLocationOnBoard(boardToMove);
-            boardToMove.getPlayers().add(player);
-            if (!player.atSquare(originSquare)) {
-                originSquare.getPlayers().remove(player);
-            }
             currentSoldier.setM_FinishedGame(true);
         }
 
@@ -328,6 +317,12 @@ public class GameControl {
                 break;
             case NONE:
                 break;
+        }
+        
+        
+        boardToMove.getPlayers().add(player);
+        if (!player.atSquare(originSquare)) {
+            originSquare.getPlayers().remove(player);
         }
         m_gameModel.setMove(player, boardToMove);
         return boardToMove;
