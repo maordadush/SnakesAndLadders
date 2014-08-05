@@ -321,6 +321,7 @@ public class GameControl {
         
         
         boardToMove.getPlayers().add(player);
+        //check if exist soldiers in origin square
         if (!player.atSquare(originSquare)) {
             originSquare.getPlayers().remove(player);
         }
