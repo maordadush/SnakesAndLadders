@@ -63,8 +63,8 @@ public class SinglePlayer {
         return nextId;
     }
 
-    public static void setNextId(AtomicInteger nextId) {
-        SinglePlayer.nextId = nextId;
+    public static void setNextId(int nextId) {
+        SinglePlayer.nextId.set(nextId);
     }
     
     public Soldier getCurrentSoldier() {
@@ -144,5 +144,12 @@ public class SinglePlayer {
     private boolean isSoldierListInited() {
         return m_SoldiersList.size() == NUM_OF_SOLDIERS;
     }
-
+    
+    public boolean atSquare(BoardSquare square){
+        for (Soldier soldier : m_SoldiersList) {
+            if (soldier.getLocationOnBoard() == square)
+                return true;
+        }
+        return false;
+    }
 }

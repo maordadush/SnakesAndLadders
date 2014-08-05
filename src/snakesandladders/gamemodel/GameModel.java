@@ -25,7 +25,6 @@ public class GameModel implements iWinChecker {
     private String saveGamePath;
     private int m_NumOfPlayers;
     private int m_numOfSnakesAndLadders;
-
     private int m_CurrentPlayerIndex;
     private String m_GameName;
     private int m_GameNameIndex = 0;
@@ -48,7 +47,7 @@ public class GameModel implements iWinChecker {
         setM_NumOfSoldiersToWin(o_numOfSoldiersToWin);
         game = new SnakesAndLaddersSingleGame(o_GameSize, o_numOfSnakesAndLadders);
         saveGamePath = null;
-        m_GameName = "Game " + m_GameNameIndex;
+        m_GameName = "SnakesAndLadders_" + m_GameNameIndex;
         m_GameNameIndex++;
     }
 
@@ -68,9 +67,11 @@ public class GameModel implements iWinChecker {
         return returnedValue;
     }
 
-    public void initNewGame() {
+    public void initNewGame(boolean startNewGame) {
         game.initGame();
-        game.shuffleSnakesAndLadders(m_numOfSnakesAndLadders);
+        if (startNewGame){
+            game.shuffleSnakesAndLadders(m_numOfSnakesAndLadders);   
+        }
         deinitPlayers();
     }
 
@@ -200,5 +201,19 @@ public class GameModel implements iWinChecker {
 
     public int getM_numOfSnakesAndLadders() {
         return m_numOfSnakesAndLadders;
+    }
+    
+    public List<BoardSquare> getSnakesAndLaddersSquares(){
+        List<BoardSquare> snakesAndLaddersList = new ArrayList();
+        for (int i = 0; i <game.getO_BoardSize(); i++) {
+            for (int j = 0; j < game.getO_BoardSize(); j++){
+                BoardSquare currSquare = game.getBoardSquare(i, j);
+                if(currSquare.getType() != eChars.NONE){
+                  snakesAndLaddersList.add(currSquare);
+                }
+            }
+                
+        }
+        return snakesAndLaddersList;
     }
 }

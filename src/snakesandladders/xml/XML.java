@@ -151,7 +151,7 @@ public class XML {
 
     private static eXMLLoadStatus loadPlayers(List<Player> players, String currPlayer, GameModel model) {
         boolean playerExist = false;
-        
+
         for (Player player : players) {
             playerExist = findPlayerInArray(player, model.getPlayers());
             if (playerExist) {
@@ -264,8 +264,8 @@ public class XML {
             for (Soldiers soldier : soldiersList) {
                 SinglePlayer player = model.getPlayerByName(soldier.getPlayerName());
                 for (int i = 0; i < soldier.getCount(); i++) {
-                    Soldier newSoldier = new Soldier(player.getColor(), player.getPlayerID(), currCell);
-                    if (currCell.getSquareNumber() == model.GetSingleGame().getMAX_SQUARE_NUM()){
+                    Soldier newSoldier = new Soldier(player.getColor(), i + 1, currCell);
+                    if (currCell.getSquareNumber() == model.GetSingleGame().getMAX_SQUARE_NUM()) {
                         newSoldier.setM_FinishedGame(true);
                     }
                     player.getM_SoldiersList().add(newSoldier);

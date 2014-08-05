@@ -409,12 +409,6 @@ public class ConsoleView {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void ThrowCube() {
-        System.out.println("Press 'Enter' to throw the cube");
-        Scanner reader = new Scanner(System.in);
-        String str = reader.nextLine();
-    }
-
     public void LetComputerPlay() {
         System.out.println("Press 'Enter' to see computer turn");
         Scanner reader = new Scanner(System.in);
@@ -453,10 +447,6 @@ public class ConsoleView {
         }
 
         return input;
-    }
-
-    public void displaySoldiersOfPlayer(SinglePlayer player) {
-
     }
 
     public void PrintCubeAnswer(int cubeAnswer) {
