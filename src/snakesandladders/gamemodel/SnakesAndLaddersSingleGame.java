@@ -6,6 +6,8 @@
 package snakesandladders.gamemodel;
 
 import java.util.Random;
+import snakesandladders.players.SinglePlayer;
+import snakesandladders.players.Soldier;
 
 /**
  *
@@ -14,7 +16,8 @@ import java.util.Random;
 public class SnakesAndLaddersSingleGame {
 
     private static final int MIN_SQUARE_NUM = 1;
-    private int  MAX_SQUARE_NUM;
+    private int MAX_SQUARE_NUM;
+    private int gameWinner;
 
     public static int getMIN_SQUARE_NUM() {
         return MIN_SQUARE_NUM;
@@ -25,10 +28,8 @@ public class SnakesAndLaddersSingleGame {
     }
     private int m_BoardSize = 0;
     private BoardSquare m_GameBoard[][];
-    private int gameWinner;
     private BoardSquare m_CurrentSquare;
     private int m_numOfSnakesAndLadders;
-    
 
     public SnakesAndLaddersSingleGame(int o_BoardSize, int o_numOfSnakesAndLadders) {
         if (o_BoardSize > 4 || o_BoardSize < 9) {
@@ -78,7 +79,32 @@ public class SnakesAndLaddersSingleGame {
         return m_CurrentSquare;
     }
 
-    public void setCurrentBoardSquare(BoardSquare updatedBoardSquere) {
+    public void setCurrentBoardSquare(SinglePlayer currPlayer, BoardSquare updatedBoardSquere) {
+        boolean playerFound = false;
+        Soldier currentSoldier = null;
+        for (SinglePlayer player : m_CurrentSquare.getPlayers()) {
+            if (player.getPlayerName().equals(currPlayer.getPlayerName())) {
+                currentSoldier = player.GetCurrentSoldier();
+                player.getM_SoldiersList().remove(player.GetCurrentSoldier());
+            }
+        }
+
+        for (SinglePlayer player : updatedBoardSquere.getPlayers()) {
+            if (player.getPlayerName().equals(currPlayer.getPlayerName())) {
+                playerFound = true;
+                if (currentSoldier != null) {
+                    player.getM_SoldiersList().add(currentSoldier);
+                }
+            }
+        }
+        if (!playerFound) {
+            SinglePlayer player = new SinglePlayer(currPlayer.getPlayerName(), currPlayer.getType());
+            if (currentSoldier != null) {
+                player.getM_SoldiersList().add(currentSoldier);
+            }
+            updatedBoardSquere.getPlayers().add(player);
+        }
+
         m_CurrentSquare = updatedBoardSquere;
     }
 
@@ -92,8 +118,9 @@ public class SnakesAndLaddersSingleGame {
     }
 
     public BoardSquare getBoardSquare(int squareNumber) {
-        if (squareNumber < MIN_SQUARE_NUM || squareNumber > MAX_SQUARE_NUM)
+        if (squareNumber < MIN_SQUARE_NUM || squareNumber > MAX_SQUARE_NUM) {
             return null;
+        }
         int boardSize = getO_BoardSize();
         int x = (squareNumber - 1) / boardSize;
         int y = (squareNumber - 1) % boardSize;
@@ -104,12 +131,6 @@ public class SnakesAndLaddersSingleGame {
         return m_GameBoard;
     }
 
-    /**
-     *
-     * @param src
-     * @param dest
-     * @return true - snake added successfully , otherwise false.
-     */
     public BoardSquare getRandomCell() {
 
         Random rand = new Random();
@@ -131,22 +152,33 @@ public class SnakesAndLaddersSingleGame {
         if (src == dest) {
             return false;
         }
+        
+        if(dest.getSquareNumber() > src.getSquareNumber()){
+            return false;
+        }
+        
+        if (src.getSquareNumber() > MAX_SQUARE_NUM || dest.getSquareNumber() > MAX_SQUARE_NUM){
+            return false;
+        }
+        
         if ((src.getType() != eChars.NONE) || (dest.getType() != eChars.NONE)) {
             return false;
         }
+        
         int srcX = (srcSquareNumber - 1) / boardSize;
         int destX = (destSquareNumber - 1) / boardSize;
         if (srcX == destX || srcSquareNumber < destSquareNumber || srcX == 0) {
             return false;
         }
+        
         src.setType(eChars.SNAKE_HEAD);
         src.setJumpTo(dest);
         dest.setType(eChars.SNAKE_TAIL);
 
         return true;
-    }   
-    
-    public boolean setLadder(BoardSquare src, BoardSquare dest){
+    }
+
+    public boolean setLadder(BoardSquare src, BoardSquare dest) {
 
         int boardSize = getO_BoardSize();
         int srcSquareNumber = src.getSquareNumber();
@@ -155,6 +187,15 @@ public class SnakesAndLaddersSingleGame {
         if (src == dest) {
             return false;
         }
+        
+        if(dest.getSquareNumber() < src.getSquareNumber()){
+            return false;
+        }
+        
+        if (src.getSquareNumber() > MAX_SQUARE_NUM || dest.getSquareNumber() > MAX_SQUARE_NUM){
+            return false;
+        }
+        
         if ((src.getType() != eChars.NONE) || (dest.getType() != eChars.NONE)) {
             return false;
         }
@@ -168,5 +209,19 @@ public class SnakesAndLaddersSingleGame {
         dest.setType(eChars.LADDER_HEAD);
 
         return true;
-    }       
+    }
+
+    public void setCurrentBoardSquare(BoardSquare move) {
+        m_CurrentSquare = move;
+    }
+
+    public void copyLaddersAndSnakes(SnakesAndLaddersSingleGame oldGame) {
+        for (int i = 0; i < oldGame.getO_BoardSize(); i++) {
+            for (int j = 0; j < oldGame.getO_BoardSize(); j++) {
+                if (oldGame.getGameBoard()[i][j].getType() != eChars.NONE){
+                    this.getGameBoard()[i][j].setType(oldGame.getGameBoard()[i][j].getType());
+                }
+            }
+        }
+    }
 }

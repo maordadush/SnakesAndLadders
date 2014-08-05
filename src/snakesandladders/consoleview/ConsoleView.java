@@ -15,7 +15,6 @@ import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
 import snakesandladders.gamemodel.eChars;
 import snakesandladders.players.SinglePlayer;
-import snakesandladders.players.Soldier;
 import snakesandladders.players.ePlayerType;
 import snakesandladders.xml.eXMLLoadStatus;
 import snakesandladders.xml.eXMLSaveStatus;
@@ -314,9 +313,9 @@ public class ConsoleView {
                 eChars bsType = bs.getType();
                 boardString.append(String.format("%02d", bs.getSquareNumber())).append("|");
                 if (bsType == eChars.LADDER_TAIL || bsType == eChars.SNAKE_HEAD) {
-                    boardString.append(String.format("%02d", bs.getJumpTo().getSquareNumber())).append("|"); //+ bsType + "|");
+                    boardString.append(String.format("%02d", bs.getJumpTo().getSquareNumber())).append("|");
                 } else {
-                    boardString.append("--|"); //+ bsType + "|");
+                    boardString.append("--|");
                 }
                 for (int k = 0; k < numPlayers; k++) {
                     boardString.append(players.get(k).getNumSoldiersAtSquare(bs));
@@ -336,7 +335,7 @@ public class ConsoleView {
     }
 
     public void displayWinner(String name) {
-        System.out.println("The winner is: " + name);
+        System.out.println("The first winner is: " + name);
     }
 
     public void printSnakesAndLaddersRunTimeExceptiom(SnakesAndLaddersRunTimeException ex) {
@@ -419,7 +418,7 @@ public class ConsoleView {
     public void LetComputerPlay() {
         System.out.println("Press 'Enter' to see computer turn");
         Scanner reader = new Scanner(System.in);
-        String str = reader.nextLine();
+        reader.nextLine();
     }
 
     private void showMenuSnakesAndLaddersSize() {
@@ -431,7 +430,7 @@ public class ConsoleView {
         int input;
 
         System.out.println(player);
-        System.out.println("Choose soldier (1-4):");
+        System.out.println("Choose soldier (1-4 that has not finished):");
 
         while (!scanner.hasNextInt()) {
             System.out.println("Inavlid Input. Please enter a number.");
@@ -443,7 +442,7 @@ public class ConsoleView {
         while ((input < 1 || input > 4) || (player.getM_SoldiersList().get(input - 1).isM_FinishedGame())) {
             System.out.println("Not Valid input, Please enter again:");
             System.out.println(player);
-            System.out.println("Choose soldier (1-4):");
+            System.out.println("Choose soldier (1-4 that has not finished):");
 
             while (!scanner.hasNextInt()) {
                 System.out.println("Inavlid Input. Please enter a number.");
@@ -464,7 +463,7 @@ public class ConsoleView {
         System.out.println("Cube answer: " + cubeAnswer);
         System.out.println("Press 'Enter' to continue.");
         Scanner reader = new Scanner(System.in);
-        String str = reader.nextLine();
+        reader.nextLine();
     }
 
     public void ClearScreen() {

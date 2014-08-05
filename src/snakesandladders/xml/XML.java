@@ -9,10 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -268,6 +265,9 @@ public class XML {
                 SinglePlayer player = model.getPlayerByName(soldier.getPlayerName());
                 for (int i = 0; i < soldier.getCount(); i++) {
                     Soldier newSoldier = new Soldier(player.getColor(), player.getPlayerID(), currCell);
+                    if (currCell.getSquareNumber() == model.GetSingleGame().getMAX_SQUARE_NUM()){
+                        newSoldier.setM_FinishedGame(true);
+                    }
                     player.getM_SoldiersList().add(newSoldier);
                 }
                 currCell.getPlayers().add(player);

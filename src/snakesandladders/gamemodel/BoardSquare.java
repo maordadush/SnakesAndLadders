@@ -6,10 +6,8 @@
 package snakesandladders.gamemodel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import snakesandladders.players.SinglePlayer;
-import snakesandladders.players.Soldier;
 
 
 /**
@@ -20,15 +18,13 @@ public class BoardSquare{
     private eChars type = eChars.NONE;
     private int squareNumber; 
     private BoardSquare jumpTo;
-    private List<SinglePlayer> players;
+    private final List<SinglePlayer> players;
 
 
     BoardSquare(int squareNumber) {
        this.squareNumber = squareNumber;
        this.players = new ArrayList<SinglePlayer>();
     }
-
-
 
     public BoardSquare getJumpTo() {
         return jumpTo;
@@ -57,6 +53,5 @@ public class BoardSquare{
     public void setType(eChars type) {
         this.type = type;
     }
-    
 
 }

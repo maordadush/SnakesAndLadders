@@ -23,7 +23,7 @@ public class SinglePlayer {
     String m_PlayerName;
     List<Soldier> m_SoldiersList;
     static AtomicInteger nextId = new AtomicInteger();
-    private int playerID;
+    private final int playerID;
     Color color;
     int m_CurrentSoldierIndex;
     private Soldier m_CurrentSoldier;
@@ -35,7 +35,6 @@ public class SinglePlayer {
         m_SoldiersList = new ArrayList<>(NUM_OF_SOLDIERS);
         this.color = Color.decode(Integer.toString(this.hashCode()));
         this.m_CurrentSoldierIndex = 0;
-        //this.m_CurrentSoldier = m_SoldiersList<m_CurrentSoldierIndex];
         playerID = nextId.incrementAndGet();
     }
 
@@ -73,7 +72,7 @@ public class SinglePlayer {
     }
 
     public void setCurrentSoldier(int indexOfSoldier) throws SnakesAndLaddersRunTimeException {
-        if (indexOfSoldier < 0 || indexOfSoldier > NUM_OF_SOLDIERS - 1) {
+        if (indexOfSoldier < 0 || indexOfSoldier > NUM_OF_SOLDIERS) {
             throw new SnakesAndLaddersRunTimeException("setCurrentSoldier(): Invalid index.");
         }
         m_CurrentSoldier = m_SoldiersList.get(indexOfSoldier - 1);
@@ -126,10 +125,9 @@ public class SinglePlayer {
     @Override
     public String toString() {
         StringBuilder playerSoldiersString = new StringBuilder();
-        playerSoldiersString.append("Player: " + this.getPlayerName() + "\t");
+        playerSoldiersString.append("Player: ").append(this.getPlayerName()).append("\t");
         for (Soldier soldier : m_SoldiersList) {
-            playerSoldiersString.append("Soldier " + soldier.getSoldierID() + ": "
-                    + (String.format("%02d", soldier.getLocationOnBoard().getSquareNumber()) + "\t"));
+            playerSoldiersString.append("Soldier ").append(soldier.getSoldierID()).append(": ").append(String.format("%02d", soldier.getLocationOnBoard().getSquareNumber())).append("\t");
         }
         playerSoldiersString.append(System.lineSeparator());
         return playerSoldiersString.toString();
