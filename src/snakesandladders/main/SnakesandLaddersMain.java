@@ -17,12 +17,9 @@ public class SnakesandLaddersMain {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        try {
-            GameControl gameControl = new GameControl();
-            gameControl.Run();
-        } catch (Exception ex) {
-            System.out.println("Error occured during the game, exit now...");
-        }
+        GameControl gameControl = new GameControl();
+        gameControl.Run();
+
     }
 
 }

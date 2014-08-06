@@ -491,15 +491,4 @@ public class ConsoleView {
         System.out.println("Error saving game to XML: " + saveStatus.toString());
     }
 
-    public void PrintPlayer(SinglePlayer player) {
-        System.out.println(player);
-    }
-
-    public void waitForEnter() {
-        System.out.println("Press 'Enter' to continue.");
-
-        Scanner reader = new Scanner(System.in);
-        reader.nextLine();
-    }
-
 }

@@ -155,6 +155,10 @@ public class GameModel implements iWinChecker {
         return m_NumOfPlayers;
     }
 
+    public SnakesAndLaddersSingleGame GetSingleGame() {
+        return this.game;
+    }
+
     public void addPlayer(SinglePlayer player) throws SnakesAndLaddersRunTimeException {
         if (players.size() < getNumOfPlayers()) {
             players.add(player);
