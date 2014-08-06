@@ -457,7 +457,7 @@ public class ConsoleView {
     }
 
     public void ClearScreen() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 50; i++) {
             System.out.println("");
         }
     }
@@ -489,6 +489,16 @@ public class ConsoleView {
 
     public void displayXMLSaveError(eXMLSaveStatus saveStatus) {
         System.out.println("Error saving game to XML: " + saveStatus.toString());
+    }
+
+    public void waitForEnter() {
+        System.out.println("Press 'Enter' to continue.");
+        Scanner reader = new Scanner(System.in);
+        reader.nextLine();
+    }
+
+    public void PrintPlayer(SinglePlayer player) {
+        System.out.println(player);
     }
 
 }
