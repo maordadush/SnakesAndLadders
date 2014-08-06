@@ -160,7 +160,7 @@ public class GameControl {
         }
 
         m_gameModel.initNewGame(shuffleLaddersAndSnakes);
-        initPlayers();
+        initPlayers(null);
         m_gameModel.selectFirstPlayer();
     }
 
@@ -236,18 +236,23 @@ public class GameControl {
         }
     }
 
-    private void initPlayers() throws SnakesAndLaddersRunTimeException {
+    private void initPlayers(List<SinglePlayer> players) throws SnakesAndLaddersRunTimeException {
         SinglePlayer player;
         ePlayerType playertype;
         String playerName;
         int computerIndex = 0;
 
         for (int i = 0; i < m_gameModel.getNumOfPlayers(); i++) {
-            playertype = m_consoleView.getPlayerType(i);
-
+            if (players == null) {
+                playertype = m_consoleView.getPlayerType(i);
+            }
+            else{
+                playertype = players.get(i).getType();
+            }
             switch (playertype) {
                 case HUMAN:
-                    playerName = m_consoleView.getPlayerString(m_gameModel.getPlayers());
+                    playerName = players == null ? m_consoleView.getPlayerString(m_gameModel.getPlayers()) :
+                            players.get(i).getPlayerName();
                     player = new SinglePlayer(playerName, playertype);
                     player.initSoldiers(m_gameModel.getCurrGameIndex());
                     m_gameModel.getCurrGameIndex().getPlayers().add(player);
@@ -318,8 +323,7 @@ public class GameControl {
             case NONE:
                 break;
         }
-        
-        
+
         boardToMove.getPlayers().add(player);
         //check if exist soldiers in origin square
         if (!player.atSquare(originSquare)) {
@@ -360,10 +364,11 @@ public class GameControl {
     private void restartGame() throws SnakesAndLaddersRunTimeException {
         boolean shuffleLaddersAndSnakes = false;
         List<BoardSquare> currentChars = m_gameModel.getSnakesAndLaddersSquares();
+        List<SinglePlayer> currPlayers = new ArrayList<>(m_gameModel.getPlayers());
 
         SinglePlayer.setNextId(0);
         m_gameModel.initNewGame(shuffleLaddersAndSnakes);
-        initPlayers();
+        initPlayers(currPlayers);
         for (BoardSquare boardSquare : currentChars) {
             BoardSquare newSquare = m_gameModel.getGame().getBoardSquare(boardSquare.getSquareNumber());
             newSquare.setType(boardSquare.getType());

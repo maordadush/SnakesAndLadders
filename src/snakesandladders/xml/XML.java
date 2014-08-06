@@ -264,7 +264,7 @@ public class XML {
             for (Soldiers soldier : soldiersList) {
                 SinglePlayer player = model.getPlayerByName(soldier.getPlayerName());
                 for (int i = 0; i < soldier.getCount(); i++) {
-                    Soldier newSoldier = new Soldier(player.getColor(), i + 1, currCell);
+                    Soldier newSoldier = new Soldier(player.getColor(), player.getM_SoldiersList().size() + 1, currCell);
                     if (currCell.getSquareNumber() == model.GetSingleGame().getMAX_SQUARE_NUM()) {
                         newSoldier.setM_FinishedGame(true);
                     }
