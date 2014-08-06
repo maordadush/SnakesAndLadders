@@ -323,13 +323,16 @@ public class GameControl {
             case NONE:
                 break;
         }
+        if (!boardToMove.getPlayers().contains(player)){
+            boardToMove.getPlayers().add(player);
+        }
 
-        boardToMove.getPlayers().add(player);
-        //check if exist soldiers in origin square
+        m_gameModel.setMove(player, boardToMove);
+        
+         //check if exist soldiers in origin square
         if (!player.atSquare(originSquare)) {
             originSquare.getPlayers().remove(player);
         }
-        m_gameModel.setMove(player, boardToMove);
         return boardToMove;
     }
 
