@@ -70,7 +70,6 @@ public class ConsoleView {
             scanner.next();
         }
         input = scanner.nextInt();
-        // TODO: Check Verified snakes And Ladders
         while ((input < 1) || (input > (boardSize * boardSize) / 5)) {
             System.out.println("Not Valid input, Please enter again:");
             showMenuSnakesAndLaddersSize();
@@ -405,10 +404,6 @@ public class ConsoleView {
         System.out.println("The game is Tie");
     }
 
-    public void displayLastMove(SinglePlayer player, BoardSquare move) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     public void LetComputerPlay() {
         System.out.println("Press 'Enter' to see computer turn");
         Scanner reader = new Scanner(System.in);
@@ -500,5 +495,4 @@ public class ConsoleView {
     public void PrintPlayer(SinglePlayer player) {
         System.out.println(player);
     }
-
 }

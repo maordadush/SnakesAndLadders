@@ -9,21 +9,20 @@ import java.util.ArrayList;
 import java.util.List;
 import snakesandladders.players.SinglePlayer;
 
-
 /**
  *
  * @author Noam
  */
-public class BoardSquare{
+public class BoardSquare {
+
     private eChars type = eChars.NONE;
-    private int squareNumber; 
+    private int squareNumber;
     private BoardSquare jumpTo;
     private final List<SinglePlayer> players;
 
-
     BoardSquare(int squareNumber) {
-       this.squareNumber = squareNumber;
-       this.players = new ArrayList<SinglePlayer>();
+        this.squareNumber = squareNumber;
+        this.players = new ArrayList<SinglePlayer>();
     }
 
     public BoardSquare getJumpTo() {

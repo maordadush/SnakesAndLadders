@@ -31,7 +31,6 @@ public class GameModel implements iWinChecker {
     private int m_NumOfSoldiersToWin;
 
     public GameModel(int o_GameSize, int o_numOfSnakesAndLadders, int o_NumOfPlayers, int o_numOfSoldiersToWin) {
-        //TODO: move input valdition to here
         if (o_numOfSnakesAndLadders > 1 || o_numOfSnakesAndLadders < (o_GameSize * o_GameSize) - 2) {
             m_numOfSnakesAndLadders = o_numOfSnakesAndLadders;
         } else {
@@ -42,7 +41,7 @@ public class GameModel implements iWinChecker {
             m_NumOfPlayers = o_NumOfPlayers;
             players = new ArrayList<>(m_NumOfPlayers);
         } else {
-            throw new UnsupportedOperationException("Illeagal number of players"); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Illeagal number of players");
         }
         setM_NumOfSoldiersToWin(o_numOfSoldiersToWin);
         game = new SnakesAndLaddersSingleGame(o_GameSize, o_numOfSnakesAndLadders);
@@ -182,7 +181,7 @@ public class GameModel implements iWinChecker {
 
     public void setM_NumOfSoldiersToWin(int m_NumOfSoldiersToWin) {
         if (m_NumOfSoldiersToWin < 1 || m_NumOfSoldiersToWin > 4) {
-            throw new UnsupportedOperationException("Illeagal number of soldiers"); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Illeagal number of soldiers");
         }
         this.m_NumOfSoldiersToWin = m_NumOfSoldiersToWin;
     }

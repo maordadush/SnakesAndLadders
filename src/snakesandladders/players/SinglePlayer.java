@@ -87,7 +87,6 @@ public class SinglePlayer {
         return type;
     }
 
-
     public int randomizeCurrentPlayer() throws SnakesAndLaddersRunTimeException {
         Random rand = new Random();
         int randomSoldierIndex;

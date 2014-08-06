@@ -105,9 +105,6 @@ public class GameControl {
         m_consoleView.ClearScreen();
 
         while (!hasGameWon()) {
-
-//            m_consoleView.printGameName(m_gameModel.getM_GameName());
-//            m_consoleView.printGame(GetSingleGame(), getPlayers());
             gameOption = eGameMenu.CHOOSE;
             while (gameOption == eGameMenu.CHOOSE) {
                 gameOption = m_consoleView.getGameOption();
@@ -367,6 +364,5 @@ public class GameControl {
             newSquare.setJumpTo(boardSquare.getJumpTo());
         }
         m_gameModel.selectFirstPlayer();
-
     }
 }

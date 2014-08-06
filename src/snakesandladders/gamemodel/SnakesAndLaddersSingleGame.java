@@ -17,15 +17,6 @@ public class SnakesAndLaddersSingleGame {
 
     private static final int MIN_SQUARE_NUM = 1;
     private int MAX_SQUARE_NUM;
-    private int gameWinner;
-
-    public static int getMIN_SQUARE_NUM() {
-        return MIN_SQUARE_NUM;
-    }
-
-    public int getMAX_SQUARE_NUM() {
-        return MAX_SQUARE_NUM;
-    }
     private int m_BoardSize = 0;
     private BoardSquare m_GameBoard[][];
     private BoardSquare m_CurrentSquare;
@@ -38,17 +29,22 @@ public class SnakesAndLaddersSingleGame {
             m_numOfSnakesAndLadders = o_numOfSnakesAndLadders;
             MAX_SQUARE_NUM = m_BoardSize * m_BoardSize;
         } else {
-            throw new UnsupportedOperationException("Illeagal board size"); //To change body of generated methods, choose Tools | Templates.
-
+            throw new UnsupportedOperationException("Illeagal board size");
         }
-
-        gameWinner = -1;
     }
 
     public void setO_BoardSize(int o_BoardSize) {
         this.m_BoardSize = o_BoardSize;
     }
+    
+    public static int getMIN_SQUARE_NUM() {
+        return MIN_SQUARE_NUM;
+    }
 
+    public int getMAX_SQUARE_NUM() {
+        return MAX_SQUARE_NUM;
+    }
+    
     public void initGame() {
         for (int i = 0; i < m_BoardSize; i++) {
             for (int j = 0; j < m_BoardSize; j++) {
@@ -57,8 +53,6 @@ public class SnakesAndLaddersSingleGame {
             }
         }
         m_CurrentSquare = m_GameBoard[0][0];
-
-        gameWinner = -1;
     }
 
     public void shuffleSnakesAndLadders(int o_NumOfSnakesAndLadders) {
@@ -112,7 +106,6 @@ public class SnakesAndLaddersSingleGame {
         return m_BoardSize;
     }
 
-//TODO maybe delete this function and replace with the next one
     public BoardSquare getBoardSquare(int i, int j) {
         return m_GameBoard[i][j];
     }
@@ -152,25 +145,25 @@ public class SnakesAndLaddersSingleGame {
         if (src == dest) {
             return false;
         }
-        
-        if(dest.getSquareNumber() > src.getSquareNumber()){
+
+        if (dest.getSquareNumber() > src.getSquareNumber()) {
             return false;
         }
-        
-        if (src.getSquareNumber() > MAX_SQUARE_NUM || dest.getSquareNumber() > MAX_SQUARE_NUM){
+
+        if (src.getSquareNumber() > MAX_SQUARE_NUM || dest.getSquareNumber() > MAX_SQUARE_NUM) {
             return false;
         }
-        
+
         if ((src.getType() != eChars.NONE) || (dest.getType() != eChars.NONE)) {
             return false;
         }
-        
+
         int srcX = (srcSquareNumber - 1) / boardSize;
         int destX = (destSquareNumber - 1) / boardSize;
         if (srcX == destX || srcSquareNumber < destSquareNumber || srcX == 0) {
             return false;
         }
-        
+
         src.setType(eChars.SNAKE_HEAD);
         src.setJumpTo(dest);
         dest.setType(eChars.SNAKE_TAIL);
@@ -187,15 +180,15 @@ public class SnakesAndLaddersSingleGame {
         if (src == dest) {
             return false;
         }
-        
-        if(dest.getSquareNumber() < src.getSquareNumber()){
+
+        if (dest.getSquareNumber() < src.getSquareNumber()) {
             return false;
         }
-        
-        if (src.getSquareNumber() > MAX_SQUARE_NUM || dest.getSquareNumber() > MAX_SQUARE_NUM){
+
+        if (src.getSquareNumber() > MAX_SQUARE_NUM || dest.getSquareNumber() > MAX_SQUARE_NUM) {
             return false;
         }
-        
+
         if ((src.getType() != eChars.NONE) || (dest.getType() != eChars.NONE)) {
             return false;
         }
@@ -213,15 +206,5 @@ public class SnakesAndLaddersSingleGame {
 
     public void setCurrentBoardSquare(BoardSquare move) {
         m_CurrentSquare = move;
-    }
-
-    public void copyLaddersAndSnakes(SnakesAndLaddersSingleGame oldGame) {
-        for (int i = 0; i < oldGame.getO_BoardSize(); i++) {
-            for (int j = 0; j < oldGame.getO_BoardSize(); j++) {
-                if (oldGame.getGameBoard()[i][j].getType() != eChars.NONE){
-                    this.getGameBoard()[i][j].setType(oldGame.getGameBoard()[i][j].getType());
-                }
-            }
-        }
     }
 }
