@@ -326,10 +326,8 @@ public class GameControl {
         if (!boardToMove.getPlayers().contains(player)){
             boardToMove.getPlayers().add(player);
         }
-
         m_gameModel.setMove(player, boardToMove);
-        
-         //check if exist soldiers in origin square
+        //check if exist soldiers in origin square
         if (!player.atSquare(originSquare)) {
             originSquare.getPlayers().remove(player);
         }
