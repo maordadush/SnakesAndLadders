@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="snakesandladders.javaFx.initScene.SceneInitController">
+  <children>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <children>
+        
+            <AnchorPane layoutX="14.0" layoutY="4.0" prefHeight="343.0" prefWidth="467.0">
+               <children>
+                  <CheckBox fx:id="checkBoxPlayer2" layoutX="35.0" layoutY="116.0" mnemonicParsing="false" onAction="#playerChecked" text="Player2" />
+                  <TextField fx:id="textBoxNamePlayer4" disable="true" layoutX="117.0" layoutY="167.0" AnchorPane.leftAnchor="117.0" AnchorPane.topAnchor="167.0" />
+                  <TextField fx:id="textBoxNamePlayer2" disable="true" layoutX="117.0" layoutY="112.0" />
+                  <TextField fx:id="textBoxNamePlayer3" disable="true" layoutX="117.0" layoutY="139.0" />
+                  <AnchorPane fx:id="paneBoardSize" disable="true" layoutX="36.0" layoutY="245.0">
+                     <children>
+                        <RadioButton fx:id="radioButton7" layoutY="53.0" mnemonicParsing="false" onAction="#handleSubmitRadioButtonAction" text="7X7" />
+                        <RadioButton fx:id="radioButton6" layoutY="27.0" mnemonicParsing="false" onAction="#handleSubmitRadioButtonAction" text="6X6" />
+                        <RadioButton fx:id="radioButton8" layoutY="81.0" mnemonicParsing="false" onAction="#handleSubmitRadioButtonAction" text="8X8" />
+                        <RadioButton fx:id="radioButton5" mnemonicParsing="false" onAction="#handleSubmitRadioButtonAction" text="5X5" />
+                     </children>
+                  </AnchorPane>
+                  <Label prefHeight="48.0" prefWidth="194.0" text="Init Game menu" textFill="#201ea4">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="35.0" layoutY="218.0" text="Board Size:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="167.0" layoutY="218.0" text="Number of snakes and ladders:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <CheckBox fx:id="checkBoxPlayer3" layoutX="35.0" layoutY="143.0" mnemonicParsing="false" onAction="#playerChecked" text="Player3" />
+                  <CheckBox fx:id="checkBoxPlayer4" layoutX="35.0" layoutY="171.0" mnemonicParsing="false" onAction="#playerChecked" text="Player4" />
+                  <Label layoutX="35.0" layoutY="54.0" text="Players:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="labelNumOfPlayers" layoutX="420.0" layoutY="218.0" prefHeight="27.0" prefWidth="42.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <MenuButton fx:id="MenuButtonPlayer2" disable="true" layoutX="279.0" layoutY="112.0" mnemonicParsing="false" text="Type">
+                     <items>
+                        <MenuItem fx:id="humanItem2" mnemonicParsing="false" onAction="#menuItemPlayer2Checked" text="Human" />
+                        <MenuItem fx:id="computerItem2" mnemonicParsing="false" onAction="#menuItemPlayer2Checked" text="Computer" />
+                     </items>
+                  </MenuButton>
+                  <MenuButton fx:id="MenuButtonPlayer3" disable="true" layoutX="279.0" layoutY="139.0" mnemonicParsing="false" text="Type">
+                     <items>
+                        <MenuItem fx:id="humanItem3" mnemonicParsing="false" onAction="#menuItemPlayer3Checked" text="Human" />
+                        <MenuItem fx:id="computerItem3" mnemonicParsing="false" onAction="#menuItemPlayer3Checked" text="Computer" />
+                     </items>
+                  </MenuButton>
+                  <MenuButton fx:id="MenuButtonPlayer4" disable="true" layoutX="279.0" layoutY="167.0" mnemonicParsing="false" text="Type">
+                     <items>
+                        <MenuItem fx:id="humanItem4" mnemonicParsing="false" onAction="#menuItemPlayer4Checked" text="Human" />
+                        <MenuItem fx:id="computerItem4" mnemonicParsing="false" onAction="#menuItemPlayer4Checked" text="Computer" />
+                     </items>
+                  </MenuButton>
+                  <Label layoutX="167.0" layoutY="276.0" text="Number of soldiers to win:">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="labelNumOfSoldiersToWin" layoutX="420.0" layoutY="276.0" prefHeight="27.0" prefWidth="42.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <AnchorPane fx:id="PlayerPane" layoutX="25.0" layoutY="81.0" prefHeight="27.0" prefWidth="320.0">
+                     <children>
+                        <CheckBox fx:id="checkBoxPlayer1" layoutX="10.0" layoutY="9.0" mnemonicParsing="false" onAction="#playerChecked" text="Player1" />
+                        <MenuButton fx:id="MenuButtonPlayer1" disable="true" layoutX="253.0" layoutY="2.0" mnemonicParsing="false" text="Type">
+                          <items>
+                            <MenuItem fx:id="humanItem1" mnemonicParsing="false" onAction="#menuItemPlayer1Checked" text="Human" />
+                            <MenuItem fx:id="computerItem1" mnemonicParsing="false" onAction="#menuItemPlayer1Checked" text="Computer" />
+                          </items>
+                        </MenuButton>
+                        <TextField fx:id="textBoxNamePlayer1" disable="true" layoutX="93.0" layoutY="2.0" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="460.0" layoutY="347.0" AnchorPane.bottomAnchor="18.0" AnchorPane.rightAnchor="14.0">
+               <children>
+                  <Button fx:id="buttonCancel" cancelButton="true" disable="true" mnemonicParsing="false" prefHeight="35.0" prefWidth="77.0" text="Cancel" />
+                  <Button fx:id="buttonOk" defaultButton="true" disable="true" layoutX="89.0" mnemonicParsing="false" onAction="#addGameSettings" prefHeight="35.0" prefWidth="77.0" text="OK" />
+               </children>
+            </AnchorPane>
+            <Slider fx:id="slider" disable="true" layoutX="432.0" layoutY="262.0" max="10.0" onMouseDragged="#dragged" />
+            <Slider fx:id="sliderSoldiersToWin" disable="true" layoutX="432.0" layoutY="312.0" max="4.0" min="1.0" onMouseDragged="#draggedSoldiersToWin" />
+            <Label fx:id="errorMessageLabel" layoutX="54.0" layoutY="365.0" prefHeight="27.0" prefWidth="247.0" />
+      </children>
+    </AnchorPane>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+  </children>
+  <stylesheets>
+    <URL value="@SceneInit.css" />
+  </stylesheets>
+</VBox>
