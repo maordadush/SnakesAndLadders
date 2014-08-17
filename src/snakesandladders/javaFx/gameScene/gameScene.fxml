@@ -39,7 +39,7 @@
       <items>
         <AnchorPane>
           <children>
-            <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Player details" textAlignment="CENTER" wrapText="false">
+            <Label fx:id="labelCurrPlayer" alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Player details" textAlignment="CENTER" wrapText="false">
               <font>
                 <Font size="18.0" fx:id="x1" />
               </font>
@@ -47,7 +47,7 @@
                 <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
               </textFill>
             </Label>
-                  <Button layoutY="41.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="221.0" text="Play!" />
+                  <Button fx:id="buttonPlay" layoutY="41.0" mnemonicParsing="false" onAction="#playButtonClicked" prefHeight="44.0" prefWidth="221.0" text="Play!" />
                   <Circle fill="DODGERBLUE" layoutX="43.0" layoutY="123.0" radius="29.0" stroke="BLACK" strokeType="INSIDE" />
                   <Circle fill="DODGERBLUE" layoutX="178.0" layoutY="123.0" radius="29.0" stroke="BLACK" strokeType="INSIDE" />
                   <Circle fill="DODGERBLUE" layoutX="43.0" layoutY="189.0" radius="29.0" stroke="BLACK" strokeType="INSIDE" />
@@ -72,7 +72,7 @@
         </ScrollPane>
         <AnchorPane>
           <children>
-            <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Details" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+            <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Pictures" textAlignment="CENTER" textFill="$x2" wrapText="false" />
           </children>
         </AnchorPane>
             <BorderPane prefHeight="200.0" prefWidth="200.0" />

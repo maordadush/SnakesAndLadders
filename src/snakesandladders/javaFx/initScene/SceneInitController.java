@@ -116,6 +116,7 @@ public class SceneInitController implements Initializable {
     @FXML
     private AnchorPane PlayerPane;
     private int m_BoardSize;
+    private int m_ComputerIndex;
 
     /**
      * Initializes the controller class.
@@ -133,6 +134,7 @@ public class SceneInitController implements Initializable {
         initTextPlayers();
         finishedInit = new SimpleBooleanProperty(false);
         m_BoardSize = 0;
+        m_ComputerIndex = 0;
     }
 
     @FXML
@@ -267,22 +269,30 @@ public class SceneInitController implements Initializable {
 
     @FXML
     private void menuItemPlayer1Checked(ActionEvent event) {
-        MenuButtonPlayer1.textProperty().bind(Bindings.concat(((MenuItem) event.getSource()).getText()));
+        String text = ((MenuItem) event.getSource()).getText();
+
+        MenuButtonPlayer1.textProperty().bind(Bindings.concat((text)));
     }
 
     @FXML
     private void menuItemPlayer2Checked(ActionEvent event) {
-        MenuButtonPlayer2.textProperty().bind(Bindings.concat(((MenuItem) event.getSource()).getText()));
+        String text = ((MenuItem) event.getSource()).getText();
+
+        MenuButtonPlayer2.textProperty().bind(Bindings.concat((text)));
     }
 
     @FXML
     private void menuItemPlayer3Checked(ActionEvent event) {
-        MenuButtonPlayer3.textProperty().bind(Bindings.concat(((MenuItem) event.getSource()).getText()));
+        String text = ((MenuItem) event.getSource()).getText();
+        
+        MenuButtonPlayer3.textProperty().bind(Bindings.concat(text));
     }
 
     @FXML
     private void menuItemPlayer4Checked(ActionEvent event) {
-        MenuButtonPlayer4.textProperty().bind(Bindings.concat(((MenuItem) event.getSource()).getText()));
+        String text = ((MenuItem) event.getSource()).getText();
+        
+        MenuButtonPlayer4.textProperty().bind(Bindings.concat((text)));
     }
 
     private void showError(String message) {
@@ -345,7 +355,7 @@ public class SceneInitController implements Initializable {
     public int GetNumOfPlayers() {
         int numOfPlayers = 0;
         for (CheckBox checkBox : m_checkedPlayers) {
-            if (checkBox.disableProperty().get() == false) {
+            if (checkBox.selectedProperty().get() == true) {
                 numOfPlayers++;
             }
         }
@@ -370,16 +380,18 @@ public class SceneInitController implements Initializable {
         switch (m_menuButtonsPlayers.get(i).getText()) {
             case "Human":
                 typeReturned = ePlayerType.HUMAN;
+                break;
             case "Computer":
                 typeReturned = ePlayerType.COMPUTER;
+                break;
             default:
                 break;
         }
         return typeReturned;
     }
 
-    public String getPlayerString(List<SinglePlayer> players) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getPlayerString(int index) {
+        return m_textPlayers.get(index).getText();
     }
 
 }

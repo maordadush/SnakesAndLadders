@@ -74,6 +74,7 @@ public class Main extends Application {
                     }
                     GameSceneController gameSceneController = (GameSceneController) fxmlLoader.getController();
                     gameSceneController.setModelAndInitController(model, sceneInitController);
+                    gameSceneController.InitModel();
 
                     javafx.geometry.Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
                     Scene scene = new Scene(rootGame, screenBounds.getWidth(), screenBounds.getHeight());
