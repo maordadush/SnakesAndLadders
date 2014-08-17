@@ -99,8 +99,8 @@
             </AnchorPane>
             <AnchorPane layoutX="460.0" layoutY="347.0" AnchorPane.bottomAnchor="18.0" AnchorPane.rightAnchor="14.0">
                <children>
-                  <Button fx:id="buttonCancel" cancelButton="true" disable="true" mnemonicParsing="false" prefHeight="35.0" prefWidth="77.0" text="Cancel" />
-                  <Button fx:id="buttonOk" defaultButton="true" disable="true" layoutX="89.0" mnemonicParsing="false" onAction="#addGameSettings" prefHeight="35.0" prefWidth="77.0" text="OK" />
+                  <Button fx:id="buttonCancel" cancelButton="true" disable="true" mnemonicParsing="false" onAction="#onCancel" prefHeight="35.0" prefWidth="77.0" text="Cancel" />
+                  <Button fx:id="buttonOk" defaultButton="true" disable="true" layoutX="89.0" mnemonicParsing="false" onAction="#onContinue" prefHeight="35.0" prefWidth="77.0" text="OK" />
                </children>
             </AnchorPane>
             <Slider fx:id="slider" disable="true" layoutX="432.0" layoutY="262.0" max="10.0" onMouseDragged="#dragged" />

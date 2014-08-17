@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;
 import javafx.animation.FadeTransitionBuilder;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -29,6 +30,9 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
+import snakesandladders.gamemodel.GameModel;
+import snakesandladders.players.SinglePlayer;
+import snakesandladders.players.ePlayerType;
 
 /**
  * FXML Controller class
@@ -37,12 +41,13 @@ import javafx.util.Duration;
  */
 public class SceneInitController implements Initializable {
 
-    private Model model;
+    private GameModel model;
     private List<RadioButton> m_radioButtons;
     private List<CheckBox> m_checkedPlayers;
     private List<TextField> m_textPlayers;
     private List<MenuButton> m_menuButtonsPlayers;
     private boolean isErrorMessageShown = false;
+    private SimpleBooleanProperty finishedInit;
 
     @FXML
     private TextField textBoxNamePlayer1;
@@ -110,10 +115,7 @@ public class SceneInitController implements Initializable {
     private Label errorMessageLabel;
     @FXML
     private AnchorPane PlayerPane;
-   
-
-
-
+    private int m_BoardSize;
 
     /**
      * Initializes the controller class.
@@ -129,7 +131,8 @@ public class SceneInitController implements Initializable {
         initCheckedPlayers();
         initMenuButtonsPlayers();
         initTextPlayers();
-
+        finishedInit = new SimpleBooleanProperty(false);
+        m_BoardSize = 0;
     }
 
     @FXML
@@ -163,8 +166,7 @@ public class SceneInitController implements Initializable {
         labelNumOfSoldiersToWin.textProperty().set(String.valueOf((int) sliderSoldiersToWin.getValue()));
     }
 
-    void setModel(Model model
-    ) {
+    public void setModel(GameModel model) {
         this.model = model;
     }
 
@@ -233,18 +235,22 @@ public class SceneInitController implements Initializable {
 
         switch (((RadioButton) event.getSource()).getText()) {
             case "5X5":
+                m_BoardSize = 5;
                 numOfSnakesAndLadders = calculateNumOfSnakesAndLadder(25);
                 slider.maxProperty().set(numOfSnakesAndLadders);
                 break;
             case "6X6":
+                m_BoardSize = 6;
                 numOfSnakesAndLadders = calculateNumOfSnakesAndLadder(36);
                 slider.maxProperty().set(numOfSnakesAndLadders);
                 break;
             case "7X7":
+                m_BoardSize = 7;
                 numOfSnakesAndLadders = calculateNumOfSnakesAndLadder(49);
                 slider.maxProperty().set(numOfSnakesAndLadders);
                 break;
             case "8X8":
+                m_BoardSize = 8;
                 numOfSnakesAndLadders = calculateNumOfSnakesAndLadder(64);
                 slider.maxProperty().set(numOfSnakesAndLadders);
                 break;
@@ -322,15 +328,58 @@ public class SceneInitController implements Initializable {
         }
         return duplicate;
     }
-    
+
     @FXML
-    private void addGameSettings(ActionEvent event) {
-        for(Node node : PlayerPane.getChildren())
-            if(node instanceof CheckBox)
-                
-                
-                    
-        return;
+    private void onCancel(ActionEvent event) {
+    }
+
+    @FXML
+    private void onContinue(ActionEvent event) {
+        finishedInit.set(true);
+    }
+
+    public SimpleBooleanProperty getFinishedInit() {
+        return finishedInit;
+    }
+
+    public int GetNumOfPlayers() {
+        int numOfPlayers = 0;
+        for (CheckBox checkBox : m_checkedPlayers) {
+            if (checkBox.disableProperty().get() == false) {
+                numOfPlayers++;
+            }
+        }
+
+        return numOfPlayers;
+    }
+
+    public int GetNumOfSnakesAndLadders() {
+        return (int) slider.getValue();
+    }
+
+    public int getNumberOfSoldiersToWin() {
+        return (int) sliderSoldiersToWin.getValue();
+    }
+
+    public int getBoardSize() {
+        return m_BoardSize;
+    }
+
+    public ePlayerType getPlayerType(int i) {
+        ePlayerType typeReturned = null;
+        switch (m_menuButtonsPlayers.get(i).getText()) {
+            case "Human":
+                typeReturned = ePlayerType.HUMAN;
+            case "Computer":
+                typeReturned = ePlayerType.COMPUTER;
+            default:
+                break;
+        }
+        return typeReturned;
+    }
+
+    public String getPlayerString(List<SinglePlayer> players) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
