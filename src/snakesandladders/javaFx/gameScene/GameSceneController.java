@@ -15,11 +15,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamemodel.GameModel;
 import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
+import snakesandladders.javaFx.components.BoardView;
+import snakesandladders.javaFx.components.PlayerView;
 import snakesandladders.javaFx.initScene.SceneInitController;
 import snakesandladders.players.SinglePlayer;
 import snakesandladders.players.ePlayerType;
@@ -30,9 +35,9 @@ import snakesandladders.players.ePlayerType;
  * @author Noam
  */
 public class GameSceneController implements Initializable {
-
+    
     boolean shuffleLaddersAndSnakes = true;
-
+    
     @FXML
     private Font x1;
     @FXML
@@ -45,21 +50,27 @@ public class GameSceneController implements Initializable {
     private Label labelCurrPlayer;
     @FXML
     private Button buttonPlay;
+    @FXML
+    private VBox playersPane;
+    @FXML
+    private AnchorPane boardPane;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+    
+        playersPane.setSpacing(10);
+        
     }
-
+    
     private void initPlayers(List<SinglePlayer> players) throws SnakesAndLaddersRunTimeException {
         SinglePlayer player;
         ePlayerType playertype;
         String playerName;
         int computerIndex = 0;
-
+        
         for (int i = 0; i < model.getNumOfPlayers(); i++) {
             if (players == null) {
                 playertype = sceneInitController.getPlayerType(i);
@@ -87,7 +98,7 @@ public class GameSceneController implements Initializable {
             }
         }
     }
-
+    
     public void InitModel() {
         model.initNewGame(shuffleLaddersAndSnakes);
         try {
@@ -100,32 +111,41 @@ public class GameSceneController implements Initializable {
         //addition from the controller
         printModelToScene();
     }
-
+    
     public void setModelAndInitController(GameModel model, SceneInitController sceneInitController) {
         this.model = model;
         this.sceneInitController = sceneInitController;
     }
-
+    
     @FXML
     private void playButtonClicked(ActionEvent event) {
     }
-
+    
     private void printModelToScene() {
         printCurrPlayerTurn();
         printListOfPlayersWithPictures(model.getPlayers());
         printGameBoard(model.getGame());
     }
-
+    
     private void printListOfPlayersWithPictures(List<SinglePlayer> players) {
-        //dadush implement this
+        
+        for (SinglePlayer singlePlayer : players) {
+            addPlayerToList(singlePlayer);
+        }
     }
-
+    
     private void printGameBoard(SnakesAndLaddersSingleGame game) {
-        //dadush implement this
+        BoardView boardView = new BoardView(game.getO_BoardSize());
+        boardPane.getChildren().add(boardView);
     }
-
+    
     private void printCurrPlayerTurn() {
         labelCurrPlayer.textProperty().set(model.getCurrPlayer().getPlayerName() + "'s turn");
     }
-
+    
+    private void addPlayerToList(SinglePlayer player) {
+        PlayerView playerView = new PlayerView(player.getPlayerName(), player.getType());
+        playersPane.getChildren().add(playerView);
+    }
+    
 }

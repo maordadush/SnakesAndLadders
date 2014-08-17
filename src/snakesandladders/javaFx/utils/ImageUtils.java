@@ -13,7 +13,7 @@ import javafx.scene.image.Image;
 public class ImageUtils {
     private static final String RESOURCES_DIR = "/resources/";
     private static final String IMAGES_DIR = RESOURCES_DIR + "images/";
-    private static final String IMAGE_EXTENSION = ".jpg";
+    private static final String IMAGE_EXTENSION = ".png";
     
     public static Image getImage (String filename){
         if (filename == null || filename.isEmpty()) {
@@ -25,10 +25,5 @@ public class ImageUtils {
         }
         
         return new Image(ImageUtils.class.getResourceAsStream(IMAGES_DIR + filename));
-    }
-    
-    public static void main(String[] args) {
-        URL url = ImageUtils.class.getResource(IMAGES_DIR+"computer.jpg");
-        System.out.println(url != null ? url.toString() : "null");
     }
 }
