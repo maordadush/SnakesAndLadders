@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -262,23 +263,27 @@ public class GameSceneController implements Initializable {
 
         switch (colorNumber) {
             case 1:
+                Image imageBlue = ImageManager.getImage("BluePlayer");
                 for (ImageView imageView : m_ImageViewSoldiers) {
-                    imageView.setImage(ImageManager.getImage("BluePlayer"));
+                    imageView.setImage(imageBlue);
                 }
                 break;
             case 2:
+                Image imageGreen = ImageManager.getImage("GreenPlayer");
                 for (ImageView imageView : m_ImageViewSoldiers) {
-                    imageView.setImage(ImageManager.getImage("GreenPlayer"));
+                    imageView.setImage(imageGreen);
                 }
                 break;
             case 3:
+                Image imagePurple = ImageManager.getImage("PurplePlayer");
                 for (ImageView imageView : m_ImageViewSoldiers) {
-                    imageView.setImage(ImageManager.getImage("PurplePlayer"));
+                    imageView.setImage(imagePurple);
                 }
                 break;
             case 4:
+                Image imageYellow = ImageManager.getImage("YellowPlayer");
                 for (ImageView imageView : m_ImageViewSoldiers) {
-                    imageView.setImage(ImageManager.getImage("YellowPlayer"));
+                    imageView.setImage(imageYellow);
                 }
                 break;
         }
