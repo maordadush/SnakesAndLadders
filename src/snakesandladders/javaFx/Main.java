@@ -5,6 +5,7 @@
  */
 package snakesandladders.javaFx;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -19,11 +20,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import snakesandladders.gamemodel.GameModel;
 import snakesandladders.javaFx.gameScene.GameSceneController;
 import snakesandladders.javaFx.initScene.SceneInitController;
+import snakesandladders.javaFx.utils.dialog.CustomizablePromptDialog;
 import snakesandladders.players.SinglePlayer;
 
 /**
@@ -72,22 +76,137 @@ public class Main extends Application {
                         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                         rootGame = null;
                     }
+
                     GameSceneController gameSceneController = (GameSceneController) fxmlLoader.getController();
+
                     gameSceneController.setModelAndInitController(model, sceneInitController);
+
                     gameSceneController.InitModel();
+
+                    lisionersForGame(gameSceneController, primaryStage);
 
                     javafx.geometry.Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
                     Scene scene = new Scene(rootGame, screenBounds.getWidth(), screenBounds.getHeight());
-                    primaryStage.setX(0);
-                    primaryStage.setY(0);
-                    primaryStage.setTitle("Game");
+
+                    primaryStage.setX(
+                            0);
+                    primaryStage.setY(
+                            0);
+                    primaryStage.setTitle(
+                            "Game");
 
                     primaryStage.setScene(scene);
+
                     primaryStage.show();
                 }
             }
         });
         return sceneInitController;
+    }
+
+    private void lisionersForGame(GameSceneController gameSceneController, final Stage primaryStage) {
+
+        primaryStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent window) {
+                if (!getFinalAnswer(primaryStage)) {
+                    window.consume();
+                }
+            }
+        });
+
+        gameSceneController.getQuitGameSelected().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    getFinalAnswer(primaryStage);
+                }
+            }
+        });
+
+        gameSceneController.getSelectedNewGame().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    try {
+                        start(primaryStage);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
+
+        gameSceneController.getSelectedNewGame().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    try {
+                        start(primaryStage);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
+
+        gameSceneController.getOpenGameSelected().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    openXML(primaryStage);
+                }
+            }
+
+        });
+
+        gameSceneController.getSaveGameAsSelected().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    saveXML(primaryStage);
+                }
+            }
+
+        });
+
+    }
+
+    private boolean getFinalAnswer(Stage primaryStage) {
+        boolean quit = true;
+        String answer = CustomizablePromptDialog.show(primaryStage, "What do you want do to?", "Quit without saving", "Save and quit", "Stay");
+        switch (answer) {
+            case ("Quit without saving"):
+                primaryStage.close();
+                break;
+            case ("Save and quit"):
+                primaryStage.close();   //TODO: implement save
+                break;
+            case ("Stay"):
+                quit = false;
+                break;
+        }
+        return quit;
+    }
+
+    private File openXML(Stage stage) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("XML", "*.xml")
+        );
+
+        fileChooser.setTitle("Open XML File");
+        return (fileChooser.showOpenDialog(stage));
+    }
+    
+    private void saveXML(Stage stage) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("XML", "*.xml")
+        );
+
+        fileChooser.setTitle("Save XML File");
+        fileChooser.showSaveDialog(stage);
     }
 
     /**

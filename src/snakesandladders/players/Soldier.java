@@ -6,7 +6,6 @@
 
 package snakesandladders.players;
 
-import java.awt.Color;
 import snakesandladders.gamemodel.BoardSquare;
 
 /**
@@ -16,10 +15,10 @@ import snakesandladders.gamemodel.BoardSquare;
 public class Soldier {
     boolean m_FinishedGame;
     private BoardSquare locationOnBoard;
-    Color color;
+    int color;
     private final int soldierID;
     
-    public Soldier(Color color, int soldierID, BoardSquare location) {
+    public Soldier(int color, int soldierID, BoardSquare location) {
         this.locationOnBoard = location;
         this.color = color;
         this.soldierID = soldierID;

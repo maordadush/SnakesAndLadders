@@ -15,22 +15,6 @@ public class PlayerView extends VBox{
     public PlayerView(String title, ePlayerType type) {
         setSpacing(10);
         setAlignment(Pos.CENTER);
-        getChildren().addAll(createImage(type), createLabel(title));
-    }
-    
-    private Label createLabel(String title){
-        return new Label(title);
-    }
-    
-    private ImageView createImage(ePlayerType type){
-        return ImageViewBuilder
-                .create()
-                .image(getImage(type))
-                .build();
-    }
-
-    private Image getImage(ePlayerType type) {
-        String filename = type == ePlayerType.HUMAN ? "human" : "computer";
-        return ImageUtils.getImage(filename);
+        getChildren().addAll(ImageManager.createImage((type == ePlayerType.HUMAN ? "human" : "computer")), ImageManager.createLabel(title));
     }
 }

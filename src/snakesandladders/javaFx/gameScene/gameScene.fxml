@@ -17,20 +17,20 @@
       <menus>
         <Menu mnemonicParsing="false" text="Game">
           <items>
-            <MenuItem mnemonicParsing="false" text="New" />
-            <MenuItem mnemonicParsing="false" text="Open…" />
+            <MenuItem mnemonicParsing="false" onAction="#newGameSelected" text="New" />
+            <MenuItem mnemonicParsing="false" onAction="#openSelected" text="Open…" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
+            <MenuItem mnemonicParsing="false" onAction="#closeGameSelected" text="Close" />
+            <MenuItem mnemonicParsing="false" onAction="#saveGameSelected" text="Save" />
+            <MenuItem mnemonicParsing="false" onAction="#saveAsGameSelected" text="Save As…" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" />
+            <MenuItem mnemonicParsing="false" onAction="#QuitGameSelected" text="Quit" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+            <MenuItem mnemonicParsing="false" onAction="#HelpSelected" text="About MyHelloApp" />
           </items>
         </Menu>
       </menus>
@@ -48,17 +48,36 @@
               </textFill>
             </Label>
                   <Button fx:id="buttonPlay" layoutY="41.0" mnemonicParsing="false" onAction="#playButtonClicked" prefHeight="44.0" prefWidth="221.0" text="Play!" />
-                  <Circle fill="DODGERBLUE" layoutX="43.0" layoutY="123.0" radius="29.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Circle fill="DODGERBLUE" layoutX="178.0" layoutY="123.0" radius="29.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Circle fill="DODGERBLUE" layoutX="43.0" layoutY="189.0" radius="29.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Circle fill="DODGERBLUE" layoutX="178.0" layoutY="189.0" radius="29.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Separator layoutY="228.0" prefHeight="2.0" prefWidth="221.0" />
-                  <ImageView fitHeight="122.0" fitWidth="146.0" layoutX="36.0" layoutY="231.0">
+                  <Label layoutX="44.0" layoutY="85.0" prefHeight="67.0" prefWidth="126.0" text="CubeAnswer" textAlignment="CENTER">
+                     <font>
+                        <Font name="System Bold" size="21.0" />
+                     </font>
+                  </Label>
+                  <Separator layoutX="11.0" layoutY="151.0" prefWidth="200.0" />
+                  <ImageView fx:id="imageViewSoldier1" fitHeight="97.0" fitWidth="52.0" layoutX="11.0" layoutY="154.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@הורד.jpg" />
+                        <Image url="@../../../resources/images/BluePlayer.png" />
                      </image>
                   </ImageView>
-                  <Separator layoutX="-1.0" layoutY="352.0" prefHeight="3.0" prefWidth="221.0" />
+                  <ImageView fx:id="imageViewSoldier2" fitHeight="97.0" fitWidth="52.0" layoutX="158.0" layoutY="154.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../resources/images/BluePlayer.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageViewSoldier4" fitHeight="97.0" fitWidth="52.0" layoutX="158.0" layoutY="309.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../resources/images/BluePlayer.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageViewSoldier3" fitHeight="97.0" fitWidth="52.0" layoutX="11.0" layoutY="309.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../resources/images/BluePlayer.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="labelIndexSoldier1" layoutX="20.0" layoutY="259.0" prefHeight="25.0" prefWidth="49.0" text="index" textAlignment="CENTER" />
+                  <Label fx:id="labelIndexSoldier2" layoutX="170.0" layoutY="259.0" prefHeight="25.0" prefWidth="49.0" text="index" />
+                  <Label fx:id="labelIndexSoldier3" layoutX="20.0" layoutY="415.0" prefHeight="25.0" prefWidth="49.0" text="index" />
+                  <Label fx:id="labelIndexSoldier4" layoutX="170.0" layoutY="415.0" prefHeight="25.0" prefWidth="49.0" text="index" />
           </children>
         </AnchorPane>
         <ScrollPane>

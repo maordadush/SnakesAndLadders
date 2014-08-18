@@ -5,7 +5,6 @@
  */
 package snakesandladders.players;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,7 +23,7 @@ public class SinglePlayer {
     List<Soldier> m_SoldiersList;
     static AtomicInteger nextId = new AtomicInteger();
     private final int playerID;
-    Color color;
+    int color;
     int m_CurrentSoldierIndex;
     private Soldier m_CurrentSoldier;
     ePlayerType type;
@@ -33,7 +32,8 @@ public class SinglePlayer {
         this.m_PlayerName = o_Name;
         this.type = type;
         m_SoldiersList = new ArrayList<>(NUM_OF_SOLDIERS);
-        this.color = Color.decode(Integer.toString(this.hashCode()));
+        Random rand = new Random();
+        this.color = rand.nextInt(NUM_OF_SOLDIERS) + 1;;
         this.m_CurrentSoldierIndex = 0;
         playerID = nextId.incrementAndGet();
     }
@@ -117,7 +117,7 @@ public class SinglePlayer {
         return this.getM_SoldiersList().get(i);
     }
 
-    public Color getColor() {
+    public int getColor() {
         return color;
     }
 
