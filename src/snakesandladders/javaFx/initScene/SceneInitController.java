@@ -48,6 +48,7 @@ public class SceneInitController implements Initializable {
     private List<MenuButton> m_menuButtonsPlayers;
     private boolean isErrorMessageShown = false;
     private SimpleBooleanProperty finishedInit;
+    private SimpleBooleanProperty CancelInit;
 
     @FXML
     private TextField textBoxNamePlayer1;
@@ -133,6 +134,7 @@ public class SceneInitController implements Initializable {
         initMenuButtonsPlayers();
         initTextPlayers();
         finishedInit = new SimpleBooleanProperty(false);
+        CancelInit = new SimpleBooleanProperty(false);
         m_BoardSize = 0;
         m_ComputerIndex = 0;
     }
@@ -270,6 +272,11 @@ public class SceneInitController implements Initializable {
     @FXML
     private void menuItemPlayer1Checked(ActionEvent event) {
         String text = ((MenuItem) event.getSource()).getText();
+        if (text.equals("Computer")) {
+            textBoxNamePlayer1.disableProperty().set(true);
+        } else {
+            textBoxNamePlayer1.disableProperty().set(false);
+        }
 
         MenuButtonPlayer1.textProperty().bind(Bindings.concat((text)));
     }
@@ -277,6 +284,11 @@ public class SceneInitController implements Initializable {
     @FXML
     private void menuItemPlayer2Checked(ActionEvent event) {
         String text = ((MenuItem) event.getSource()).getText();
+        if (text.equals("Computer")) {
+            textBoxNamePlayer2.disableProperty().set(true);
+        } else {
+            textBoxNamePlayer2.disableProperty().set(false);
+        }
 
         MenuButtonPlayer2.textProperty().bind(Bindings.concat((text)));
     }
@@ -284,14 +296,24 @@ public class SceneInitController implements Initializable {
     @FXML
     private void menuItemPlayer3Checked(ActionEvent event) {
         String text = ((MenuItem) event.getSource()).getText();
-        
+        if (text.equals("Computer")) {
+            textBoxNamePlayer3.disableProperty().set(true);
+        } else {
+            textBoxNamePlayer3.disableProperty().set(false);
+        }
+
         MenuButtonPlayer3.textProperty().bind(Bindings.concat(text));
     }
 
     @FXML
     private void menuItemPlayer4Checked(ActionEvent event) {
         String text = ((MenuItem) event.getSource()).getText();
-        
+        if (text.equals("Computer")) {
+            textBoxNamePlayer4.disableProperty().set(true);
+        } else {
+            textBoxNamePlayer4.disableProperty().set(false);
+        }
+
         MenuButtonPlayer4.textProperty().bind(Bindings.concat((text)));
     }
 
@@ -341,6 +363,11 @@ public class SceneInitController implements Initializable {
 
     @FXML
     private void onCancel(ActionEvent event) {
+        CancelInit.set(true);
+    }
+
+    public SimpleBooleanProperty getCancelInit() {
+        return CancelInit;
     }
 
     @FXML
@@ -350,6 +377,10 @@ public class SceneInitController implements Initializable {
 
     public SimpleBooleanProperty getFinishedInit() {
         return finishedInit;
+    }
+    
+    public void setFinishedInit(boolean value) {
+        finishedInit.set(value);
     }
 
     public int GetNumOfPlayers() {

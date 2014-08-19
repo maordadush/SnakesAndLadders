@@ -12,6 +12,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,12 +21,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
+import snakesandladders.gamemodel.Cube;
 import snakesandladders.gamemodel.GameModel;
 import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
 import snakesandladders.javaFx.components.BoardView;
@@ -34,6 +38,8 @@ import snakesandladders.javaFx.initScene.SceneInitController;
 import snakesandladders.players.SinglePlayer;
 import snakesandladders.players.Soldier;
 import snakesandladders.players.ePlayerType;
+import static snakesandladders.players.ePlayerType.COMPUTER;
+import snakesandladders.xml.eXMLLoadStatus;
 
 /**
  * FXML Controller class
@@ -43,6 +49,8 @@ import snakesandladders.players.ePlayerType;
 public class GameSceneController implements Initializable {
 
     boolean shuffleLaddersAndSnakes = true;
+    Cube cube;
+    int cubeAnswer;
 
     @FXML
     private Font x1;
@@ -67,6 +75,11 @@ public class GameSceneController implements Initializable {
     private SimpleBooleanProperty saveGameAsSelected;
     private SimpleBooleanProperty quitGameSelected;
     private SimpleBooleanProperty helpSelected;
+    private SimpleBooleanProperty userChooseSoldier1;
+    private SimpleBooleanProperty userChooseSoldier2;
+    private SimpleBooleanProperty userChooseSoldier3;
+    private SimpleBooleanProperty userChooseSoldier4;
+
     private List<ImageView> m_ImageViewSoldiers;
     private List<Label> m_LablesSoldiers;
     @FXML
@@ -85,6 +98,8 @@ public class GameSceneController implements Initializable {
     private Label labelIndexSoldier3;
     @FXML
     private Label labelIndexSoldier4;
+    @FXML
+    private Label labelCubeAnswer;
 
     /**
      * Initializes the controller class.
@@ -101,6 +116,12 @@ public class GameSceneController implements Initializable {
         saveGameAsSelected = new SimpleBooleanProperty(false);
         quitGameSelected = new SimpleBooleanProperty(false);
         helpSelected = new SimpleBooleanProperty(false);
+        userChooseSoldier1 = new SimpleBooleanProperty(false);
+        userChooseSoldier2 = new SimpleBooleanProperty(false);
+        userChooseSoldier3 = new SimpleBooleanProperty(false);
+        userChooseSoldier4 = new SimpleBooleanProperty(false);
+
+        cube = new Cube();
 
         m_ImageViewSoldiers = new ArrayList<ImageView>();
         m_ImageViewSoldiers.add(imageViewSoldier1);
@@ -169,7 +190,29 @@ public class GameSceneController implements Initializable {
     }
 
     @FXML
-    private void playButtonClicked(ActionEvent event) {
+    private void playButtonClicked(ActionEvent event) throws SnakesAndLaddersRunTimeException {
+        SinglePlayer player = model.getCurrPlayer();
+
+        cubeAnswer = cube.throwCube();
+
+        if (player.getType() == COMPUTER) {
+            makeComputerTurn(player);
+//            m_consoleView.LetComputerPlay();
+//            m_consoleView.PrintCubeAnswer(cubeAnswer);
+//            m_consoleView.PrintPlayer(player);
+//            int soldierIndex = player.randomizeCurrentPlayer();
+//            m_consoleView.printCurrentSoldier(soldierIndex);
+        } else {
+            labelCubeAnswer.textProperty().set(String.valueOf(cubeAnswer));
+            makeSoldiersAvaliable();
+            waitForUserToChooseSoldier();
+            //ChooseHumanSoldierToPlay();
+            //player.setCurrentSoldier(indexOfSoldier);
+        }
+
+//        nextMove = move(player, cubeAnswer);
+//
+//        return nextMove;
     }
 
     private void printModelToScene() {
@@ -266,25 +309,132 @@ public class GameSceneController implements Initializable {
                 Image imageBlue = ImageManager.getImage("BluePlayer");
                 for (ImageView imageView : m_ImageViewSoldiers) {
                     imageView.setImage(imageBlue);
+                    imageView.disableProperty().set(true);
                 }
                 break;
             case 2:
                 Image imageGreen = ImageManager.getImage("GreenPlayer");
                 for (ImageView imageView : m_ImageViewSoldiers) {
                     imageView.setImage(imageGreen);
+                    imageView.disableProperty().set(true);
                 }
                 break;
             case 3:
                 Image imagePurple = ImageManager.getImage("PurplePlayer");
                 for (ImageView imageView : m_ImageViewSoldiers) {
                     imageView.setImage(imagePurple);
+                    imageView.disableProperty().set(true);
                 }
                 break;
             case 4:
                 Image imageYellow = ImageManager.getImage("YellowPlayer");
                 for (ImageView imageView : m_ImageViewSoldiers) {
                     imageView.setImage(imageYellow);
+                    imageView.disableProperty().set(true);
                 }
+                break;
+        }
+    }
+
+    private void makeComputerTurn(SinglePlayer player) {
+    }
+
+    private void makeSoldiersAvaliable() {
+        for (ImageView imageSoldier : m_ImageViewSoldiers) {
+            imageSoldier.disableProperty().set(false);
+        }
+    }
+
+    private void waitForUserToChooseSoldier() {
+
+        //while (!newValue) {
+        userChooseSoldier1.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    soldierChoosed(1);
+                }
+            }
+        });
+
+        userChooseSoldier2.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    soldierChoosed(2);
+                }
+            }
+        });
+
+        userChooseSoldier3.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    soldierChoosed(3);
+                }
+            }
+        });
+
+        userChooseSoldier4.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    soldierChoosed(4);
+                }
+            }
+        });
+        //}
+    }
+
+    private void soldierChoosed(int soldierNumber) {
+        disableSoldierImages();
+        playWithSoldier(soldierNumber);
+    }
+
+    @FXML
+    private void ChooseSoldier1(MouseEvent event) {
+        userChooseSoldier1.set(true);
+    }
+
+    @FXML
+    private void ChooseSoldier2(MouseEvent event) {
+        userChooseSoldier2.set(true);
+    }
+
+    @FXML
+    private void ChooseSoldier4(MouseEvent event) {
+        userChooseSoldier3.set(true);
+    }
+
+    @FXML
+    private void ChooseSoldier3(MouseEvent event) {
+        userChooseSoldier4.set(true);
+    }
+
+    private void disableSoldierImages() {
+        for (ImageView imageSoldier : m_ImageViewSoldiers) {
+            imageSoldier.disableProperty().set(true);
+        }
+    }
+
+    private void playWithSoldier(int soldierNumber) {
+        //TODO: logic of playing
+        switch (soldierNumber) {
+            case 1:
+                labelIndexSoldier1.textProperty().set(
+                        (String.valueOf(Integer.valueOf(labelIndexSoldier1.getText()) + cubeAnswer)));
+                break;
+            case 2:
+                labelIndexSoldier2.textProperty().set(
+                        (String.valueOf(Integer.valueOf(labelIndexSoldier2.getText()) + cubeAnswer)));
+                break;
+            case 3:
+                labelIndexSoldier3.textProperty().set(
+                        (String.valueOf(Integer.valueOf(labelIndexSoldier3.getText()) + cubeAnswer)));
+                break;
+            case 4:
+                labelIndexSoldier4.textProperty().set(
+                        (String.valueOf(Integer.valueOf(labelIndexSoldier4.getText()) + cubeAnswer)));
                 break;
         }
     }

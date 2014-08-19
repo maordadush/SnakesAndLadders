@@ -95,6 +95,7 @@
                         <TextField fx:id="textBoxNamePlayer1" disable="true" layoutX="93.0" layoutY="2.0" />
                      </children>
                   </AnchorPane>
+                  <Button layoutX="185.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="Open..." />
                </children>
             </AnchorPane>
             <AnchorPane layoutX="460.0" layoutY="347.0" AnchorPane.bottomAnchor="18.0" AnchorPane.rightAnchor="14.0">
@@ -103,8 +104,8 @@
                   <Button fx:id="buttonOk" defaultButton="true" disable="true" layoutX="89.0" mnemonicParsing="false" onAction="#onContinue" prefHeight="35.0" prefWidth="77.0" text="OK" />
                </children>
             </AnchorPane>
-            <Slider fx:id="slider" disable="true" layoutX="432.0" layoutY="262.0" max="10.0" onMouseDragged="#dragged" />
-            <Slider fx:id="sliderSoldiersToWin" disable="true" layoutX="432.0" layoutY="312.0" max="4.0" min="1.0" onMouseDragged="#draggedSoldiersToWin" />
+            <Slider fx:id="slider" disable="true" layoutX="432.0" layoutY="262.0" max="10.0" onMouseClicked="#dragged" onMouseDragged="#dragged" />
+            <Slider fx:id="sliderSoldiersToWin" disable="true" layoutX="432.0" layoutY="312.0" max="4.0" min="1.0" onMouseClicked="#draggedSoldiersToWin" onMouseDragged="#draggedSoldiersToWin" />
             <Label fx:id="errorMessageLabel" layoutX="54.0" layoutY="365.0" prefHeight="27.0" prefWidth="247.0" />
       </children>
     </AnchorPane>

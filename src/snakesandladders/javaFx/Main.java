@@ -8,6 +8,7 @@ package snakesandladders.javaFx;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.CollationElementIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -24,11 +25,14 @@ import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import snakesandladders.gamecontrol.eStartMenu;
 import snakesandladders.gamemodel.GameModel;
 import snakesandladders.javaFx.gameScene.GameSceneController;
 import snakesandladders.javaFx.initScene.SceneInitController;
 import snakesandladders.javaFx.utils.dialog.CustomizablePromptDialog;
 import snakesandladders.players.SinglePlayer;
+import snakesandladders.xml.XML;
+import snakesandladders.xml.eXMLLoadStatus;
 
 /**
  *
@@ -83,7 +87,7 @@ public class Main extends Application {
 
                     gameSceneController.InitModel();
 
-                    lisionersForGame(gameSceneController, primaryStage);
+                    lisionersForGame(gameSceneController, sceneInitController, primaryStage);
 
                     javafx.geometry.Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
                     Scene scene = new Scene(rootGame, screenBounds.getWidth(), screenBounds.getHeight());
@@ -101,10 +105,19 @@ public class Main extends Application {
                 }
             }
         });
+
+        sceneInitController.getCancelInit().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    primaryStage.close();
+                }
+            }
+        });
         return sceneInitController;
     }
 
-    private void lisionersForGame(GameSceneController gameSceneController, final Stage primaryStage) {
+    private void lisionersForGame(GameSceneController gameSceneController, final SceneInitController sceneInitController, final Stage primaryStage) {
 
         primaryStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, new EventHandler<WindowEvent>() {
             @Override
@@ -154,10 +167,13 @@ public class Main extends Application {
             @Override
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
-                    openXML(primaryStage);
+                    try {
+                        openXML(primaryStage, sceneInitController); //TODO: check returned value
+                    } catch (IOException ex) {
+                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
-
         });
 
         gameSceneController.getSaveGameAsSelected().addListener(new ChangeListener<Boolean>() {
@@ -189,16 +205,22 @@ public class Main extends Application {
         return quit;
     }
 
-    private File openXML(Stage stage) {
+    private eXMLLoadStatus openXML(Stage stage, SceneInitController initSceneController) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("XML", "*.xml")
         );
 
         fileChooser.setTitle("Open XML File");
-        return (fileChooser.showOpenDialog(stage));
+        eXMLLoadStatus status = loadGame(fileChooser.showOpenDialog(stage));
+        if (status != eXMLLoadStatus.LOAD_SUCCESS) {
+            return status;
+        }
+
+        startWithInitializedModel(stage);
+        return status.LOAD_SUCCESS;
     }
-    
+
     private void saveXML(Stage stage) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
@@ -225,5 +247,33 @@ public class Main extends Application {
 
     private Parent getRoot(FXMLLoader fxmlLoader) throws IOException {
         return (Parent) fxmlLoader.load(fxmlLoader.getLocation().openStream());
+    }
+
+    private eXMLLoadStatus loadGame(File xmlFile) throws IOException {
+        eXMLLoadStatus loadStatus;
+        SinglePlayer.setNextId(0);
+        GameModel modelLoad = null;
+        String xmlPath = xmlFile.getCanonicalPath();
+
+        loadStatus = XML.initModelFromXml(xmlPath, modelLoad);
+        if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
+            //GameSceneController.displayXMLLoadError(loadStatus);
+            return loadStatus;
+        }
+        modelLoad = new GameModel(XML.getM_GameSize(), XML.getM_NumOfSnakesAndLadders(), XML.getM_NumOfPlayers(), XML.getM_NumOfSoldiersToWin());
+        loadStatus = XML.loadXML(xmlPath, modelLoad);
+
+        if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
+            //GameSceneController.displayXMLLoadError(loadStatus);
+            return loadStatus;
+        }
+
+        model = modelLoad;
+
+        return loadStatus;
+    }
+
+    private void startWithInitializedModel(Stage primaryStage) {
+
     }
 }
