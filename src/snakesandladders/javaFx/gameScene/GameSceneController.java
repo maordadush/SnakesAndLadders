@@ -17,6 +17,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -24,6 +25,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -229,7 +231,7 @@ public class GameSceneController implements Initializable {
     }
 
     private void printGameBoard(SnakesAndLaddersSingleGame game) {
-        BoardView boardView = new BoardView(game.getO_BoardSize());
+        BoardView boardView = new BoardView(game.getGameBoard());
         boardPane.getChildren().add(boardView);
     }
 
