@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.CollationElementIterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -31,6 +33,7 @@ import snakesandladders.javaFx.gameScene.GameSceneController;
 import snakesandladders.javaFx.initScene.SceneInitController;
 import snakesandladders.javaFx.utils.dialog.CustomizablePromptDialog;
 import snakesandladders.players.SinglePlayer;
+import snakesandladders.players.ePlayerType;
 import snakesandladders.xml.XML;
 import snakesandladders.xml.eXMLLoadStatus;
 
@@ -68,6 +71,7 @@ public class Main extends Application {
             @Override
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
+                    List<SinglePlayer> playersInitiated = createPlayerListFromSceneInit(sceneInitController);
                     SinglePlayer.setNextId(0);
                     model = new GameModel(sceneInitController.getBoardSize(), sceneInitController.GetNumOfSnakesAndLadders(),
                             sceneInitController.GetNumOfPlayers(), sceneInitController.getNumberOfSoldiersToWin());
@@ -83,11 +87,11 @@ public class Main extends Application {
 
                     GameSceneController gameSceneController = (GameSceneController) fxmlLoader.getController();
 
-                    gameSceneController.setModelAndInitController(model, sceneInitController);
+                    gameSceneController.setModel(model);
 
-                    gameSceneController.InitModel();
+                    gameSceneController.InitModel(playersInitiated);
 
-                    lisionersForGame(gameSceneController, sceneInitController, primaryStage);
+                    lisionersForGame(gameSceneController, primaryStage, rootGame);
 
                     javafx.geometry.Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
                     Scene scene = new Scene(rootGame, screenBounds.getWidth(), screenBounds.getHeight());
@@ -117,7 +121,18 @@ public class Main extends Application {
         return sceneInitController;
     }
 
-    private void lisionersForGame(GameSceneController gameSceneController, final SceneInitController sceneInitController, final Stage primaryStage) {
+    List<SinglePlayer> createPlayerListFromSceneInit(SceneInitController sceneInitController) {
+        List<SinglePlayer> listToReturn = new ArrayList<>();
+
+        for (int i = 0; i < sceneInitController.GetNumOfPlayers(); i++) {
+            listToReturn.add(new SinglePlayer(sceneInitController.getPlayerString(i),
+                    sceneInitController.getPlayerType(i)));
+        }
+
+        return listToReturn;
+    }
+
+    private void lisionersForGame(final GameSceneController gameSceneController, final Stage primaryStage, final Parent rootGame) {
 
         primaryStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, new EventHandler<WindowEvent>() {
             @Override
@@ -132,6 +147,7 @@ public class Main extends Application {
             @Override
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
+                    gameSceneController.getQuitGameSelected().set(false);
                     getFinalAnswer(primaryStage);
                 }
             }
@@ -142,19 +158,7 @@ public class Main extends Application {
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
                     try {
-                        start(primaryStage);
-                    } catch (IOException ex) {
-                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        });
-
-        gameSceneController.getSelectedNewGame().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    try {
+                        gameSceneController.getSelectedNewGame().set(false);
                         start(primaryStage);
                     } catch (IOException ex) {
                         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -168,7 +172,8 @@ public class Main extends Application {
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
                     try {
-                        openXML(primaryStage, sceneInitController); //TODO: check returned value
+                        gameSceneController.getOpenGameSelected().set(false);
+                        openXML(primaryStage, gameSceneController, rootGame); //TODO: check returned value
                     } catch (IOException ex) {
                         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -180,6 +185,7 @@ public class Main extends Application {
             @Override
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
+                    gameSceneController.getSaveGameAsSelected().set(false);
                     saveXML(primaryStage);
                 }
             }
@@ -205,7 +211,7 @@ public class Main extends Application {
         return quit;
     }
 
-    private eXMLLoadStatus openXML(Stage stage, SceneInitController initSceneController) throws IOException {
+    private eXMLLoadStatus openXML(Stage stage, GameSceneController gameSceneController, Parent rootGame) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("XML", "*.xml")
@@ -217,7 +223,7 @@ public class Main extends Application {
             return status;
         }
 
-        startWithInitializedModel(stage);
+        startWithInitializedModel(stage, gameSceneController, rootGame);
         return status.LOAD_SUCCESS;
     }
 
@@ -273,7 +279,39 @@ public class Main extends Application {
         return loadStatus;
     }
 
-    private void startWithInitializedModel(Stage primaryStage) {
+    private void startWithInitializedModel(Stage primaryStage, GameSceneController gameSceneController, Parent rootGame) {
 
+        SinglePlayer.setNextId(0);
+//new
+        FXMLLoader fxmlLoader = getFXMLLoader(GAME_SCENE_FXML_PATH);
+
+        try {
+            rootGame = getRoot(fxmlLoader);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            rootGame = null;
+        }
+
+        gameSceneController = (GameSceneController) fxmlLoader.getController();
+
+        gameSceneController.setModel(model);
+
+        //gameSceneController.InitModel(playersInitiated);
+
+        lisionersForGame(gameSceneController, primaryStage, rootGame);
+
+        javafx.geometry.Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        Scene scene = new Scene(rootGame, screenBounds.getWidth(), screenBounds.getHeight());
+
+        primaryStage.setX(
+                0);
+        primaryStage.setY(
+                0);
+        primaryStage.setTitle(
+                "Game");
+
+        primaryStage.setScene(scene);
+
+        primaryStage.show();
     }
 }

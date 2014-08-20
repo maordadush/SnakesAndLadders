@@ -61,7 +61,6 @@ public class GameSceneController implements Initializable {
     @FXML
     private Font x3;
     private GameModel model;
-    private SceneInitController sceneInitController;
     @FXML
     private Label labelCurrPlayer;
     @FXML
@@ -139,22 +138,22 @@ public class GameSceneController implements Initializable {
 
     }
 
-    private void initPlayers(List<SinglePlayer> players) throws SnakesAndLaddersRunTimeException {
+    private void initPlayers(List<SinglePlayer> playersToInit, List<SinglePlayer> playersInitiated) throws SnakesAndLaddersRunTimeException {
         SinglePlayer player;
         ePlayerType playertype;
         String playerName;
         int computerIndex = 0;
 
         for (int i = 0; i < model.getNumOfPlayers(); i++) {
-            if (players == null) {
-                playertype = sceneInitController.getPlayerType(i);
+            if (playersToInit == null) {
+                playertype = playersInitiated.get(i).getType();
             } else {
-                playertype = players.get(i).getType();
+                playertype = playersToInit.get(i).getType();
             }
             switch (playertype) {
                 case HUMAN:
-                    playerName = players == null ? sceneInitController.getPlayerString(i)
-                            : players.get(i).getPlayerName();
+                    playerName = playersToInit == null ? playersInitiated.get(i).getPlayerName()
+                            : playersToInit.get(i).getPlayerName();
                     player = new SinglePlayer(playerName, playertype);
                     player.initSoldiers(model.getCurrGameIndex());
                     model.getCurrGameIndex().getPlayers().add(player);
@@ -173,10 +172,10 @@ public class GameSceneController implements Initializable {
         }
     }
 
-    public void InitModel() {
+    public void InitModel(List<SinglePlayer> playersInitiated) {
         model.initNewGame(shuffleLaddersAndSnakes);
         try {
-            initPlayers(null);
+            initPlayers(null, playersInitiated);
         } catch (SnakesAndLaddersRunTimeException ex) {
             Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -186,9 +185,8 @@ public class GameSceneController implements Initializable {
         printModelToScene();
     }
 
-    public void setModelAndInitController(GameModel model, SceneInitController sceneInitController) {
+    public void setModel(GameModel model) {
         this.model = model;
-        this.sceneInitController = sceneInitController;
     }
 
     @FXML
@@ -354,6 +352,7 @@ public class GameSceneController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
+                    userChooseSoldier1.set(false);
                     soldierChoosed(1);
                 }
             }
@@ -363,6 +362,7 @@ public class GameSceneController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
+                    userChooseSoldier2.set(false);
                     soldierChoosed(2);
                 }
             }
@@ -372,6 +372,7 @@ public class GameSceneController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
+                    userChooseSoldier3.set(false);
                     soldierChoosed(3);
                 }
             }
@@ -381,11 +382,11 @@ public class GameSceneController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
+                    userChooseSoldier4.set(false);
                     soldierChoosed(4);
                 }
             }
         });
-        //}
     }
 
     private void soldierChoosed(int soldierNumber) {
@@ -404,12 +405,12 @@ public class GameSceneController implements Initializable {
     }
 
     @FXML
-    private void ChooseSoldier4(MouseEvent event) {
+    private void ChooseSoldier3(MouseEvent event) {
         userChooseSoldier3.set(true);
     }
 
     @FXML
-    private void ChooseSoldier3(MouseEvent event) {
+    private void ChooseSoldier4(MouseEvent event) {
         userChooseSoldier4.set(true);
     }
 
