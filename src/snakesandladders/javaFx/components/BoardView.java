@@ -35,6 +35,7 @@ public class BoardView extends GridPane {
             for (int Y = 0; Y < board.length; Y++) {
                 SquareView bs = new SquareView(board[X][Y]);
                 add(bs, Y, board.length - 1 - X);
+                
             }
         }
     }

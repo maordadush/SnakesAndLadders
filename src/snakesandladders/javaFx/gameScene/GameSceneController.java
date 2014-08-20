@@ -7,6 +7,7 @@ package snakesandladders.javaFx.gameScene;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -14,17 +15,21 @@ import java.util.logging.Logger;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -36,6 +41,7 @@ import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
 import snakesandladders.javaFx.components.BoardView;
 import snakesandladders.javaFx.components.ImageManager;
 import snakesandladders.javaFx.components.PlayerView;
+import snakesandladders.javaFx.components.SquareView;
 import snakesandladders.javaFx.initScene.SceneInitController;
 import snakesandladders.players.SinglePlayer;
 import snakesandladders.players.Soldier;
@@ -442,4 +448,25 @@ public class GameSceneController implements Initializable {
         }
     }
 
+    public Node getSquareView(int squareNumber) {
+
+        GridPane boardview = (GridPane) boardPane.getChildren().get(0);
+        ObservableList<Node> squareViews = boardview.getChildren();
+
+        if (squareNumber < 1 || squareNumber > model.getGame().getMAX_SQUARE_NUM()) {
+            return null;
+        }
+        int boardSize = model.getGame().getO_BoardSize();
+        int x = (boardSize * boardSize - 1 - (squareNumber - 1)) / boardSize;
+        int y = (squareNumber - 1) % boardSize;
+
+        for (Node node : squareViews) {
+            if (node.isManaged()) {
+                if (boardview.getRowIndex(node) == x && boardview.getColumnIndex(node) == y) {
+                    return node;
+                }
+            }
+        }
+        return null;
+    }
 }

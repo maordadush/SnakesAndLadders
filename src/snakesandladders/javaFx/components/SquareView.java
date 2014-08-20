@@ -5,24 +5,29 @@
  */
 package snakesandladders.javaFx.components;
 
+import java.util.List;
 import java.util.Set;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.gamemodel.eChars;
+import snakesandladders.players.SinglePlayer;
+import snakesandladders.players.Soldier;
 
 public class SquareView extends VBox {
 
     private BoardSquare boardSquare;
-    private Set<HBox> players;
+    private Set<HBox> hPlayers;
 
     SquareView(BoardSquare boardSquare) {
         this.boardSquare = boardSquare;
         setId(String.valueOf(boardSquare.getSquareNumber()));
         addSquareNumberLabel();
         addSquareTypeLabel();
-        
+        addSoldiersLabel();
+
     }
 
     private void addSquareNumberLabel() {
@@ -31,12 +36,12 @@ public class SquareView extends VBox {
     }
 
     private void addSquareTypeLabel() {
-        switch(boardSquare.getType()){
+        switch (boardSquare.getType()) {
             case SNAKE_HEAD:
-                 getChildren().add(new Label("SnakeHead"));
+                getChildren().add(new Label("SnakeHead"));
                 break;
             case SNAKE_TAIL:
-                 getChildren().add(new Label("SnakeTail"));
+                getChildren().add(new Label("SnakeTail"));
                 break;
             case LADDER_HEAD:
                 getChildren().add(new Label("LadderHead"));
@@ -45,7 +50,23 @@ public class SquareView extends VBox {
                 getChildren().add(new Label("LadderTail"));
                 break;
         }
-       
+
+    }
+
+    private void addSoldiersLabel() {
+        List<SinglePlayer> players = boardSquare.getPlayers();
+        for (SinglePlayer singlePlayer : players) {
+            HBox hbox = new HBox();
+            hbox.getChildren().addAll(new Label("Name: "), new Label(singlePlayer.getPlayerName()));
+            int numOfSoldiers = singlePlayer.getNumSoldiersAtSquare(boardSquare);
+            for (int i = 0; i < numOfSoldiers; i++) {
+                hbox.getChildren().addAll(new Label(" "),new Label(String.valueOf(singlePlayer.getM_SoldiersList().get(i).getSoldierID())));
+            }
+            getChildren().add(hbox);
+        }
+
     }
 
 }
+
+;
