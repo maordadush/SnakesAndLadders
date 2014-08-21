@@ -428,6 +428,7 @@ public class GameSceneController implements Initializable {
 
     private void playWithSoldier(int soldierNumber) {
         //TODO: logic of playing
+        //TODO: maby we can use soldier as custon image that have number and just printing it - polymorphism
         switch (soldierNumber) {
             case 1:
                 labelIndexSoldier1.textProperty().set(
