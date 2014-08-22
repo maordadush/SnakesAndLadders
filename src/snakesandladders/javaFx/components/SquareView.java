@@ -5,18 +5,18 @@
  */
 package snakesandladders.javaFx.components;
 
+import com.sun.jmx.snmp.BerDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import javafx.geometry.Pos;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import snakesandladders.gamemodel.BoardSquare;
-import snakesandladders.gamemodel.eChars;
-import snakesandladders.players.SinglePlayer;
-import snakesandladders.players.Soldier;
 
 public class SquareView extends VBox {
 
@@ -48,6 +48,7 @@ public class SquareView extends VBox {
         initPlayersHbox();
         createPlayersHBoxs();
         createGeneralVBox();
+        
 
         //addSoldiersLabel();
     }
@@ -75,25 +76,48 @@ public class SquareView extends VBox {
 
     }
 
-    //UI not need to hold Logic
-//    private void addSoldiersLabel() {
-//        List<SinglePlayer> players = boardSquare.getPlayers();
-//        for (SinglePlayer singlePlayer : players) {
-//            HBox hbox = new HBox();
-//            hbox.getChildren().addAll(new Label("Name: "), new Label(singlePlayer.getPlayerName()));
-//            int numOfSoldiers = singlePlayer.getNumSoldiersAtSquare(boardSquare);
-//            for (int i = 0; i < numOfSoldiers; i++) {
-//                hbox.getChildren().addAll(new Label(" "),new Label(String.valueOf(singlePlayer.getM_SoldiersList().get(i).getSoldierID())));
-//            }
-//            getChildren().add(hbox);
-//        }
-//    }
-    public void removeSoldier(int playerNumber) {
-        //This function knows from outside
+    public void removeSoldier(int playerNumber, Image soldierImage,int numOfSoldiers) {
+        HBox player = m_HboxPlayers.get(playerNumber);
+        ImageView imageView = m_ImagePlayers.get(playerNumber);
+        Label soldiersCount = m_LabelPlayers.get(playerNumber);
+
+        if (numOfSoldiers == 0) {
+            vPlayers.getChildren().remove(player);
+        } else {
+            imageView.setImage(soldierImage);
+            imageView.setFitWidth(50);
+            imageView.setPreserveRatio(true);
+            imageView.setSmooth(true);
+            imageView.setCache(true);
+            soldiersCount.textProperty().set(String.valueOf(numOfSoldiers));
+            soldiersCount.setGraphic(imageView);
+            soldiersCount.setContentDisplay(ContentDisplay.TOP);
+            soldiersCount.setMaxHeight(150.0);
+            player.getChildren().set(0, soldiersCount);
+        }
     }
 
-    public void addSoldier(int playerNumber) {
-        //This fuction knows from outside
+    public void addSoldier(int playerNumber, Image soldierImage, int numOfSoldiers) {
+        HBox player = m_HboxPlayers.get(playerNumber);
+        ImageView imageView = m_ImagePlayers.get(playerNumber);
+        Label soldiersCount = m_LabelPlayers.get(playerNumber);
+
+        if (numOfSoldiers == 0) {
+            player.setVisible(true);
+        }
+        //soldiersCount.textProperty().set((String.valueOf(Integer.valueOf(soldiersCount.getText()) + 1)));
+        imageView.setImage(soldierImage);
+        imageView.setFitWidth(50);
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+        imageView.setCache(true);
+        soldiersCount.textProperty().set(String.valueOf(numOfSoldiers));
+        soldiersCount.setGraphic(imageView);
+        soldiersCount.setContentDisplay(ContentDisplay.TOP);
+        // player.getChildren().set(0, imageView);
+        player.getChildren().set(0, soldiersCount);
+        player.setAlignment(Pos.TOP_CENTER);
+
     }
 
     private void initPlayersImages() {
@@ -139,16 +163,17 @@ public class SquareView extends VBox {
 
     private void createPlayersHBoxs() {
         for (int i = 0; i < m_HboxPlayers.size(); i++) {
-            m_HboxPlayers.get(i).getChildren().addAll(m_ImagePlayers.get(i), m_LabelPlayers.get(i));
+            m_HboxPlayers.get(i).getChildren().addAll(m_LabelPlayers.get(i));
         }
     }
 
     private void createGeneralVBox() {
         vPlayers = new VBox(8);
-        
-        for(HBox playerBox : m_HboxPlayers){
+
+        for (HBox playerBox : m_HboxPlayers) {
             vPlayers.getChildren().add(playerBox);
         }
+        getChildren().add(vPlayers);
     }
-    
+
 }

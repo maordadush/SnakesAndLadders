@@ -35,6 +35,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
+import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.gamemodel.Cube;
 import snakesandladders.gamemodel.GameModel;
 import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
@@ -211,7 +212,7 @@ public class GameSceneController implements Initializable {
         } else {
             labelCubeAnswer.textProperty().set(String.valueOf(cubeAnswer));
             makeSoldiersAvaliable();
-            waitForUserToChooseSoldier();
+            waitForUserToChooseSoldier(player);
             //ChooseHumanSoldierToPlay();
             //player.setCurrentSoldier(indexOfSoldier);
         }
@@ -222,9 +223,10 @@ public class GameSceneController implements Initializable {
     }
 
     private void printModelToScene() {
+
+        printGameBoard(model.getGame());
         printCurrPlayerTurn();
         printListOfPlayersWithPictures(model.getPlayers());
-        printGameBoard(model.getGame());
     }
 
     private void printListOfPlayersWithPictures(List<SinglePlayer> players) {
@@ -303,11 +305,16 @@ public class GameSceneController implements Initializable {
 
     private void printCurrPlayerSoldiers(SinglePlayer currentPlayer) {
         int colorNumber = currentPlayer.getColor();
+        Image soldierImage = getImageSoldier(colorNumber);
+
         List<Soldier> currentSoldiers = currentPlayer.getM_SoldiersList();
 
         for (int i = 0; i < currentSoldiers.size(); i++) {
-            m_LablesSoldiers.get(i).setText(String.valueOf(
-                    currentSoldiers.get(i).getLocationOnBoard().getSquareNumber()));
+            int squareNumber = currentSoldiers.get(i).getLocationOnBoard().getSquareNumber();
+            int numOfSoldiers = currentPlayer.getNumSoldiersAtSquare(currentSoldiers.get(i).getLocationOnBoard());
+            SquareView node = (SquareView) getSquareView(squareNumber);
+            node.addSoldier(currentPlayer.getPlayerID(), soldierImage, numOfSoldiers);
+            m_LablesSoldiers.get(i).setText(String.valueOf(squareNumber));
         }
 
         switch (colorNumber) {
@@ -342,6 +349,24 @@ public class GameSceneController implements Initializable {
         }
     }
 
+    private Image getImageSoldier(int colorNumber) {
+        switch (colorNumber) {
+            case 1:
+                Image imageBlue = ImageManager.getImage("BluePlayer");
+                return imageBlue;
+            case 2:
+                Image imageGreen = ImageManager.getImage("GreenPlayer");
+                return imageGreen;
+            case 3:
+                Image imagePurple = ImageManager.getImage("PurplePlayer");
+                return imagePurple;
+            case 4:
+                Image imageYellow = ImageManager.getImage("YellowPlayer");
+                return imageYellow;
+        }
+        return null;
+    }
+
     private void makeComputerTurn(SinglePlayer player) {
     }
 
@@ -351,15 +376,24 @@ public class GameSceneController implements Initializable {
         }
     }
 
-    private void waitForUserToChooseSoldier() {
-
+    private void waitForUserToChooseSoldier(final SinglePlayer player) {
+         
         //while (!newValue) {
         userChooseSoldier1.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
                     userChooseSoldier1.set(false);
-                    soldierChoosed(1);
+                    try {
+                        player.setCurrentSoldier(1);
+                    } catch (SnakesAndLaddersRunTimeException ex) {
+                        Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {
+                        soldierChoosed(player);
+                    } catch (SnakesAndLaddersRunTimeException ex) {
+                        Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
@@ -369,7 +403,16 @@ public class GameSceneController implements Initializable {
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
                     userChooseSoldier2.set(false);
-                    soldierChoosed(2);
+                    try {
+                        player.setCurrentSoldier(2);
+                    } catch (SnakesAndLaddersRunTimeException ex) {
+                        Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {
+                        soldierChoosed(player);
+                    } catch (SnakesAndLaddersRunTimeException ex) {
+                        Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
@@ -379,7 +422,16 @@ public class GameSceneController implements Initializable {
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
                     userChooseSoldier3.set(false);
-                    soldierChoosed(3);
+                    try {
+                        player.setCurrentSoldier(3);
+                    } catch (SnakesAndLaddersRunTimeException ex) {
+                        Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {
+                        soldierChoosed(player);
+                    } catch (SnakesAndLaddersRunTimeException ex) {
+                        Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
@@ -389,15 +441,24 @@ public class GameSceneController implements Initializable {
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
                     userChooseSoldier4.set(false);
-                    soldierChoosed(4);
+                    try {
+                        player.setCurrentSoldier(4);
+                    } catch (SnakesAndLaddersRunTimeException ex) {
+                        Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {
+                        soldierChoosed(player);
+                    } catch (SnakesAndLaddersRunTimeException ex) {
+                        Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
     }
 
-    private void soldierChoosed(int soldierNumber) {
+    private void soldierChoosed(SinglePlayer player) throws SnakesAndLaddersRunTimeException {
         disableSoldierImages();
-        playWithSoldier(soldierNumber);
+        playWithSoldier(player);
     }
 
     @FXML
@@ -426,25 +487,33 @@ public class GameSceneController implements Initializable {
         }
     }
 
-    private void playWithSoldier(int soldierNumber) {
-        //TODO: logic of playing
-        //TODO: maby we can use soldier as custon image that have number and just printing it - polymorphism
-        switch (soldierNumber) {
+    private void playWithSoldier(SinglePlayer player) throws SnakesAndLaddersRunTimeException {
+        
+          BoardSquare currSquare  = player.GetCurrentSoldier().getLocationOnBoard();
+          SquareView origin = (SquareView)getSquareView(currSquare.getSquareNumber());
+          BoardSquare toMove = move(player, cubeAnswer);
+          SquareView dest = (SquareView)getSquareView(toMove.getSquareNumber());
+          dest.addSoldier(player.getPlayerID(),getImageSoldier(player.getColor()),player.getNumSoldiersAtSquare(toMove));
+          origin.removeSoldier(player.getPlayerID(),getImageSoldier(player.getColor()),player.getNumSoldiersAtSquare(currSquare));
+          
+          
+          Soldier currSoldier = player.getCurrentSoldier();
+          switch (currSoldier.getSoldierID()) {
             case 1:
                 labelIndexSoldier1.textProperty().set(
-                        (String.valueOf(Integer.valueOf(labelIndexSoldier1.getText()) + cubeAnswer)));
+                       (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
                 break;
             case 2:
                 labelIndexSoldier2.textProperty().set(
-                        (String.valueOf(Integer.valueOf(labelIndexSoldier2.getText()) + cubeAnswer)));
+                        (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
                 break;
             case 3:
                 labelIndexSoldier3.textProperty().set(
-                        (String.valueOf(Integer.valueOf(labelIndexSoldier3.getText()) + cubeAnswer)));
+                        (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
                 break;
             case 4:
                 labelIndexSoldier4.textProperty().set(
-                        (String.valueOf(Integer.valueOf(labelIndexSoldier4.getText()) + cubeAnswer)));
+                        (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
                 break;
         }
     }
@@ -469,5 +538,40 @@ public class GameSceneController implements Initializable {
             }
         }
         return null;
+    }
+
+    private BoardSquare move(SinglePlayer player, int cubeAnswer) throws SnakesAndLaddersRunTimeException {
+        Soldier currentSoldier = player.GetCurrentSoldier();
+        BoardSquare originSquare = currentSoldier.getLocationOnBoard();
+        BoardSquare boardToMove;
+        int oldPlyerIndex = originSquare.getSquareNumber();
+        int newPlayerIndex = oldPlyerIndex + cubeAnswer;
+
+        if (newPlayerIndex < (model.getGame().getMAX_SQUARE_NUM())) {
+            boardToMove = model.getGame().getBoardSquare(newPlayerIndex);
+        } else {
+            boardToMove = model.getGame().getBoardSquare(model.getGame().getMAX_SQUARE_NUM());
+            currentSoldier.setM_FinishedGame(true);
+        }
+
+        switch (boardToMove.getType()) {
+            case LADDER_TAIL:
+                boardToMove = boardToMove.getJumpTo();
+                break;
+            case SNAKE_HEAD:
+                boardToMove = boardToMove.getJumpTo();
+                break;
+            case NONE:
+                break;
+        }
+        if (!boardToMove.getPlayers().contains(player)) {
+            boardToMove.getPlayers().add(player);
+        }
+        model.setMove(player, boardToMove);
+        //check if exist soldiers in origin square
+        if (!player.atSquare(originSquare)) {
+            originSquare.getPlayers().remove(player);
+        }
+        return boardToMove;
     }
 }
