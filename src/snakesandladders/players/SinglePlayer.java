@@ -32,10 +32,8 @@ public class SinglePlayer {
         this.m_PlayerName = o_Name;
         this.type = type;
         m_SoldiersList = new ArrayList<>(NUM_OF_SOLDIERS);
-        Random rand = new Random();
-        this.color = rand.nextInt(NUM_OF_SOLDIERS) + 1;;
         this.m_CurrentSoldierIndex = 0;
-        playerID = nextId.incrementAndGet();
+        color = playerID = nextId.incrementAndGet();
     }
 
     public String getPlayerName() {

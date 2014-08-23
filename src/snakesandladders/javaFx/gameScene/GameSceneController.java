@@ -176,6 +176,7 @@ public class GameSceneController implements Initializable {
                 default:
                     throw new SnakesAndLaddersRunTimeException("InitPlayers(): Invalid PlayerType Input");
             }
+            //printCurrPlayerSoldiers(player);            
         }
     }
 
@@ -212,18 +213,18 @@ public class GameSceneController implements Initializable {
         } else {
             labelCubeAnswer.textProperty().set(String.valueOf(cubeAnswer));
             makeSoldiersAvaliable();
-            waitForUserToChooseSoldier(player);
+            waitForUserToChooseSoldier(/*player*/);
         }
-
 
     }
 
     private void printModelToScene() {
 
         printGameBoard(model.getGame());
+        printPlayersSoldiers();
         setPlayerTurn();
         printListOfPlayersWithPictures(model.getPlayers());
-        
+
     }
 
     private void printListOfPlayersWithPictures(List<SinglePlayer> players) {
@@ -373,13 +374,15 @@ public class GameSceneController implements Initializable {
         }
     }
 
-    private void waitForUserToChooseSoldier( final SinglePlayer player) {
+    private void waitForUserToChooseSoldier(/*SinglePlayer player*/) {
 
 //        //while (!newValue) {
         userChooseSoldier1.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
+                    SinglePlayer player = model.getCurrPlayer();
+
                     userChooseSoldier1.set(false);
                     try {
                         player.setCurrentSoldier(1);
@@ -387,7 +390,7 @@ public class GameSceneController implements Initializable {
                         Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     try {
-                       soldierChoosed(player);
+                        soldierChoosed(player);
                     } catch (SnakesAndLaddersRunTimeException ex) {
                         Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -399,6 +402,8 @@ public class GameSceneController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
+                    final SinglePlayer player = model.getCurrPlayer();
+
                     userChooseSoldier2.set(false);
                     try {
                         player.setCurrentSoldier(2);
@@ -406,7 +411,7 @@ public class GameSceneController implements Initializable {
                         Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     try {
-                       soldierChoosed(player);
+                        soldierChoosed(player);
                     } catch (SnakesAndLaddersRunTimeException ex) {
                         Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -418,6 +423,8 @@ public class GameSceneController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
+                    final SinglePlayer player = model.getCurrPlayer();
+
                     userChooseSoldier3.set(false);
                     try {
                         player.setCurrentSoldier(3);
@@ -425,7 +432,7 @@ public class GameSceneController implements Initializable {
                         Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     try {
-                       soldierChoosed(player);
+                        soldierChoosed(player);
                     } catch (SnakesAndLaddersRunTimeException ex) {
                         Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -437,6 +444,8 @@ public class GameSceneController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
+                    final SinglePlayer player = model.getCurrPlayer();
+
                     userChooseSoldier4.set(false);
                     try {
                         player.setCurrentSoldier(4);
@@ -512,7 +521,7 @@ public class GameSceneController implements Initializable {
                         (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
                 break;
         }
-        
+
         model.forwardPlayer();
         setPlayerTurn();
     }
@@ -574,5 +583,10 @@ public class GameSceneController implements Initializable {
         return boardToMove;
     }
 
+    private void printPlayersSoldiers() {
+        for (SinglePlayer player : model.getPlayers()) {
+            printCurrPlayerSoldiers(player);
+        }
+    }
 
 }
