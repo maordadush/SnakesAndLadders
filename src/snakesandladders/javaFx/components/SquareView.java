@@ -16,12 +16,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 import snakesandladders.gamemodel.BoardSquare;
 
 public class SquareView extends VBox {
 
     private BoardSquare boardSquare;
-    private VBox vPlayers;
+    private HBox vPlayers;
     private ImageView imagePlayer1;
     private ImageView imagePlayer2;
     private ImageView imagePlayer3;
@@ -47,7 +49,8 @@ public class SquareView extends VBox {
         initPlayersLabels();
         initPlayersHbox();
         createPlayersHBoxs();
-        createGeneralVBox();
+        createGeneralHBox();
+  
         
 
         //addSoldiersLabel();
@@ -55,6 +58,7 @@ public class SquareView extends VBox {
 
     private void addSquareNumberLabel() {
         Label label = new Label(this.getId());
+
         getChildren().add(label);
     }
 
@@ -76,7 +80,7 @@ public class SquareView extends VBox {
 
     }
 
-    public void removeSoldier(int playerNumber, Image soldierImage,int numOfSoldiers) {
+    public void removeSoldier(int playerNumber, Image soldierImage, int numOfSoldiers) {
         HBox player = m_HboxPlayers.get(playerNumber);
         ImageView imageView = m_ImagePlayers.get(playerNumber);
         Label soldiersCount = m_LabelPlayers.get(playerNumber);
@@ -85,7 +89,7 @@ public class SquareView extends VBox {
             vPlayers.getChildren().remove(player);
         } else {
             imageView.setImage(soldierImage);
-            imageView.setFitWidth(50);
+            imageView.setFitWidth(30);
             imageView.setPreserveRatio(true);
             imageView.setSmooth(true);
             imageView.setCache(true);
@@ -107,7 +111,7 @@ public class SquareView extends VBox {
         }
         //soldiersCount.textProperty().set((String.valueOf(Integer.valueOf(soldiersCount.getText()) + 1)));
         imageView.setImage(soldierImage);
-        imageView.setFitWidth(50);
+        imageView.setFitWidth(30);
         imageView.setPreserveRatio(true);
         imageView.setSmooth(true);
         imageView.setCache(true);
@@ -167,13 +171,22 @@ public class SquareView extends VBox {
         }
     }
 
-    private void createGeneralVBox() {
-        vPlayers = new VBox(8);
+    private void createGeneralHBox() {
+        vPlayers = new HBox(8);
 
         for (HBox playerBox : m_HboxPlayers) {
             vPlayers.getChildren().add(playerBox);
         }
+        vPlayers.setMaxHeight(120.0);
         getChildren().add(vPlayers);
     }
 
+    public void addSnake() {
+
+  
+    }
+
+    public void addLadder(Image ladderImage) {
+
+    }
 }

@@ -8,6 +8,7 @@ package snakesandladders.javaFx.components;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -34,6 +35,8 @@ public class BoardView extends GridPane {
             getRowConstraints().add(new RowConstraints(heightSquare));
             for (int Y = 0; Y < board.length; Y++) {
                 SquareView bs = new SquareView(board[X][Y]);
+                bs.setMaxHeight(heightSquare);
+                bs.setMaxWidth(widthSquare);
                 add(bs, Y, board.length - 1 - X);
                 
             }
