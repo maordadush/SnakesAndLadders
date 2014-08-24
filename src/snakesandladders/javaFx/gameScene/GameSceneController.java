@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +45,7 @@ import snakesandladders.javaFx.components.ImageManager;
 import snakesandladders.javaFx.components.PlayerView;
 import snakesandladders.javaFx.components.SquareView;
 import snakesandladders.javaFx.initScene.SceneInitController;
+import snakesandladders.javaFx.utils.dialog.CustomizablePromptDialog;
 import snakesandladders.players.SinglePlayer;
 import snakesandladders.players.Soldier;
 import snakesandladders.players.ePlayerType;
@@ -87,6 +89,7 @@ public class GameSceneController implements Initializable {
     private SimpleBooleanProperty userChooseSoldier2;
     private SimpleBooleanProperty userChooseSoldier3;
     private SimpleBooleanProperty userChooseSoldier4;
+    private List<Image> cubeImages;
 
     private List<ImageView> m_ImageViewSoldiers;
     private List<Label> m_LablesSoldiers;
@@ -107,7 +110,9 @@ public class GameSceneController implements Initializable {
     @FXML
     private Label labelIndexSoldier4;
     @FXML
-    private Label labelCubeAnswer;
+    private Label labelNotification;
+    @FXML
+    private ImageView imageCubeAnswer;
 
     /**
      * Initializes the controller class.
@@ -128,6 +133,8 @@ public class GameSceneController implements Initializable {
         userChooseSoldier2 = new SimpleBooleanProperty(false);
         userChooseSoldier3 = new SimpleBooleanProperty(false);
         userChooseSoldier4 = new SimpleBooleanProperty(false);
+        cubeImages = new ArrayList<>();
+        loadImagesToList(cubeImages);
 
         cube = new Cube();
 
@@ -176,7 +183,6 @@ public class GameSceneController implements Initializable {
                 default:
                     throw new SnakesAndLaddersRunTimeException("InitPlayers(): Invalid PlayerType Input");
             }
-            //printCurrPlayerSoldiers(player);            
         }
     }
 
@@ -199,6 +205,7 @@ public class GameSceneController implements Initializable {
 
     @FXML
     private void playButtonClicked(ActionEvent event) throws SnakesAndLaddersRunTimeException {
+        buttonPlay.disableProperty().set(true);
         SinglePlayer player = model.getCurrPlayer();
 
         cubeAnswer = cube.throwCube();
@@ -211,9 +218,9 @@ public class GameSceneController implements Initializable {
 //            int soldierIndex = player.randomizeCurrentPlayer();
 //            m_consoleView.printCurrentSoldier(soldierIndex);
         } else {
-            labelCubeAnswer.textProperty().set(String.valueOf(cubeAnswer));
+            showCubeAnswer(cubeAnswer);
             makeSoldiersAvaliable();
-            waitForUserToChooseSoldier(/*player*/);
+            waitForUserToChooseSoldier();
         }
 
     }
@@ -365,7 +372,10 @@ public class GameSceneController implements Initializable {
         return null;
     }
 
-    private void makeComputerTurn(SinglePlayer player) {
+    private void makeComputerTurn(SinglePlayer player) throws SnakesAndLaddersRunTimeException {
+        int soldierIndex = getRandomSoldierIndex(player);
+        player.setCurrentSoldier(soldierIndex);
+        soldierChoosed(player);
     }
 
     private void makeSoldiersAvaliable() {
@@ -374,7 +384,7 @@ public class GameSceneController implements Initializable {
         }
     }
 
-    private void waitForUserToChooseSoldier(/*SinglePlayer player*/) {
+    private void waitForUserToChooseSoldier() {
 
 //        //while (!newValue) {
         userChooseSoldier1.addListener(new ChangeListener<Boolean>() {
@@ -463,8 +473,16 @@ public class GameSceneController implements Initializable {
     }
 
     private void soldierChoosed(SinglePlayer player) throws SnakesAndLaddersRunTimeException {
+        boolean finishedGame = false;
         disableSoldierImages();
         playWithSoldier(player);
+        finishedGame = checkPlayerWon(player);
+
+        if (finishedGame) {
+            alertPlayerWon(player);
+        }
+
+        buttonPlay.disableProperty().set(false);
     }
 
     @FXML
@@ -494,33 +512,33 @@ public class GameSceneController implements Initializable {
     }
 
     private void playWithSoldier(SinglePlayer player) throws SnakesAndLaddersRunTimeException {
-
-        BoardSquare currSquare = player.GetCurrentSoldier().getLocationOnBoard();
+        Soldier currSoldier = player.getCurrentSoldier();
+        BoardSquare currSquare = currSoldier.getLocationOnBoard();
         SquareView origin = (SquareView) getSquareView(currSquare.getSquareNumber());
         BoardSquare toMove = move(player, cubeAnswer);
         SquareView dest = (SquareView) getSquareView(toMove.getSquareNumber());
         dest.addSoldier(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(toMove));
         origin.removeSoldier(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(currSquare));
-
-        Soldier currSoldier = player.getCurrentSoldier();
-        switch (currSoldier.getSoldierID()) {
-            case 1:
-                labelIndexSoldier1.textProperty().set(
-                        (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
-                break;
-            case 2:
-                labelIndexSoldier2.textProperty().set(
-                        (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
-                break;
-            case 3:
-                labelIndexSoldier3.textProperty().set(
-                        (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
-                break;
-            case 4:
-                labelIndexSoldier4.textProperty().set(
-                        (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
-                break;
-        }
+        updateSoldierIfWon(currSoldier, currSquare);
+        //Dadush I removed it and it works good check if needed
+//        switch (currSoldier.getSoldierID()) {
+//            case 1:
+//                labelIndexSoldier1.textProperty().set(
+//                        (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
+//                break;
+//            case 2:
+//                labelIndexSoldier2.textProperty().set(
+//                        (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
+//                break;
+//            case 3:
+//                labelIndexSoldier3.textProperty().set(
+//                        (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
+//                break;
+//            case 4:
+//                labelIndexSoldier4.textProperty().set(
+//                        (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
+//                break;
+//        }
 
         model.forwardPlayer();
         setPlayerTurn();
@@ -587,6 +605,62 @@ public class GameSceneController implements Initializable {
         for (SinglePlayer player : model.getPlayers()) {
             printCurrPlayerSoldiers(player);
         }
+    }
+
+    private boolean checkPlayerWon(SinglePlayer player) {
+        boolean returnedValue = false;
+        int finishedSoldier = 0;
+
+        for (Soldier soldier : player.getM_SoldiersList()) {
+            if (soldier.isM_FinishedGame()) {
+                finishedSoldier++;
+            }
+        }
+        if (finishedSoldier >= model.getM_NumOfSoldiersToWin()) {
+            returnedValue = true;
+        }
+
+        return returnedValue;
+    }
+
+    private void alertPlayerWon(SinglePlayer player) {
+        labelNotification.textProperty().set(player.getPlayerName() + " won! Game Over!");
+    }
+
+    private void updateSoldierIfWon(Soldier currSoldier, BoardSquare currSquare) {
+        if (currSquare.getSquareNumber() >= model.getGame().getMAX_SQUARE_NUM()) {
+            currSoldier.setM_FinishedGame(true);
+        }
+    }
+
+    private int getRandomSoldierIndex(SinglePlayer player) {
+        int randomSoldierIndex;
+        do {
+            Random rand = new Random();
+            randomSoldierIndex = rand.nextInt(4) + 1;
+        } while (player.getM_SoldiersList().get(randomSoldierIndex).isM_FinishedGame());
+
+        return randomSoldierIndex;
+    }
+
+    private void showCubeAnswer(int cubeAnswer) {
+        imageCubeAnswer.setImage(cubeImages.get(cubeAnswer - 1));
+    }
+
+    private void loadImagesToList(List<Image> cubeImages) {
+        Image imageOne = ImageManager.getImage("cubeAnswers/1");
+        Image imageTwo = ImageManager.getImage("cubeAnswers/2");
+        Image imageThree = ImageManager.getImage("cubeAnswers/3");
+        Image imageFour = ImageManager.getImage("cubeAnswers/4");
+        Image imageFive = ImageManager.getImage("cubeAnswers/5");
+        Image imageSix = ImageManager.getImage("cubeAnswers/6");
+
+        cubeImages.add(imageOne);
+        cubeImages.add(imageTwo);
+        cubeImages.add(imageThree);
+        cubeImages.add(imageFour);
+        cubeImages.add(imageFive);
+        cubeImages.add(imageSix);
     }
 
 }
