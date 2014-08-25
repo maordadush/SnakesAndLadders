@@ -91,7 +91,7 @@ public class Main extends Application {
 
                     gameSceneController.setModel(model);
 
-                    gameSceneController.InitModel(true,playersInitiated);
+                    gameSceneController.InitModel(false,playersInitiated);
 
                     lisionersForGame(gameSceneController, primaryStage, rootGame);
 
@@ -240,7 +240,7 @@ public class Main extends Application {
         );
        
         fileChooser.setTitle("Save XML File");
-        eXMLSaveStatus saveStatus = XML.saveXML(fileChooser.showSaveDialog(stage)+".xml", model);
+        eXMLSaveStatus saveStatus = XML.saveXML(fileChooser.showSaveDialog(stage).getAbsolutePath(), model);
         if (saveStatus != eXMLSaveStatus.SAVE_SUCCESS)
             throw new XMLException("Save Failed");
         
@@ -304,7 +304,7 @@ public class Main extends Application {
         gameSceneController = (GameSceneController) fxmlLoader.getController();
 
         gameSceneController.setModel(model);
-        gameSceneController.InitModel(false,model.getPlayers());
+        gameSceneController.InitModel(true,model.getPlayers());
 
         lisionersForGame(gameSceneController, primaryStage, rootGame);
 

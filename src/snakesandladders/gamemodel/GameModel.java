@@ -66,9 +66,9 @@ public class GameModel implements iWinChecker {
         return returnedValue;
     }
 
-    public void initNewGame(boolean startNewGame) {
+    public void initNewGame(boolean loadGame) {
         game.initGame();
-        if (startNewGame){
+        if (!loadGame){
             game.shuffleSnakesAndLadders(m_numOfSnakesAndLadders);   
         }
         deinitPlayers();
@@ -210,5 +210,9 @@ public class GameModel implements iWinChecker {
                 
         }
         return snakesAndLaddersList;
+    }
+
+    public void setPlayers(List<SinglePlayer> players) {
+        this.players = players;
     }
 }

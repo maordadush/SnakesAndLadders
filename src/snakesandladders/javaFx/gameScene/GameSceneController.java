@@ -62,7 +62,7 @@ import snakesandladders.xml.eXMLLoadStatus;
  */
 public class GameSceneController implements Initializable {
 
-    boolean shuffleLaddersAndSnakes = true;
+    boolean loadGame = true;
     Cube cube;
     int cubeAnswer;
 
@@ -165,8 +165,7 @@ public class GameSceneController implements Initializable {
             playertype = playersToInit.get(i).getType();
             switch (playertype) {
                 case HUMAN:
-                    playerName = playersToInit == null ? playersToInit.get(i).getPlayerName()
-                            : playersToInit.get(i).getPlayerName();
+                    playerName = playersToInit.get(i).getPlayerName();
                     player = new SinglePlayer(playerName, playertype);
                     player.initSoldiers(model.getCurrGameIndex());
                     model.getCurrGameIndex().getPlayers().add(player);
@@ -185,12 +184,16 @@ public class GameSceneController implements Initializable {
         }
     }
 
-    public void InitModel(Boolean shuffleLaddersAndSnakes, List<SinglePlayer> playersInitiated) {
+    public void InitModel(Boolean loadGame, List<SinglePlayer> playersInitiated) {
         List<SinglePlayer> players = new ArrayList<>(playersInitiated);
-        model.initNewGame(shuffleLaddersAndSnakes);
-
+        model.initNewGame(loadGame);
+        
         try {
-            initPlayers(players);
+            if(!loadGame)
+                initPlayers(players);
+            else    
+                model.setPlayers(players);
+          
         } catch (SnakesAndLaddersRunTimeException ex) {
             Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -228,7 +231,7 @@ public class GameSceneController implements Initializable {
 
     private void printModelToScene() {
 
-        cleanScene();
+       
         printGameBoard(model.getGame());
         printPlayersSoldiers();
         setPlayerTurn();
@@ -665,16 +668,6 @@ public class GameSceneController implements Initializable {
         cubeImages.add(imageFour);
         cubeImages.add(imageFive);
         cubeImages.add(imageSix);
-    }
-
-    private void cleanScene() {
-        for (Node node : boardPane.getChildren()) {
-            boardPane.getChildren().remove(node);
-        }
-        for (Node node : playersPane.getChildren()) {
-            playersPane.getChildren().remove(node);
-        }
-
     }
 
 }
