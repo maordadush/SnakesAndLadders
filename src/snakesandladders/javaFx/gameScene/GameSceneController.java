@@ -62,7 +62,7 @@ import snakesandladders.xml.eXMLLoadStatus;
  */
 public class GameSceneController implements Initializable {
 
-    boolean loadGame = true;
+    boolean startNewGame = true;
     Cube cube;
     int cubeAnswer;
 
@@ -184,15 +184,18 @@ public class GameSceneController implements Initializable {
         }
     }
 
-    public void InitModel(Boolean loadGame, List<SinglePlayer> playersInitiated) {
+    public void InitModel(Boolean startNewGame, List<SinglePlayer> playersInitiated) {
         List<SinglePlayer> players = new ArrayList<>(playersInitiated);
-        model.initNewGame(loadGame);
         
         try {
-            if(!loadGame)
+            if(startNewGame){
+                model.initNewGame(startNewGame);
                 initPlayers(players);
-            else    
+            }
+            else
+            {    
                 model.setPlayers(players);
+            }
           
         } catch (SnakesAndLaddersRunTimeException ex) {
             Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);

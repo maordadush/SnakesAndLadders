@@ -91,7 +91,7 @@ public class Main extends Application {
 
                     gameSceneController.setModel(model);
 
-                    gameSceneController.InitModel(false,playersInitiated);
+                    gameSceneController.InitModel(true,playersInitiated);
 
                     lisionersForGame(gameSceneController, primaryStage, rootGame);
 
@@ -304,7 +304,7 @@ public class Main extends Application {
         gameSceneController = (GameSceneController) fxmlLoader.getController();
 
         gameSceneController.setModel(model);
-        gameSceneController.InitModel(true,model.getPlayers());
+        gameSceneController.InitModel(false,model.getPlayers());
 
         lisionersForGame(gameSceneController, primaryStage, rootGame);
 
