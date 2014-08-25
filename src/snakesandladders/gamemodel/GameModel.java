@@ -67,11 +67,12 @@ public class GameModel implements iWinChecker {
     }
 
     public void initNewGame(boolean loadGame) {
-        game.initGame();
         if (!loadGame){
+            game.initGame();
             game.shuffleSnakesAndLadders(m_numOfSnakesAndLadders);   
+            deinitPlayers();
         }
-        deinitPlayers();
+        
     }
 
     public BoardSquare getCurrGameIndex() {
