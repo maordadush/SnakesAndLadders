@@ -35,7 +35,9 @@ import snakesandladders.javaFx.utils.dialog.CustomizablePromptDialog;
 import snakesandladders.players.SinglePlayer;
 import snakesandladders.players.ePlayerType;
 import snakesandladders.xml.XML;
+import snakesandladders.xml.XMLException;
 import snakesandladders.xml.eXMLLoadStatus;
+import snakesandladders.xml.eXMLSaveStatus;
 
 /**
  *
@@ -89,7 +91,7 @@ public class Main extends Application {
 
                     gameSceneController.setModel(model);
 
-                    gameSceneController.InitModel(playersInitiated);
+                    gameSceneController.InitModel(true,playersInitiated);
 
                     lisionersForGame(gameSceneController, primaryStage, rootGame);
 
@@ -186,7 +188,11 @@ public class Main extends Application {
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
                     gameSceneController.getSaveGameAsSelected().set(false);
-                    saveXML(primaryStage);
+                    try {
+                        saveXML(primaryStage);
+                    } catch (XMLException ex) {
+                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
 
@@ -227,14 +233,17 @@ public class Main extends Application {
         return status.LOAD_SUCCESS;
     }
 
-    private void saveXML(Stage stage) {
+    private void saveXML(Stage stage) throws XMLException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("XML", "*.xml")
         );
-
+       
         fileChooser.setTitle("Save XML File");
-        fileChooser.showSaveDialog(stage);
+        eXMLSaveStatus saveStatus = XML.saveXML(fileChooser.showSaveDialog(stage)+".xml", model);
+        if (saveStatus != eXMLSaveStatus.SAVE_SUCCESS)
+            throw new XMLException("Save Failed");
+        
     }
 
     /**
@@ -295,8 +304,7 @@ public class Main extends Application {
         gameSceneController = (GameSceneController) fxmlLoader.getController();
 
         gameSceneController.setModel(model);
-
-        //gameSceneController.InitModel(playersInitiated);
+        gameSceneController.InitModel(false,model.getPlayers());
 
         lisionersForGame(gameSceneController, primaryStage, rootGame);
 
@@ -309,7 +317,8 @@ public class Main extends Application {
                 0);
         primaryStage.setTitle(
                 "Game");
-
+        
+        
         primaryStage.setScene(scene);
 
         primaryStage.show();

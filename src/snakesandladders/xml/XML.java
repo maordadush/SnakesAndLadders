@@ -300,13 +300,13 @@ public class XML {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema;
 
-        URL xsdURL = XML.class.getResource(XSD_FOLDER + XSD_FNAME);
-        if (xsdURL == null) {
+        xsdIS = XML.class.getResourceAsStream(XSD_FOLDER + XSD_FNAME);
+        if (xsdIS == null) {
             return eXMLSaveStatus.XSD_FILE_NOT_FOUND;
         }
 
         try {
-            schema = schemaFactory.newSchema(new File(xsdURL.getFile()));
+            schema = schemaFactory.newSchema(new StreamSource(xsdIS));
         } catch (SAXException ex) {
             return eXMLSaveStatus.XSD_FILE_NOT_FOUND;
         }

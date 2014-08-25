@@ -66,6 +66,8 @@ public class SquareView extends VBox {
         switch (boardSquare.getType()) {
             case SNAKE_HEAD:
                 getChildren().add(new Label("SnakeHead"));
+                Image snakeImage = ImageManager.getImage("Snake");
+                
                 break;
             case SNAKE_TAIL:
                 getChildren().add(new Label("SnakeTail"));

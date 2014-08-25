@@ -8,6 +8,7 @@ package snakesandladders.javaFx.gameScene;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -35,6 +36,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Rotate;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.gamemodel.Cube;
@@ -50,6 +52,7 @@ import snakesandladders.players.SinglePlayer;
 import snakesandladders.players.Soldier;
 import snakesandladders.players.ePlayerType;
 import static snakesandladders.players.ePlayerType.COMPUTER;
+import snakesandladders.xml.XML;
 import snakesandladders.xml.eXMLLoadStatus;
 
 /**
@@ -152,21 +155,17 @@ public class GameSceneController implements Initializable {
 
     }
 
-    private void initPlayers(List<SinglePlayer> playersToInit, List<SinglePlayer> playersInitiated) throws SnakesAndLaddersRunTimeException {
+    private void initPlayers(List<SinglePlayer> playersToInit) throws SnakesAndLaddersRunTimeException {
         SinglePlayer player;
         ePlayerType playertype;
         String playerName;
         int computerIndex = 0;
 
         for (int i = 0; i < model.getNumOfPlayers(); i++) {
-            if (playersToInit == null) {
-                playertype = playersInitiated.get(i).getType();
-            } else {
-                playertype = playersToInit.get(i).getType();
-            }
+            playertype = playersToInit.get(i).getType();
             switch (playertype) {
                 case HUMAN:
-                    playerName = playersToInit == null ? playersInitiated.get(i).getPlayerName()
+                    playerName = playersToInit == null ? playersToInit.get(i).getPlayerName()
                             : playersToInit.get(i).getPlayerName();
                     player = new SinglePlayer(playerName, playertype);
                     player.initSoldiers(model.getCurrGameIndex());
@@ -186,10 +185,12 @@ public class GameSceneController implements Initializable {
         }
     }
 
-    public void InitModel(List<SinglePlayer> playersInitiated) {
+    public void InitModel(Boolean shuffleLaddersAndSnakes, List<SinglePlayer> playersInitiated) {
+        List<SinglePlayer> players = new ArrayList<>(playersInitiated);
         model.initNewGame(shuffleLaddersAndSnakes);
+
         try {
-            initPlayers(null, playersInitiated);
+            initPlayers(players);
         } catch (SnakesAndLaddersRunTimeException ex) {
             Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -227,6 +228,7 @@ public class GameSceneController implements Initializable {
 
     private void printModelToScene() {
 
+        cleanScene();
         printGameBoard(model.getGame());
         printPlayersSoldiers();
         setPlayerTurn();
@@ -244,6 +246,7 @@ public class GameSceneController implements Initializable {
     private void printGameBoard(SnakesAndLaddersSingleGame game) {
         BoardView boardView = new BoardView(game.getGameBoard());
         boardPane.getChildren().add(boardView);
+
     }
 
     private void setPlayerTurn() {
@@ -381,6 +384,7 @@ public class GameSceneController implements Initializable {
     private void makeSoldiersAvaliable() {
         for (ImageView imageSoldier : m_ImageViewSoldiers) {
             imageSoldier.disableProperty().set(false);
+
         }
     }
 
@@ -637,7 +641,7 @@ public class GameSceneController implements Initializable {
         int randomSoldierIndex;
         do {
             Random rand = new Random();
-            randomSoldierIndex = rand.nextInt(4) + 1;
+            randomSoldierIndex = rand.nextInt(3) + 1;
         } while (player.getM_SoldiersList().get(randomSoldierIndex).isM_FinishedGame());
 
         return randomSoldierIndex;
@@ -661,6 +665,16 @@ public class GameSceneController implements Initializable {
         cubeImages.add(imageFour);
         cubeImages.add(imageFive);
         cubeImages.add(imageSix);
+    }
+
+    private void cleanScene() {
+        for (Node node : boardPane.getChildren()) {
+            boardPane.getChildren().remove(node);
+        }
+        for (Node node : playersPane.getChildren()) {
+            playersPane.getChildren().remove(node);
+        }
+
     }
 
 }
