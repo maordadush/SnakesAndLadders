@@ -37,7 +37,7 @@
     </MenuBar>
     <SplitPane dividerPositions="0.2695547533092659, 0.802647412755716" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
-        <AnchorPane>
+        <AnchorPane fx:id="anchorPaneLeft">
           <children>
             <Label fx:id="labelCurrPlayer" alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Player details" textAlignment="CENTER" wrapText="false">
               <font>
@@ -60,12 +60,12 @@
                   <ImageView fx:id="imageCubeAnswer" fitHeight="97.0" fitWidth="126.0" layoutX="48.0" layoutY="85.0" pickOnBounds="true" preserveRatio="true" />
           </children>
         </AnchorPane>
-        <ScrollPane>
+        <ScrollPane fx:id="scrollPaneMiddle">
           <content>
             <AnchorPane id="Content" fx:id="boardPane" minHeight="-1.0" minWidth="-1.0" prefHeight="487.0" prefWidth="430.0" />
           </content>
         </ScrollPane>
-            <BorderPane prefHeight="200.0" prefWidth="200.0">
+            <BorderPane fx:id="boarderPaneRight" prefHeight="200.0" prefWidth="200.0">
                <center>
                   <VBox fx:id="playersPane" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
                </center></BorderPane>
@@ -73,13 +73,14 @@
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
       <children>
-        <Label fx:id="labelNotification" maxHeight="1.7976931348623157E308" maxWidth="-1.0" prefHeight="16.0" prefWidth="225.0" textFill="#f21f1f" HBox.hgrow="ALWAYS">
+        <Label fx:id="labelNotification" maxHeight="1.7976931348623157E308" maxWidth="-1.0" prefHeight="35.0" prefWidth="836.0" textFill="#f21f1f" HBox.hgrow="ALWAYS">
           <font>
             <Font size="24.0" fx:id="x3" />
           </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
         </Label>
-        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
-        <Label font="$x3" maxWidth="-1.0" text="Right status" textFill="$x4" HBox.hgrow="NEVER" />
       </children>
       <padding>
         <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />

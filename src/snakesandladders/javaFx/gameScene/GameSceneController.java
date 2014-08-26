@@ -25,6 +25,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -54,6 +55,7 @@ import snakesandladders.players.ePlayerType;
 import static snakesandladders.players.ePlayerType.COMPUTER;
 import snakesandladders.xml.XML;
 import snakesandladders.xml.eXMLLoadStatus;
+import snakesandladders.xml.eXMLSaveStatus;
 
 /**
  * FXML Controller class
@@ -116,6 +118,12 @@ public class GameSceneController implements Initializable {
     private Label labelNotification;
     @FXML
     private ImageView imageCubeAnswer;
+    @FXML
+    private ScrollPane scrollPaneMiddle;
+    @FXML
+    private BorderPane boarderPaneRight;
+    @FXML
+    private AnchorPane anchorPaneLeft;
 
     /**
      * Initializes the controller class.
@@ -186,17 +194,15 @@ public class GameSceneController implements Initializable {
 
     public void InitModel(Boolean startNewGame, List<SinglePlayer> playersInitiated) {
         List<SinglePlayer> players = new ArrayList<>(playersInitiated);
-        
+
         try {
-            if(startNewGame){
+            if (startNewGame) {
                 model.initNewGame(startNewGame);
                 initPlayers(players);
-            }
-            else
-            {    
+            } else {
                 model.setPlayers(players);
             }
-          
+
         } catch (SnakesAndLaddersRunTimeException ex) {
             Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -234,7 +240,6 @@ public class GameSceneController implements Initializable {
 
     private void printModelToScene() {
 
-       
         printGameBoard(model.getGame());
         printPlayersSoldiers();
         setPlayerTurn();
@@ -315,6 +320,10 @@ public class GameSceneController implements Initializable {
 
     public SimpleBooleanProperty getSaveGameAsSelected() {
         return saveGameAsSelected;
+    }
+
+    public SimpleBooleanProperty getSaveGameSelected() {
+        return saveGameSelected;
     }
 
     private void printCurrPlayerSoldiers(SinglePlayer currentPlayer) {
@@ -489,6 +498,7 @@ public class GameSceneController implements Initializable {
         finishedGame = checkPlayerWon(player);
 
         if (finishedGame) {
+            disableInnerPanes();
             alertPlayerWon(player);
         }
 
@@ -671,6 +681,21 @@ public class GameSceneController implements Initializable {
         cubeImages.add(imageFour);
         cubeImages.add(imageFive);
         cubeImages.add(imageSix);
+    }
+
+    private void disableInnerPanes() {
+        anchorPaneLeft.visibleProperty().set(false);
+        scrollPaneMiddle.visibleProperty().set(false);
+        boarderPaneRight.visibleProperty().set(false);
+    }
+
+    public void displayError(eXMLSaveStatus saveStatus) {
+        labelNotification.textProperty().set("Error: " + saveStatus.name());
+    }
+
+    public void displayXMLSavedSuccessfully(String saveGamePath) {
+        labelNotification.textProperty().set("Game saved successfully to: " + saveGamePath);
+
     }
 
 }

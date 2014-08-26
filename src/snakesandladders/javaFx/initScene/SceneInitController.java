@@ -40,8 +40,7 @@ import snakesandladders.players.ePlayerType;
  * @author Noam
  */
 public class SceneInitController implements Initializable {
-
-    private GameModel model;
+    
     private List<RadioButton> m_radioButtons;
     private List<CheckBox> m_checkedPlayers;
     private List<TextField> m_textPlayers;
@@ -49,7 +48,8 @@ public class SceneInitController implements Initializable {
     private boolean isErrorMessageShown = false;
     private SimpleBooleanProperty finishedInit;
     private SimpleBooleanProperty CancelInit;
-
+    private int m_NumberOfCheckedPlayers;
+    
     @FXML
     private TextField textBoxNamePlayer1;
     @FXML
@@ -118,6 +118,8 @@ public class SceneInitController implements Initializable {
     private AnchorPane PlayerPane;
     private int m_BoardSize;
     private int m_ComputerIndex;
+    private SimpleBooleanProperty openGameSelected;
+    private int m_IndexOfPlayerList;
 
     /**
      * Initializes the controller class.
@@ -128,17 +130,21 @@ public class SceneInitController implements Initializable {
         m_checkedPlayers = new ArrayList<>();
         m_menuButtonsPlayers = new ArrayList<>();
         m_textPlayers = new ArrayList<>();
-
+        m_NumberOfCheckedPlayers = 2;
+        m_IndexOfPlayerList = 0;
+        
         initRadioButtons();
         initCheckedPlayers();
         initMenuButtonsPlayers();
         initTextPlayers();
         finishedInit = new SimpleBooleanProperty(false);
         CancelInit = new SimpleBooleanProperty(false);
-        m_BoardSize = 0;
+        openGameSelected = new SimpleBooleanProperty(false);
+        
+        m_BoardSize = 5;
         m_ComputerIndex = 0;
     }
-
+    
     @FXML
     private void handleSubmitRadioButtonAction(ActionEvent event) {
         for (RadioButton button : m_radioButtons) {
@@ -149,7 +155,7 @@ public class SceneInitController implements Initializable {
             }
         }
         setSlider(event);
-        slider.setValue(0);
+        slider.setValue(1);
         sliderSoldiersToWin.setValue(1);
         dragged();
         draggedSoldiersToWin();
@@ -157,53 +163,49 @@ public class SceneInitController implements Initializable {
         sliderSoldiersToWin.disableProperty().set(false);
         buttonOk.disableProperty().set(false);
         buttonCancel.disableProperty().set(false);
-
+        
     }
-
+    
     @FXML
     private void dragged() {
         labelNumOfPlayers.textProperty().set(String.valueOf((int) slider.getValue()));
     }
-
+    
     @FXML
     private void draggedSoldiersToWin() {
         labelNumOfSoldiersToWin.textProperty().set(String.valueOf((int) sliderSoldiersToWin.getValue()));
     }
-
-    public void setModel(GameModel model) {
-        this.model = model;
-    }
-
+    
     private void initRadioButtons() {
         m_radioButtons.add(radioButton5);
         m_radioButtons.add(radioButton6);
         m_radioButtons.add(radioButton7);
         m_radioButtons.add(radioButton8);
     }
-
+    
     private void initCheckedPlayers() {
         m_checkedPlayers.add(checkBoxPlayer1);
         m_checkedPlayers.add(checkBoxPlayer2);
         m_checkedPlayers.add(checkBoxPlayer3);
         m_checkedPlayers.add(checkBoxPlayer4);
     }
-
+    
     private void initMenuButtonsPlayers() {
         m_menuButtonsPlayers.add(MenuButtonPlayer1);
         m_menuButtonsPlayers.add(MenuButtonPlayer2);
         m_menuButtonsPlayers.add(MenuButtonPlayer3);
         m_menuButtonsPlayers.add(MenuButtonPlayer4);
     }
-
+    
     private void initTextPlayers() {
         m_textPlayers.add(textBoxNamePlayer1);
         m_textPlayers.add(textBoxNamePlayer2);
         m_textPlayers.add(textBoxNamePlayer3);
         m_textPlayers.add(textBoxNamePlayer4);
-
+        
         for (TextField textField : m_textPlayers) {
             textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
-
+                
                 @Override
                 public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
                     if (playerDuplicateNameExist()) {
@@ -215,28 +217,36 @@ public class SceneInitController implements Initializable {
             });
         }
     }
-
+    
     @FXML
     private void playerChecked(ActionEvent event) {
         for (int i = 0; i < m_checkedPlayers.size(); i++) {
             if (((CheckBox) (event.getSource())).getId().equals(m_checkedPlayers.get(i).getId())) {
                 if (m_checkedPlayers.get(i).selectedProperty().get() == true) {
+                    m_NumberOfCheckedPlayers++;
                     m_menuButtonsPlayers.get(i).disableProperty().set(false);
                     m_textPlayers.get(i).disableProperty().set(false);
                     m_menuButtonsPlayers.get(i).disableProperty().set(false);
                 } else {
+                    m_NumberOfCheckedPlayers--;
                     m_menuButtonsPlayers.get(i).disableProperty().set(true);
                     m_textPlayers.get(i).disableProperty().set(true);
                     m_menuButtonsPlayers.get(i).disableProperty().set(true);
                 }
             }
         }
-        paneBoardSize.disableProperty().set(false);
+        if (m_NumberOfCheckedPlayers >= 2) {
+            //paneBoardSize.disableProperty().set(false);
+            buttonOk.disableProperty().set(false);
+        } else {
+            //paneBoardSize.disableProperty().set(true);
+            buttonOk.disableProperty().set(true);
+        }
     }
-
+    
     private void setSlider(ActionEvent event) {
         int numOfSnakesAndLadders;
-
+        
         switch (((RadioButton) event.getSource()).getText()) {
             case "5X5":
                 m_BoardSize = 5;
@@ -260,15 +270,15 @@ public class SceneInitController implements Initializable {
                 break;
             default:
                 break;
-
+            
         }
-
+        
     }
-
+    
     private int calculateNumOfSnakesAndLadder(int BoardSize) {
         return ((int) (BoardSize / 5));
     }
-
+    
     @FXML
     private void menuItemPlayer1Checked(ActionEvent event) {
         String text = ((MenuItem) event.getSource()).getText();
@@ -277,10 +287,10 @@ public class SceneInitController implements Initializable {
         } else {
             textBoxNamePlayer1.disableProperty().set(false);
         }
-
+        
         MenuButtonPlayer1.textProperty().bind(Bindings.concat((text)));
     }
-
+    
     @FXML
     private void menuItemPlayer2Checked(ActionEvent event) {
         String text = ((MenuItem) event.getSource()).getText();
@@ -289,10 +299,10 @@ public class SceneInitController implements Initializable {
         } else {
             textBoxNamePlayer2.disableProperty().set(false);
         }
-
+        
         MenuButtonPlayer2.textProperty().bind(Bindings.concat((text)));
     }
-
+    
     @FXML
     private void menuItemPlayer3Checked(ActionEvent event) {
         String text = ((MenuItem) event.getSource()).getText();
@@ -301,10 +311,10 @@ public class SceneInitController implements Initializable {
         } else {
             textBoxNamePlayer3.disableProperty().set(false);
         }
-
+        
         MenuButtonPlayer3.textProperty().bind(Bindings.concat(text));
     }
-
+    
     @FXML
     private void menuItemPlayer4Checked(ActionEvent event) {
         String text = ((MenuItem) event.getSource()).getText();
@@ -313,10 +323,10 @@ public class SceneInitController implements Initializable {
         } else {
             textBoxNamePlayer4.disableProperty().set(false);
         }
-
+        
         MenuButtonPlayer4.textProperty().bind(Bindings.concat((text)));
     }
-
+    
     private void showError(String message) {
         if (!isErrorMessageShown) {
             isErrorMessageShown = true;
@@ -329,9 +339,9 @@ public class SceneInitController implements Initializable {
                     .build();
             animation.play();
         }
-
+        
     }
-
+    
     private void hideError() {
         if (isErrorMessageShown) {
             FadeTransition animation = FadeTransitionBuilder.create()
@@ -341,13 +351,13 @@ public class SceneInitController implements Initializable {
                     .toValue(0.0)
                     .build();
             animation.play();
-
+            
             isErrorMessageShown = false;
             errorMessageLabel.textProperty().setValue("");
-
+            
         }
     }
-
+    
     private boolean playerDuplicateNameExist() {
         boolean duplicate = false;
         for (TextField textField : m_textPlayers) {
@@ -360,21 +370,21 @@ public class SceneInitController implements Initializable {
         }
         return duplicate;
     }
-
+    
     @FXML
     private void onCancel(ActionEvent event) {
         CancelInit.set(true);
     }
-
+    
     public SimpleBooleanProperty getCancelInit() {
         return CancelInit;
     }
-
+    
     @FXML
     private void onContinue(ActionEvent event) {
         finishedInit.set(true);
     }
-
+    
     public SimpleBooleanProperty getFinishedInit() {
         return finishedInit;
     }
@@ -382,7 +392,7 @@ public class SceneInitController implements Initializable {
     public void setFinishedInit(boolean value) {
         finishedInit.set(value);
     }
-
+    
     public int GetNumOfPlayers() {
         int numOfPlayers = 0;
         for (CheckBox checkBox : m_checkedPlayers) {
@@ -390,23 +400,23 @@ public class SceneInitController implements Initializable {
                 numOfPlayers++;
             }
         }
-
+        
         return numOfPlayers;
     }
-
+    
     public int GetNumOfSnakesAndLadders() {
         return (int) slider.getValue();
     }
-
+    
     public int getNumberOfSoldiersToWin() {
         return (int) sliderSoldiersToWin.getValue();
     }
-
+    
     public int getBoardSize() {
         return m_BoardSize;
     }
-
-    public ePlayerType getPlayerType(int i) {
+    
+    private ePlayerType getPlayerType(int i) {
         ePlayerType typeReturned = null;
         switch (m_menuButtonsPlayers.get(i).getText()) {
             case "Human":
@@ -420,9 +430,43 @@ public class SceneInitController implements Initializable {
         }
         return typeReturned;
     }
-
-    public String getPlayerString(int index) {
-        return m_textPlayers.get(index).getText();
+    
+    private String getPlayerString(int index) {
+        String text = m_textPlayers.get(index).getText();
+        String promptText = m_textPlayers.get(index).getPromptText();
+        if (text.equals("")) {
+            return promptText;
+        } else {
+            return text;
+        }
     }
-
+    
+    @FXML
+    private void openGameClicked(ActionEvent event) {
+        openGameSelected.set(true);
+    }
+    
+    public SimpleBooleanProperty getOpenGameSelected() {
+        return openGameSelected;
+    }
+    
+    public String getLegalPlayerString() {
+        for (int i = m_IndexOfPlayerList; i < 4; i++) {
+            if (m_checkedPlayers.get(i).selectedProperty().get()) {
+                return getPlayerString(i);
+            }
+        }
+        return null;
+    }
+    
+    public ePlayerType getLegalPlayerType() {
+        for (int i = m_IndexOfPlayerList; i < 4; i++) {
+            if (m_checkedPlayers.get(i).selectedProperty().get()) {
+                m_IndexOfPlayerList = i + 1;
+                return getPlayerType(i);
+            }
+        }
+        return null;
+    }
+    
 }

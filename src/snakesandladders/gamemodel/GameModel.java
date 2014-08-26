@@ -27,7 +27,7 @@ public class GameModel implements iWinChecker {
     private int m_numOfSnakesAndLadders;
     private int m_CurrentPlayerIndex;
     private String m_GameName;
-    private int m_GameNameIndex = 0;
+    private static int m_GameNameIndex = 0;
     private int m_NumOfSoldiersToWin;
 
     public GameModel(int o_GameSize, int o_numOfSnakesAndLadders, int o_NumOfPlayers, int o_numOfSoldiersToWin) {
