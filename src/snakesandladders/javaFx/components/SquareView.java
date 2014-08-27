@@ -83,9 +83,9 @@ public class SquareView extends VBox {
     }
 
     public void removeSoldier(int playerNumber, Image soldierImage, int numOfSoldiers) {
-        HBox player = m_HboxPlayers.get(playerNumber);
-        ImageView imageView = m_ImagePlayers.get(playerNumber);
-        Label soldiersCount = m_LabelPlayers.get(playerNumber);
+        HBox player = m_HboxPlayers.get(playerNumber - 1);
+        ImageView imageView = m_ImagePlayers.get(playerNumber - 1);
+        Label soldiersCount = m_LabelPlayers.get(playerNumber - 1);
 
         if (numOfSoldiers == 0) {
             vPlayers.getChildren().remove(player);
@@ -104,9 +104,9 @@ public class SquareView extends VBox {
     }
 
     public void addSoldier(int playerNumber, Image soldierImage, int numOfSoldiers) {
-        HBox player = m_HboxPlayers.get(playerNumber);
-        ImageView imageView = m_ImagePlayers.get(playerNumber);
-        Label soldiersCount = m_LabelPlayers.get(playerNumber);
+        HBox player = m_HboxPlayers.get(playerNumber - 1);
+        ImageView imageView = m_ImagePlayers.get(playerNumber - 1);
+        Label soldiersCount = m_LabelPlayers.get(playerNumber - 1);
 
         if (numOfSoldiers == 0) {
             player.setVisible(true);
