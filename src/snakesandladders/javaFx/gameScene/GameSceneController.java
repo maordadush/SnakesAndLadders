@@ -48,6 +48,7 @@ import snakesandladders.javaFx.components.ImageManager;
 import snakesandladders.javaFx.components.PlayerView;
 import snakesandladders.javaFx.components.SquareView;
 import snakesandladders.javaFx.initScene.SceneInitController;
+import snakesandladders.javaFx.utils.SnakesAndLaddersDrawingUtil;
 import snakesandladders.javaFx.utils.dialog.CustomizablePromptDialog;
 import snakesandladders.players.SinglePlayer;
 import snakesandladders.players.Soldier;
@@ -83,6 +84,7 @@ public class GameSceneController implements Initializable {
     private VBox playersPane;
     @FXML
     private AnchorPane boardPane;
+    BoardView boardView;
     private SimpleBooleanProperty selectedNewGame;
     private SimpleBooleanProperty openGameSelected;
     private SimpleBooleanProperty closeGame;
@@ -94,6 +96,7 @@ public class GameSceneController implements Initializable {
     private SimpleBooleanProperty userChooseSoldier2;
     private SimpleBooleanProperty userChooseSoldier3;
     private SimpleBooleanProperty userChooseSoldier4;
+    SnakesAndLaddersDrawingUtil snlUtil;
     private List<Image> cubeImages;
 
     private List<ImageView> m_ImageViewSoldiers;
@@ -124,6 +127,7 @@ public class GameSceneController implements Initializable {
     private BorderPane boarderPaneRight;
     @FXML
     private AnchorPane anchorPaneLeft;
+    private String paneStyle = "-fx-background-color: #ffffe0;";
 
     /**
      * Initializes the controller class.
@@ -220,22 +224,18 @@ public class GameSceneController implements Initializable {
     private void playButtonClicked(ActionEvent event) throws SnakesAndLaddersRunTimeException {
         buttonPlay.disableProperty().set(true);
         SinglePlayer player = model.getCurrPlayer();
-
         cubeAnswer = cube.throwCube();
+        showCubeAnswer(cubeAnswer);
 
         if (player.getType() == COMPUTER) {
             makeComputerTurn(player);
-//            m_consoleView.LetComputerPlay();
-//            m_consoleView.PrintCubeAnswer(cubeAnswer);
-//            m_consoleView.PrintPlayer(player);
-//            int soldierIndex = player.randomizeCurrentPlayer();
-//            m_consoleView.printCurrentSoldier(soldierIndex);
         } else {
-            showCubeAnswer(cubeAnswer);
             makeSoldiersAvaliable();
             waitForUserToChooseSoldier();
         }
-
+        //TODO: dadush, remove when you understand
+        snlUtil.addLadderOrSnake(2, 2, 4, 4, true);
+        snlUtil.addLadderOrSnake(1, 1, 4, 1, false);
     }
 
     private void printModelToScene() {
@@ -244,7 +244,7 @@ public class GameSceneController implements Initializable {
         printPlayersSoldiers();
         setPlayerTurn();
         printListOfPlayersWithPictures(model.getPlayers());
-
+        snlUtil = new SnakesAndLaddersDrawingUtil(5, boardView, boardPane);
     }
 
     private void printListOfPlayersWithPictures(List<SinglePlayer> players) {
@@ -255,7 +255,8 @@ public class GameSceneController implements Initializable {
     }
 
     private void printGameBoard(SnakesAndLaddersSingleGame game) {
-        BoardView boardView = new BoardView(game.getGameBoard());
+        boardView = new BoardView(game.getGameBoard());
+        boardPane.setStyle(paneStyle);
         boardPane.getChildren().add(boardView);
 
     }

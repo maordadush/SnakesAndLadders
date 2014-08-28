@@ -22,6 +22,15 @@ import snakesandladders.gamemodel.BoardSquare;
 
 public class SquareView extends VBox {
 
+    String squereStyleEven = "-fx-background-color: oldlace;"
+            + "-fx-border-style: solid;"
+            + "-fx-border-width: 1;"
+            + "-fx-border-color: black";
+    String squereStyleOdd = "-fx-background-color: blanchedalmond;"
+            + "-fx-border-style: solid;"
+            + "-fx-border-width: 1;"
+            + "-fx-border-color: black";
+
     private BoardSquare boardSquare;
     private HBox vPlayers;
     private ImageView imagePlayer1;
@@ -41,8 +50,9 @@ public class SquareView extends VBox {
     private List<HBox> m_HboxPlayers;
 
     SquareView(BoardSquare boardSquare) {
+        int squereNumber = boardSquare.getSquareNumber();
         this.boardSquare = boardSquare;
-        setId(String.valueOf(boardSquare.getSquareNumber()));
+        setId(String.valueOf(squereNumber));
         addSquareNumberLabel();
         addSquareTypeLabel();
         initPlayersImages();
@@ -50,8 +60,12 @@ public class SquareView extends VBox {
         initPlayersHbox();
         createPlayersHBoxs();
         createGeneralHBox();
-  
-        
+
+        if ((squereNumber % 2) == 0) {
+            setStyle(squereStyleEven);
+        } else {
+            setStyle(squereStyleOdd);
+        }
 
         //addSoldiersLabel();
     }
@@ -66,8 +80,6 @@ public class SquareView extends VBox {
         switch (boardSquare.getType()) {
             case SNAKE_HEAD:
                 getChildren().add(new Label("SnakeHead"));
-                Image snakeImage = ImageManager.getImage("Snake");
-                
                 break;
             case SNAKE_TAIL:
                 getChildren().add(new Label("SnakeTail"));
@@ -185,7 +197,6 @@ public class SquareView extends VBox {
 
     public void addSnake() {
 
-  
     }
 
     public void addLadder(Image ladderImage) {

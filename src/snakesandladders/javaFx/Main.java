@@ -162,6 +162,8 @@ public class Main extends Application {
                 try {
                     if (!getFinalAnswer(primaryStage)) {
                         window.consume();
+                    } else {
+                        System.exit(1);
                     }
                 } catch (XMLException ex) {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -259,7 +261,6 @@ public class Main extends Application {
         String answer = CustomizablePromptDialog.show(primaryStage, "What do you want do to?", "Quit without saving", "Save and quit", "Stay");
         switch (answer) {
             case ("Quit without saving"):
-                primaryStage.close();
                 break;
             case ("Save and quit"):
                 saveXML(primaryStage);
@@ -377,7 +378,7 @@ public class Main extends Application {
         primaryStage.setY(screenBounds.getMinY());
         primaryStage.setWidth(screenBounds.getWidth());
         primaryStage.setHeight(screenBounds.getHeight());
-        
+
         primaryStage.setTitle(
                 model.getM_GameName());
 

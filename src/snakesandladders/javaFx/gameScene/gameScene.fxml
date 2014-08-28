@@ -35,9 +35,9 @@
         </Menu>
       </menus>
     </MenuBar>
-    <SplitPane dividerPositions="0.2695547533092659, 0.802647412755716" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.2695547533092659, 0.8206979542719615" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
-        <AnchorPane fx:id="anchorPaneLeft">
+        <AnchorPane fx:id="anchorPaneLeft" style="-fx-background-color: #ffffe0;">
           <children>
             <Label fx:id="labelCurrPlayer" alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Player details" textAlignment="CENTER" wrapText="false">
               <font>
@@ -62,16 +62,16 @@
         </AnchorPane>
         <ScrollPane fx:id="scrollPaneMiddle">
           <content>
-            <AnchorPane id="Content" fx:id="boardPane" minHeight="-1.0" minWidth="-1.0" prefHeight="487.0" prefWidth="430.0" />
+            <AnchorPane id="Content" fx:id="boardPane" minHeight="-1.0" minWidth="-1.0" prefHeight="487.0" prefWidth="430.0" style="-fx-background-color: #ffffe0;" />
           </content>
         </ScrollPane>
             <BorderPane fx:id="boarderPaneRight" prefHeight="200.0" prefWidth="200.0">
                <center>
-                  <VBox fx:id="playersPane" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+                  <VBox fx:id="playersPane" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #ffffe0;" BorderPane.alignment="CENTER" />
                </center></BorderPane>
       </items>
     </SplitPane>
-    <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
+    <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" style="-fx-background-color: #ffffe0;" VBox.vgrow="NEVER">
       <children>
         <Label fx:id="labelNotification" maxHeight="1.7976931348623157E308" maxWidth="-1.0" prefHeight="35.0" prefWidth="836.0" textFill="#f21f1f" HBox.hgrow="ALWAYS">
           <font>

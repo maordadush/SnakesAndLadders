@@ -316,8 +316,8 @@ public class XML {
             Marshaller u = jc.createMarshaller();
             u.setSchema(schema);
             u.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-            File file = new File(savePath);
+            savePath = removeXMLEndingIfContain(savePath);
+            File file = new File(savePath + ".xml");
 
             Snakesandladders snakesandladders = new Snakesandladders();
 
@@ -424,6 +424,15 @@ public class XML {
             }
         }
         return false;
+    }
+
+    private static String removeXMLEndingIfContain(String savePath) {
+        String newSavePath = savePath;
+        if (newSavePath.endsWith(".xml")) {
+            newSavePath = newSavePath.substring(0, newSavePath.length() - 4);
+        }
+        
+        return newSavePath;
     }
 
 }

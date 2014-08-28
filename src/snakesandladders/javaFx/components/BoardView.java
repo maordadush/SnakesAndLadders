@@ -20,15 +20,13 @@ import snakesandladders.gamemodel.BoardSquare;
  */
 public class BoardView extends GridPane {
 
-    double widthSquare = 160.0;
-    double heightSquare = 160.0;
+    double widthSquare = 150.0;
+    double heightSquare = 110.0;
 
     public BoardView() {
-
     }
 
     public BoardView(BoardSquare[][] board) {
-
         setGridLinesVisible(true);
         for (int X = 0; X < board.length; X++) {
             getColumnConstraints().add(new ColumnConstraints(widthSquare));
@@ -38,7 +36,6 @@ public class BoardView extends GridPane {
                 bs.setMaxHeight(heightSquare);
                 bs.setMaxWidth(widthSquare);
                 add(bs, Y, board.length - 1 - X);
-                
             }
         }
     }
