@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 import snakesandladders.gamemodel.BoardSquare;
+import snakesandladders.gamemodel.eChars;
 import snakesandladders.javaFx.components.BoardView;
 import snakesandladders.javaFx.components.SquareView;
 import snakesandladders.players.SinglePlayer;
@@ -53,8 +54,9 @@ public class MoveTransition extends AnchorPane {
        transition.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
-                image.setVisible(false); 
+                image.setVisible(false);
                 dest.addSoldier(player.getPlayerID(),soldierImage , player.getNumSoldiersAtSquare(toMove));
+                
             }
         });
         moveSoldierStart(from, to);
