@@ -20,17 +20,11 @@
             <MenuItem mnemonicParsing="false" onAction="#newGameSelected" text="New" />
             <MenuItem mnemonicParsing="false" onAction="#openSelected" text="Open…" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" onAction="#closeGameSelected" text="Close" />
             <MenuItem mnemonicParsing="false" onAction="#saveGameSelected" text="Save" />
             <MenuItem mnemonicParsing="false" onAction="#saveAsGameSelected" text="Save As…" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#QuitGameSelected" text="Quit" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Help">
-          <items>
-            <MenuItem mnemonicParsing="false" onAction="#HelpSelected" text="About MyHelloApp" />
           </items>
         </Menu>
       </menus>

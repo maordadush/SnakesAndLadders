@@ -5,7 +5,6 @@
  */
 package snakesandladders.javaFx.gameScene;
 
-import java.awt.geom.Point2D;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +12,9 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.animation.Interpolator;
+import javafx.animation.FadeTransition;
+import javafx.animation.FadeTransitionBuilder;
 import javafx.animation.TranslateTransition;
-import javafx.animation.TranslateTransitionBuilder;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -52,8 +51,6 @@ import snakesandladders.players.SinglePlayer;
 import snakesandladders.players.Soldier;
 import snakesandladders.players.ePlayerType;
 import static snakesandladders.players.ePlayerType.COMPUTER;
-import snakesandladders.xml.eXMLLoadStatus;
-import snakesandladders.xml.eXMLSaveStatus;
 
 /**
  * FXML Controller class
@@ -126,6 +123,7 @@ public class GameSceneController implements Initializable {
     private AnchorPane anchorPaneLeft;
     private String paneStyle = "-fx-background-color: #ffffe0;";
     TranslateTransition transitionMove;
+    private boolean isErrorMessageShown;
 
     /**
      * Initializes the controller class.
@@ -134,7 +132,7 @@ public class GameSceneController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         playersPane.setSpacing(10);
-
+        isErrorMessageShown = false;
         selectedNewGame = new SimpleBooleanProperty(false);
         openGameSelected = new SimpleBooleanProperty(false);
         closeGame = new SimpleBooleanProperty(false);
@@ -224,6 +222,7 @@ public class GameSceneController implements Initializable {
 
     @FXML
     private void playButtonClicked(ActionEvent event) throws SnakesAndLaddersRunTimeException {
+        hideError();
         buttonPlay.disableProperty().set(true);
         SinglePlayer player = model.getCurrPlayer();
         cubeAnswer = cube.throwCube();
@@ -540,17 +539,14 @@ public class GameSceneController implements Initializable {
         SquareView origin = (SquareView) getSquareView(currSquare.getSquareNumber());
         BoardSquare toMove = move(player, cubeAnswer);
         SquareView dest = (SquareView) getSquareView(toMove.getSquareNumber());
-        
+
         ImageView iv = origin.getSoldierImage(player.getPlayerID());
-        
-         origin.removeSoldier(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(currSquare));
 
+        origin.removeSoldier(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(currSquare));
 
-         boardPane.getChildren().add(iv);
-         iv.localToScene(320, 110);
-   
+        boardPane.getChildren().add(iv);
+        iv.localToScene(320, 110);
 
-     
           //transitionMove = createTransitionMove(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(toMove), origin, dest);
 //         TranslateTransition transition = new TranslateTransition(Duration.millis(1000), iv);
 //        
@@ -559,11 +555,9 @@ public class GameSceneController implements Initializable {
 //        transition.setToX(240);
 //        transition.setToY(0);
 //        transition.play();
-         // transitionMove.play();
-       //   dest.addSoldier(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(toMove));
-      
+        // transitionMove.play();
+        //   dest.addSoldier(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(toMove));
        // transitionMove.play();
-
         updateSoldierIfWon(currSoldier, currSquare);
 
         model.forwardPlayer();
@@ -699,8 +693,34 @@ public class GameSceneController implements Initializable {
         boarderPaneRight.visibleProperty().set(false);
     }
 
-    public void displayError(eXMLSaveStatus saveStatus) {
-        labelNotification.textProperty().set("Error: " + saveStatus.name());
+    public void displayMessage(String error) {
+        if (!isErrorMessageShown) {
+            isErrorMessageShown = true;
+            labelNotification.textProperty().setValue(error);
+            FadeTransition animation = FadeTransitionBuilder.create()
+                    .node(labelNotification)
+                    .duration(Duration.seconds(0.3))
+                    .fromValue(0.0)
+                    .toValue(1.0)
+                    .build();
+            animation.play();
+        }
+    }
+
+    public void hideError() {
+        if (isErrorMessageShown) {
+            FadeTransition animation = FadeTransitionBuilder.create()
+                    .node(labelNotification)
+                    .duration(Duration.seconds(0.3))
+                    .fromValue(1.0)
+                    .toValue(0.0)
+                    .build();
+            animation.play();
+
+            isErrorMessageShown = false;
+            labelNotification.textProperty().setValue("");
+
+        }
     }
 
     public void displayXMLSavedSuccessfully(String saveGamePath) {
@@ -728,29 +748,22 @@ public class GameSceneController implements Initializable {
             }
 
         }
-
-    }
-
-    public void displayXMLLoadSuccessfully(eXMLLoadStatus loadStatus) {
-        labelNotification.textProperty().set("blaa");
     }
 
     private TranslateTransition createTransitionMove(int playerID, Image imageSoldier, int numSoldiersAtSquare, SquareView origin, SquareView dest) {
         ImageView imageView = origin.getSoldierImage(playerID);
-        
-       //ImageView imageView = new ImageView();
-      //imageView.setImage(imageSoldier);
 
+       //ImageView imageView = new ImageView();
+        //imageView.setImage(imageSoldier);
       //  boardPane.getChildren().add(imageView);
 //        double boardViewX = boardView.getBoundsInParent().getMinX();
 //        double boardViewY = boardView.getBoundsInParent().getMinY();
 //        double ivX = imageView.getBoundsInParent().getMinX();
 //        double ivY = imageView.getBoundsInParent().getMinY();
-        
 //        Point2D.Double from = boardView.getCellPoisition(Integer.valueOf(origin.getId()));
 //        Point2D.Double to = boardView.getCellPoisition(Integer.valueOf(dest.getId()));
         TranslateTransition transition = new TranslateTransition(Duration.millis(1000), imageView);
-        
+
         transition.setFromX(0);
         transition.setFromY(0);
         transition.setToX(240);
