@@ -47,6 +47,7 @@ import snakesandladders.javaFx.components.BoardView;
 import snakesandladders.javaFx.components.ImageManager;
 import snakesandladders.javaFx.components.PlayerView;
 import snakesandladders.javaFx.components.SquareView;
+import snakesandladders.javaFx.utils.MoveTransition;
 import snakesandladders.javaFx.utils.SnakesAndLaddersDrawingUtil;
 import snakesandladders.players.SinglePlayer;
 import snakesandladders.players.Soldier;
@@ -125,7 +126,8 @@ public class GameSceneController implements Initializable {
     @FXML
     private AnchorPane anchorPaneLeft;
     private String paneStyle = "-fx-background-color: #ffffe0;";
-    TranslateTransition transitionMove;
+    private TranslateTransition transitionMove;
+    private MoveTransition moveTransition;
 
     /**
      * Initializes the controller class.
@@ -256,7 +258,9 @@ public class GameSceneController implements Initializable {
 
     private void printGameBoard(SnakesAndLaddersSingleGame game) {
         boardView = new BoardView(game.getGameBoard());
+        moveTransition = new MoveTransition(boardView.getWidth(), boardView.getHeight(),boardView);
         boardPane.setStyle(paneStyle);
+        boardView.getChildren().add(moveTransition);
         boardPane.getChildren().add(boardView);
 
     }
@@ -541,29 +545,9 @@ public class GameSceneController implements Initializable {
         BoardSquare toMove = move(player, cubeAnswer);
         SquareView dest = (SquareView) getSquareView(toMove.getSquareNumber());
         
-        ImageView iv = origin.getSoldierImage(player.getPlayerID());
+        origin.removeSoldier(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(currSquare));
+        moveTransition.moveSoldier(Integer.valueOf(origin.getId()), Integer.valueOf(dest.getId()), getImageSoldier(player.getColor()), player, dest, toMove);
         
-         origin.removeSoldier(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(currSquare));
-
-
-         boardPane.getChildren().add(iv);
-         iv.localToScene(320, 110);
-   
-
-     
-          //transitionMove = createTransitionMove(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(toMove), origin, dest);
-//         TranslateTransition transition = new TranslateTransition(Duration.millis(1000), iv);
-//        
-//        transition.setFromX(0);
-//        transition.setFromY(0);
-//        transition.setToX(240);
-//        transition.setToY(0);
-//        transition.play();
-         // transitionMove.play();
-       //   dest.addSoldier(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(toMove));
-      
-       // transitionMove.play();
-
         updateSoldierIfWon(currSoldier, currSquare);
 
         model.forwardPlayer();
@@ -599,6 +583,7 @@ public class GameSceneController implements Initializable {
     private BoardSquare move(SinglePlayer player, int cubeAnswer) throws SnakesAndLaddersRunTimeException {
         Soldier currentSoldier = player.GetCurrentSoldier();
         BoardSquare originSquare = currentSoldier.getLocationOnBoard();
+        SquareView origin = (SquareView) getSquareView(originSquare.getSquareNumber());
         BoardSquare boardToMove;
         int oldPlyerIndex = originSquare.getSquareNumber();
         int newPlayerIndex = oldPlyerIndex + cubeAnswer;
@@ -609,7 +594,11 @@ public class GameSceneController implements Initializable {
             boardToMove = model.getGame().getBoardSquare(model.getGame().getMAX_SQUARE_NUM());
             currentSoldier.setM_FinishedGame(true);
         }
-
+        BoardSquare originBoardToMove = boardToMove;
+        SquareView originSquareView = (SquareView) getSquareView(originBoardToMove.getSquareNumber());
+        
+        SquareView middle = (SquareView) getSquareView(boardToMove.getSquareNumber());
+        moveTransition.moveSoldier(Integer.valueOf(origin.getId()), Integer.valueOf(middle.getId()), getImageSoldier(player.getColor()), player, middle, boardToMove);
         switch (boardToMove.getType()) {
             case LADDER_TAIL:
                 boardToMove = boardToMove.getJumpTo();
@@ -628,6 +617,9 @@ public class GameSceneController implements Initializable {
         if (!player.atSquare(originSquare)) {
             originSquare.getPlayers().remove(player);
         }
+        SquareView dest = (SquareView) getSquareView(boardToMove.getSquareNumber());
+        if(!middle.getId().equals(dest.getId()))
+            moveTransition.moveSoldier(Integer.valueOf(middle.getId()), Integer.valueOf(dest.getId()), getImageSoldier(player.getColor()), player, dest, boardToMove);
         return boardToMove;
     }
 
@@ -737,20 +729,18 @@ public class GameSceneController implements Initializable {
 
     private TranslateTransition createTransitionMove(int playerID, Image imageSoldier, int numSoldiersAtSquare, SquareView origin, SquareView dest) {
         ImageView imageView = origin.getSoldierImage(playerID);
-        
-       //ImageView imageView = new ImageView();
-      //imageView.setImage(imageSoldier);
 
+       //ImageView imageView = new ImageView();
+        //imageView.setImage(imageSoldier);
       //  boardPane.getChildren().add(imageView);
 //        double boardViewX = boardView.getBoundsInParent().getMinX();
 //        double boardViewY = boardView.getBoundsInParent().getMinY();
 //        double ivX = imageView.getBoundsInParent().getMinX();
 //        double ivY = imageView.getBoundsInParent().getMinY();
-        
 //        Point2D.Double from = boardView.getCellPoisition(Integer.valueOf(origin.getId()));
 //        Point2D.Double to = boardView.getCellPoisition(Integer.valueOf(dest.getId()));
         TranslateTransition transition = new TranslateTransition(Duration.millis(1000), imageView);
-        
+
         transition.setFromX(0);
         transition.setFromY(0);
         transition.setToX(240);

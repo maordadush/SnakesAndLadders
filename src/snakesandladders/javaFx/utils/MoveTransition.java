@@ -6,35 +6,57 @@
 
 package snakesandladders.javaFx.utils;
 
+
 import java.awt.geom.Point2D;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
+import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.javaFx.components.BoardView;
+import snakesandladders.javaFx.components.SquareView;
+import snakesandladders.players.SinglePlayer;
+import snl.Players;
+import snl.Players.Player;
 
 public class MoveTransition extends AnchorPane {
    
     private final TranslateTransition transition;
-    private ImageView image;
-    private static final double DURATION = 1.0;
+    public ImageView image;
+    private static final double DURATION = 2.0;
+    private final BoardView boardView;
 
-    public MoveTransition(double width, double height, double cellSize) {
+
+    public MoveTransition(double width, double height, BoardView boardView) {
         maxWidth(width);
         maxHeight(height);
+        this.boardView = boardView;
         image = new ImageView();
+        image.setFitWidth(30);
+        image.setPreserveRatio(true);
+        image.setSmooth(true);
+        image.setCache(true);
         image.setVisible(true);
         getChildren().add(image);
         transition = createTransition();
     }
 
-    public void moveSoldier(int fromCell, int toCell, int player) {
-        Point2D.Double from = BoardView.getCellPoisition(fromCell);
-        Point2D.Double to = BoardView.getCellPoisition(toCell);
-       // image.setImage(ImageUtils.getImage());
+    public void moveSoldier(int fromCell, int toCell, final Image soldierImage, final SinglePlayer player, final SquareView dest, final BoardSquare toMove) {
+       
+        Point2D.Double from = boardView.getCellPoisition(fromCell);
+        Point2D.Double to = boardView.getCellPoisition(toCell);
+        image.setImage(soldierImage);
         image.setVisible(true);
+       transition.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                image.setVisible(false); 
+                dest.addSoldier(player.getPlayerID(),soldierImage , player.getNumSoldiersAtSquare(toMove));
+            }
+        });
         moveSoldierStart(from, to);
 
     }
@@ -45,6 +67,7 @@ public class MoveTransition extends AnchorPane {
             @Override
             public void handle(ActionEvent t) {
                 image.setVisible(false);
+                
             }
         });
         return translateTransition;

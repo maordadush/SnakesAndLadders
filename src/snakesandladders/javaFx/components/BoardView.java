@@ -17,13 +17,16 @@ import snakesandladders.gamemodel.BoardSquare;
  */
 public class BoardView extends GridPane {
 
-    double widthSquare = 160.0;
-    double heightSquare = 110.0;
+    final static double widthSquare = 160.0;
+    final static double heightSquare = 110.0;
+    private int boardSize;
+    
 
     public BoardView() {
     }
 
     public BoardView(BoardSquare[][] board) {
+         this.boardSize = board.length;
         setGridLinesVisible(true);
         for (int X = 0; X < board.length; X++) {
             getColumnConstraints().add(new ColumnConstraints(widthSquare));
@@ -37,18 +40,14 @@ public class BoardView extends GridPane {
         }
     }
     
-    public static Point2D.Double getCellPoisition(int squareNumber) {
+    public Point2D.Double getCellPoisition(int squareNumber) {
         
-        int boardSize = 5;
-        double y = (boardSize - (int) ((squareNumber - 1) / boardSize) - 0.5) * 110.0;
+        double y = (boardSize - (int) ((squareNumber - 1) / boardSize) - 0.9) * heightSquare;
         double x = squareNumber % boardSize;
         if (x == 0) {
             x = boardSize;
         }
-        x = (x - 0.5) * 160.0;
-
-        
-        
+        x = (x - 0.9) * widthSquare;
         
         Point2D.Double p = new Point2D.Double(x, y);
         return p;
