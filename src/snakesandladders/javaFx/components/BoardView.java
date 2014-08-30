@@ -5,13 +5,10 @@
  */
 package snakesandladders.javaFx.components;
 
-import javafx.scene.layout.AnchorPane;
+import java.awt.geom.Point2D;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import snakesandladders.gamemodel.BoardSquare;
 
 /**
@@ -20,7 +17,7 @@ import snakesandladders.gamemodel.BoardSquare;
  */
 public class BoardView extends GridPane {
 
-    double widthSquare = 150.0;
+    double widthSquare = 160.0;
     double heightSquare = 110.0;
 
     public BoardView() {
@@ -39,5 +36,23 @@ public class BoardView extends GridPane {
             }
         }
     }
+    
+    public static Point2D.Double getCellPoisition(int squareNumber) {
+        
+        int boardSize = 5;
+        double y = (boardSize - (int) ((squareNumber - 1) / boardSize) - 0.5) * 110.0;
+        double x = squareNumber % boardSize;
+        if (x == 0) {
+            x = boardSize;
+        }
+        x = (x - 0.5) * 160.0;
+
+        
+        
+        
+        Point2D.Double p = new Point2D.Double(x, y);
+        return p;
+    }
+
 
 }

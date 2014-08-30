@@ -36,7 +36,7 @@ public class SnakesAndLaddersSingleGame {
     public void setO_BoardSize(int o_BoardSize) {
         this.m_BoardSize = o_BoardSize;
     }
-    
+
     public static int getMIN_SQUARE_NUM() {
         return MIN_SQUARE_NUM;
     }
@@ -44,7 +44,7 @@ public class SnakesAndLaddersSingleGame {
     public int getMAX_SQUARE_NUM() {
         return MAX_SQUARE_NUM;
     }
-    
+
     public void initGame() {
         for (int i = 0; i < m_BoardSize; i++) {
             for (int j = 0; j < m_BoardSize; j++) {
@@ -206,5 +206,23 @@ public class SnakesAndLaddersSingleGame {
 
     public void setCurrentBoardSquare(BoardSquare move) {
         m_CurrentSquare = move;
+    }
+
+    public int getBoardSquareX(int squareNumber) {
+        if (squareNumber < MIN_SQUARE_NUM || squareNumber > MAX_SQUARE_NUM) {
+            return -1;
+        }
+        int boardSize = getO_BoardSize();
+        int x = (squareNumber - 1) / boardSize;
+        return x;
+    }
+
+    public int getBoardSquareY(int squareNumber) {
+        if (squareNumber < MIN_SQUARE_NUM || squareNumber > MAX_SQUARE_NUM) {
+            return -1;
+        }
+        int boardSize = getO_BoardSize();
+        int y = (squareNumber - 1) % boardSize;
+        return y;
     }
 }

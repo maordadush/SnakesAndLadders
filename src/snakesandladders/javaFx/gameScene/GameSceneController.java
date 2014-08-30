@@ -5,15 +5,17 @@
  */
 package snakesandladders.javaFx.gameScene;
 
+import java.awt.geom.Point2D;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.Interpolator;
+import javafx.animation.TranslateTransition;
+import javafx.animation.TranslateTransitionBuilder;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,7 +23,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -31,30 +32,26 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.gamemodel.Cube;
 import snakesandladders.gamemodel.GameModel;
 import snakesandladders.gamemodel.SnakesAndLaddersSingleGame;
+import snakesandladders.gamemodel.eChars;
 import snakesandladders.javaFx.components.BoardView;
 import snakesandladders.javaFx.components.ImageManager;
 import snakesandladders.javaFx.components.PlayerView;
 import snakesandladders.javaFx.components.SquareView;
-import snakesandladders.javaFx.initScene.SceneInitController;
 import snakesandladders.javaFx.utils.SnakesAndLaddersDrawingUtil;
-import snakesandladders.javaFx.utils.dialog.CustomizablePromptDialog;
 import snakesandladders.players.SinglePlayer;
 import snakesandladders.players.Soldier;
 import snakesandladders.players.ePlayerType;
 import static snakesandladders.players.ePlayerType.COMPUTER;
-import snakesandladders.xml.XML;
 import snakesandladders.xml.eXMLLoadStatus;
 import snakesandladders.xml.eXMLSaveStatus;
 
@@ -128,6 +125,7 @@ public class GameSceneController implements Initializable {
     @FXML
     private AnchorPane anchorPaneLeft;
     private String paneStyle = "-fx-background-color: #ffffe0;";
+    TranslateTransition transitionMove;
 
     /**
      * Initializes the controller class.
@@ -196,7 +194,7 @@ public class GameSceneController implements Initializable {
         }
     }
 
-    public void InitModel(Boolean startNewGame, List<SinglePlayer> playersInitiated) {
+    public void InitModel(Boolean startNewGame, List<SinglePlayer> playersInitiated) throws SnakesAndLaddersRunTimeException {
         List<SinglePlayer> players = new ArrayList<>(playersInitiated);
 
         try {
@@ -214,6 +212,10 @@ public class GameSceneController implements Initializable {
 
         //addition from the controller
         printModelToScene();
+        if (model.getCurrPlayer().getType() == COMPUTER) {
+            makeComputerTurn(model.getCurrPlayer());
+        }
+
     }
 
     public void setModel(GameModel model) {
@@ -233,18 +235,16 @@ public class GameSceneController implements Initializable {
             makeSoldiersAvaliable();
             waitForUserToChooseSoldier();
         }
-        //TODO: dadush, remove when you understand
-        snlUtil.addLadderOrSnake(2, 2, 4, 4, true);
-        snlUtil.addLadderOrSnake(1, 1, 4, 1, false);
     }
 
     private void printModelToScene() {
 
         printGameBoard(model.getGame());
+        printSnakeAndLadders(model.getGame());
         printPlayersSoldiers();
         setPlayerTurn();
         printListOfPlayersWithPictures(model.getPlayers());
-        snlUtil = new SnakesAndLaddersDrawingUtil(5, boardView, boardPane);
+
     }
 
     private void printListOfPlayersWithPictures(List<SinglePlayer> players) {
@@ -392,6 +392,8 @@ public class GameSceneController implements Initializable {
     }
 
     private void makeComputerTurn(SinglePlayer player) throws SnakesAndLaddersRunTimeException {
+        cubeAnswer = cube.throwCube();
+        showCubeAnswer(cubeAnswer);
         int soldierIndex = getRandomSoldierIndex(player);
         player.setCurrentSoldier(soldierIndex);
         soldierChoosed(player);
@@ -538,31 +540,38 @@ public class GameSceneController implements Initializable {
         SquareView origin = (SquareView) getSquareView(currSquare.getSquareNumber());
         BoardSquare toMove = move(player, cubeAnswer);
         SquareView dest = (SquareView) getSquareView(toMove.getSquareNumber());
-        dest.addSoldier(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(toMove));
-        origin.removeSoldier(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(currSquare));
+        
+        ImageView iv = origin.getSoldierImage(player.getPlayerID());
+        
+         origin.removeSoldier(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(currSquare));
+
+
+         boardPane.getChildren().add(iv);
+         iv.localToScene(320, 110);
+   
+
+     
+          //transitionMove = createTransitionMove(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(toMove), origin, dest);
+//         TranslateTransition transition = new TranslateTransition(Duration.millis(1000), iv);
+//        
+//        transition.setFromX(0);
+//        transition.setFromY(0);
+//        transition.setToX(240);
+//        transition.setToY(0);
+//        transition.play();
+         // transitionMove.play();
+       //   dest.addSoldier(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(toMove));
+      
+       // transitionMove.play();
+
         updateSoldierIfWon(currSoldier, currSquare);
-        //Dadush I removed it and it works good check if needed
-//        switch (currSoldier.getSoldierID()) {
-//            case 1:
-//                labelIndexSoldier1.textProperty().set(
-//                        (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
-//                break;
-//            case 2:
-//                labelIndexSoldier2.textProperty().set(
-//                        (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
-//                break;
-//            case 3:
-//                labelIndexSoldier3.textProperty().set(
-//                        (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
-//                break;
-//            case 4:
-//                labelIndexSoldier4.textProperty().set(
-//                        (String.valueOf(Integer.valueOf(currSoldier.getLocationOnBoard().getSquareNumber()))));
-//                break;
-//        }
 
         model.forwardPlayer();
         setPlayerTurn();
+        if (model.getCurrPlayer().getType() == COMPUTER) {
+            makeComputerTurn(model.getCurrPlayer());
+        }
+
     }
 
     public Node getSquareView(int squareNumber) {
@@ -697,6 +706,69 @@ public class GameSceneController implements Initializable {
     public void displayXMLSavedSuccessfully(String saveGamePath) {
         labelNotification.textProperty().set("Game saved successfully to: " + saveGamePath);
 
+    }
+
+    private void printSnakeAndLadders(SnakesAndLaddersSingleGame game) {
+        int boradSize = game.getO_BoardSize();
+        snlUtil = new SnakesAndLaddersDrawingUtil(boradSize, boardView, boardPane);
+        for (int i = boradSize - 1; i >= 0; i--) {
+            for (int j = 0; j < boradSize; j++) {
+                BoardSquare bs = game.getBoardSquare(i, j);
+                eChars bsType = bs.getType();
+                if (bsType == eChars.LADDER_TAIL) {
+                    snlUtil.addLadderOrSnake(game.getBoardSquareX(bs.getSquareNumber()), game.getBoardSquareY(bs.getSquareNumber()), game.getBoardSquareX(bs.getJumpTo().getSquareNumber()),
+                            game.getBoardSquareY(bs.getJumpTo().getSquareNumber()), true);
+                } else if (bsType == eChars.SNAKE_HEAD) {
+                    snlUtil.addLadderOrSnake(game.getBoardSquareX(bs.getSquareNumber()), game.getBoardSquareY(bs.getSquareNumber()),
+                            game.getBoardSquareX(bs.getJumpTo().getSquareNumber()),
+                            game.getBoardSquareY(bs.getJumpTo().getSquareNumber()), false);
+
+                }
+
+            }
+
+        }
+
+    }
+
+    public void displayXMLLoadSuccessfully(eXMLLoadStatus loadStatus) {
+        labelNotification.textProperty().set("blaa");
+    }
+
+    private TranslateTransition createTransitionMove(int playerID, Image imageSoldier, int numSoldiersAtSquare, SquareView origin, SquareView dest) {
+        ImageView imageView = origin.getSoldierImage(playerID);
+        
+       //ImageView imageView = new ImageView();
+      //imageView.setImage(imageSoldier);
+
+      //  boardPane.getChildren().add(imageView);
+//        double boardViewX = boardView.getBoundsInParent().getMinX();
+//        double boardViewY = boardView.getBoundsInParent().getMinY();
+//        double ivX = imageView.getBoundsInParent().getMinX();
+//        double ivY = imageView.getBoundsInParent().getMinY();
+        
+//        Point2D.Double from = boardView.getCellPoisition(Integer.valueOf(origin.getId()));
+//        Point2D.Double to = boardView.getCellPoisition(Integer.valueOf(dest.getId()));
+        TranslateTransition transition = new TranslateTransition(Duration.millis(1000), imageView);
+        
+        transition.setFromX(0);
+        transition.setFromY(0);
+        transition.setToX(240);
+        transition.setToY(0);
+        transition.play();
+//        TranslateTransition transition = TranslateTransitionBuilder.create()
+//                .node(imageView)
+//                .fromX(from.x)
+//                // .fromX(origin.getBoundsInParent().getMinX())
+//                .toX(to.x)
+//                .fromY(from.y)
+//                .toY(to.y)
+//                .duration(Duration.millis(1000))
+//                .interpolator(Interpolator.LINEAR)
+//                .cycleCount(1)
+//                .build();
+
+        return transition;
     }
 
 }

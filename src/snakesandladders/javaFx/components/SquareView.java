@@ -5,7 +5,6 @@
  */
 package snakesandladders.javaFx.components;
 
-import com.sun.jmx.snmp.BerDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Pos;
@@ -14,10 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
 import snakesandladders.gamemodel.BoardSquare;
 
 public class SquareView extends VBox {
@@ -54,7 +50,7 @@ public class SquareView extends VBox {
         this.boardSquare = boardSquare;
         setId(String.valueOf(squereNumber));
         addSquareNumberLabel();
-        addSquareTypeLabel();
+        //addSquareTypeLabel();
         initPlayersImages();
         initPlayersLabels();
         initPlayersHbox();
@@ -100,7 +96,8 @@ public class SquareView extends VBox {
         Label soldiersCount = m_LabelPlayers.get(playerNumber - 1);
 
         if (numOfSoldiers == 0) {
-            vPlayers.getChildren().remove(player);
+            //vPlayers.getChildren().remove(player);
+            player.getChildren().remove(soldiersCount);
         } else {
             imageView.setImage(soldierImage);
             imageView.setFitWidth(30);
@@ -110,8 +107,9 @@ public class SquareView extends VBox {
             soldiersCount.textProperty().set(String.valueOf(numOfSoldiers));
             soldiersCount.setGraphic(imageView);
             soldiersCount.setContentDisplay(ContentDisplay.TOP);
-            soldiersCount.setMaxHeight(150.0);
-            player.getChildren().set(0, soldiersCount);
+            //soldiersCount.setMaxHeight(150.0);
+            // player.getChildren().set(0, soldiersCount);
+            player.getChildren().setAll(soldiersCount);
         }
     }
 
@@ -120,9 +118,9 @@ public class SquareView extends VBox {
         ImageView imageView = m_ImagePlayers.get(playerNumber - 1);
         Label soldiersCount = m_LabelPlayers.get(playerNumber - 1);
 
-        if (numOfSoldiers == 0) {
-            player.setVisible(true);
-        }
+//        if (numOfSoldiers == 0) {
+//            player.setVisible(true);
+//        }
         //soldiersCount.textProperty().set((String.valueOf(Integer.valueOf(soldiersCount.getText()) + 1)));
         imageView.setImage(soldierImage);
         imageView.setFitWidth(30);
@@ -133,7 +131,8 @@ public class SquareView extends VBox {
         soldiersCount.setGraphic(imageView);
         soldiersCount.setContentDisplay(ContentDisplay.TOP);
         // player.getChildren().set(0, imageView);
-        player.getChildren().set(0, soldiersCount);
+//        player.getChildren().set(0, soldiersCount);
+        player.getChildren().setAll(soldiersCount);
         player.setAlignment(Pos.TOP_CENTER);
 
     }
@@ -194,12 +193,8 @@ public class SquareView extends VBox {
         vPlayers.setMaxHeight(120.0);
         getChildren().add(vPlayers);
     }
-
-    public void addSnake() {
-
-    }
-
-    public void addLadder(Image ladderImage) {
-
+    
+    public ImageView getSoldierImage(int playerID) {
+        return m_ImagePlayers.get(playerID - 1);
     }
 }

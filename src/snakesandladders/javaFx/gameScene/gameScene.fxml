@@ -47,7 +47,7 @@
                 <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
               </textFill>
             </Label>
-                  <Button fx:id="buttonPlay" layoutY="41.0" mnemonicParsing="false" onAction="#playButtonClicked" prefHeight="44.0" prefWidth="221.0" text="Play!" />
+                  <Button fx:id="buttonPlay" layoutY="41.0" mnemonicParsing="false" onAction="#playButtonClicked" prefHeight="44.0" prefWidth="221.0" text="Click To Play!" />
                   <Separator layoutX="11.0" layoutY="182.0" prefWidth="200.0" />
                   <ImageView fx:id="imageViewSoldier1" disable="true" fitHeight="97.0" fitWidth="52.0" layoutX="7.0" layoutY="182.0" onMouseClicked="#ChooseSoldier1" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fx:id="imageViewSoldier2" disable="true" fitHeight="97.0" fitWidth="52.0" layoutX="154.0" layoutY="182.0" onMouseClicked="#ChooseSoldier2" pickOnBounds="true" preserveRatio="true" />
@@ -73,7 +73,7 @@
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" style="-fx-background-color: #ffffe0;" VBox.vgrow="NEVER">
       <children>
-        <Label fx:id="labelNotification" maxHeight="1.7976931348623157E308" maxWidth="-1.0" prefHeight="35.0" prefWidth="836.0" textFill="#f21f1f" HBox.hgrow="ALWAYS">
+        <Label fx:id="labelNotification" maxHeight="1.7976931348623157E308" maxWidth="-1.0" prefHeight="35.0" prefWidth="827.0" textFill="#f21f1f" HBox.hgrow="ALWAYS">
           <font>
             <Font size="24.0" fx:id="x3" />
           </font>

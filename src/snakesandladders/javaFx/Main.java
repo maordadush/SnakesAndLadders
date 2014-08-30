@@ -8,7 +8,6 @@ package snakesandladders.javaFx;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.text.CollationElementIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,25 +15,21 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import snakesandladders.gamecontrol.eStartMenu;
+import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamemodel.GameModel;
 import snakesandladders.javaFx.gameScene.GameSceneController;
 import snakesandladders.javaFx.initScene.SceneInitController;
 import snakesandladders.javaFx.utils.dialog.CustomizablePromptDialog;
 import snakesandladders.players.SinglePlayer;
-import snakesandladders.players.ePlayerType;
 import snakesandladders.xml.XML;
 import snakesandladders.xml.XMLException;
 import snakesandladders.xml.eXMLLoadStatus;
@@ -59,7 +54,7 @@ public class Main extends Application {
         SceneInitController playersController = getPlayersController(fxmlLoader, primaryStage);
 
         Scene scene = new Scene(playersRoot, 600, 600);
-
+        primaryStage.centerOnScreen();
         primaryStage.setTitle("Start new game");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -91,21 +86,20 @@ public class Main extends Application {
 
                     gameSceneController.setModel(model);
 
-                    gameSceneController.InitModel(true, playersInitiated);
+                    try {
+                        gameSceneController.InitModel(true, playersInitiated);
+                    } catch (SnakesAndLaddersRunTimeException ex) {
+                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 
                     lisionersForGame(gameSceneController, primaryStage, rootGame);
 
                     Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
                     Scene scene = new Scene(rootGame, screenBounds.getWidth(), screenBounds.getHeight());
 
-//                    primaryStage.setX(
-//                            0);
-//                    primaryStage.setY(
-//                            0);
-                    primaryStage.setX(screenBounds.getMinX());
-                    primaryStage.setY(screenBounds.getMinY());
-                    primaryStage.setWidth(screenBounds.getWidth());
-                    primaryStage.setHeight(screenBounds.getHeight());
+                    primaryStage.setX(0);
+                    primaryStage.setY(0);
+                    
                     primaryStage.setTitle(
                             model.getM_GameName());
 
@@ -126,6 +120,8 @@ public class Main extends Application {
                         sceneInitController.getOpenGameSelected().set(false);
                         openXML(primaryStage, gameSceneController, rootGame); //TODO: check returned value
                     } catch (IOException ex) {
+                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SnakesAndLaddersRunTimeException ex) {
                         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -206,8 +202,11 @@ public class Main extends Application {
                 if (newValue) {
                     try {
                         gameSceneController.getOpenGameSelected().set(false);
-                        openXML(primaryStage, gameSceneController, rootGame); //TODO: check returned value
+                        eXMLLoadStatus loadStatus = openXML(primaryStage, gameSceneController, rootGame); //TODO: check returned value
+                        gameSceneController.displayXMLLoadSuccessfully(loadStatus);
                     } catch (IOException ex) {
+                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SnakesAndLaddersRunTimeException ex) {
                         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -221,6 +220,7 @@ public class Main extends Application {
                     gameSceneController.getSaveGameAsSelected().set(false);
                     try {
                         saveXML(primaryStage);
+                        
                     } catch (XMLException ex) {
                         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -272,7 +272,7 @@ public class Main extends Application {
         return quit;
     }
 
-    private eXMLLoadStatus openXML(Stage stage, GameSceneController gameSceneController, Parent rootGame) throws IOException {
+    private eXMLLoadStatus openXML(Stage stage, GameSceneController gameSceneController, Parent rootGame) throws IOException, SnakesAndLaddersRunTimeException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("XML", "*.xml")
@@ -283,7 +283,7 @@ public class Main extends Application {
         if (status != eXMLLoadStatus.LOAD_SUCCESS) {
             return status;
         }
-
+        
         startWithInitializedModel(stage, gameSceneController, rootGame);
         return status.LOAD_SUCCESS;
     }
@@ -328,6 +328,7 @@ public class Main extends Application {
         SinglePlayer.setNextId(0);
         GameModel modelLoad = null;
         String xmlPath = xmlFile.getCanonicalPath();
+    
 
         loadStatus = XML.initModelFromXml(xmlPath, modelLoad);
         if (loadStatus != eXMLLoadStatus.LOAD_SUCCESS) {
@@ -347,7 +348,7 @@ public class Main extends Application {
         return loadStatus;
     }
 
-    private void startWithInitializedModel(Stage primaryStage, GameSceneController gameSceneController, Parent rootGame) {
+    private void startWithInitializedModel(Stage primaryStage, GameSceneController gameSceneController, Parent rootGame) throws SnakesAndLaddersRunTimeException {
 
         SinglePlayer.setNextId(0);
 //new
@@ -370,18 +371,21 @@ public class Main extends Application {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         Scene scene = new Scene(rootGame, screenBounds.getWidth(), screenBounds.getHeight());
 
-//        primaryStage.setX(
-//                0);
-//        primaryStage.setY(
-//                0);
-        primaryStage.setX(screenBounds.getMinX());
-        primaryStage.setY(screenBounds.getMinY());
-        primaryStage.setWidth(screenBounds.getWidth());
-        primaryStage.setHeight(screenBounds.getHeight());
-
+        primaryStage.setX(
+                0);
+        primaryStage.setY(
+                0);
+       
+        
+        //primaryStage.setX(screenBounds.getMinX());
+        //primaryStage.setY(screenBounds.getMinY());
+       
+       //primaryStage.setWidth(screenBounds.getWidth());
+      //  primaryStage.setHeight(screenBounds.getHeight());
+        
         primaryStage.setTitle(
                 model.getM_GameName());
-
+        //primaryStage.setResizable(false);
         primaryStage.setScene(scene);
 
         primaryStage.show();
