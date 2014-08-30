@@ -18,11 +18,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
@@ -30,8 +28,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
-import snakesandladders.gamemodel.GameModel;
-import snakesandladders.players.SinglePlayer;
 import snakesandladders.players.ePlayerType;
 
 /**
@@ -327,7 +323,7 @@ public class SceneInitController implements Initializable {
         MenuButtonPlayer4.textProperty().bind(Bindings.concat((text)));
     }
     
-    private void showError(String message) {
+    public void showError(String message) {
         if (!isErrorMessageShown) {
             isErrorMessageShown = true;
             errorMessageLabel.textProperty().setValue(message);

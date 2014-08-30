@@ -106,7 +106,7 @@
             </AnchorPane>
             <Slider fx:id="slider" layoutX="432.0" layoutY="262.0" max="5.0" min="1.0" onMouseClicked="#dragged" onMouseDragged="#dragged" />
             <Slider fx:id="sliderSoldiersToWin" layoutX="432.0" layoutY="312.0" max="4.0" min="1.0" onMouseClicked="#draggedSoldiersToWin" onMouseDragged="#draggedSoldiersToWin" />
-            <Label fx:id="errorMessageLabel" layoutX="54.0" layoutY="365.0" prefHeight="27.0" prefWidth="247.0" />
+            <Label fx:id="errorMessageLabel" layoutX="54.0" layoutY="365.0" prefHeight="27.0" prefWidth="247.0" textFill="#f81515" />
       </children>
     </AnchorPane>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" />
