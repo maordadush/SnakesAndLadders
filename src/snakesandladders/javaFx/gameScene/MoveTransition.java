@@ -18,14 +18,10 @@ import javafx.util.Duration;
 import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamemodel.BoardSquare;
 import snakesandladders.gamemodel.GameModel;
-import snakesandladders.gamemodel.eChars;
 import snakesandladders.javaFx.components.BoardView;
 import snakesandladders.javaFx.components.SquareView;
-import snakesandladders.javaFx.gameScene.GameSceneController;
 import snakesandladders.players.SinglePlayer;
 import static snakesandladders.players.ePlayerType.COMPUTER;
-import snl.Players;
-import snl.Players.Player;
 
 public class MoveTransition extends AnchorPane {
 
