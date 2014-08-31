@@ -126,6 +126,7 @@ public class GameSceneController implements Initializable {
     private String paneStyle = "-fx-background-color: #ffffe0;";
     private TranslateTransition transitionMove;
     private MoveTransition moveTransition;
+
     private boolean isErrorMessageShown;
 
     /**
@@ -164,6 +165,10 @@ public class GameSceneController implements Initializable {
         m_LablesSoldiers.add(labelIndexSoldier3);
         m_LablesSoldiers.add(labelIndexSoldier4);
 
+    }
+
+    public MoveTransition getMoveTransition() {
+        return moveTransition;
     }
 
     private void initPlayers(List<SinglePlayer> playersToInit) throws SnakesAndLaddersRunTimeException {
@@ -377,7 +382,7 @@ public class GameSceneController implements Initializable {
         }
     }
 
-    private Image getImageSoldier(int colorNumber) {
+    Image getImageSoldier(int colorNumber) {
         switch (colorNumber) {
             case 1:
                 Image imageBlue = ImageManager.getImage("BluePlayer");
@@ -395,7 +400,7 @@ public class GameSceneController implements Initializable {
         return null;
     }
 
-     void makeComputerTurn(SinglePlayer player) throws SnakesAndLaddersRunTimeException {
+    void makeComputerTurn(SinglePlayer player) throws SnakesAndLaddersRunTimeException {
         cubeAnswer = cube.throwCube();
         showCubeAnswer(cubeAnswer);
         int soldierIndex = getRandomSoldierIndex(player);
@@ -781,7 +786,5 @@ public class GameSceneController implements Initializable {
 
         return transition;
     }
-
-
 
 }

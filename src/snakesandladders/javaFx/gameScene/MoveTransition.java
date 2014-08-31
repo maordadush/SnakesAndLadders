@@ -3,9 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package snakesandladders.javaFx.gameScene;
-
 
 import java.awt.geom.Point2D;
 import java.util.logging.Level;
@@ -30,12 +28,11 @@ import snl.Players;
 import snl.Players.Player;
 
 public class MoveTransition extends AnchorPane {
-   
+
     private final TranslateTransition transition;
     public ImageView image;
     private static final double DURATION = 2.0;
     private final BoardView boardView;
-
 
     public MoveTransition(double width, double height, BoardView boardView) {
         maxWidth(width);
@@ -53,7 +50,7 @@ public class MoveTransition extends AnchorPane {
 
     public void moveSoldier(int fromCell, int toCell, final Image soldierImage, final SinglePlayer player, final SquareView dest,
             final BoardSquare toMove, final GameModel model, final GameSceneController controller) {
-       
+
         Point2D.Double from = boardView.getSquareView(fromCell);
         Point2D.Double to = boardView.getSquareView(toCell);
         image.setImage(soldierImage);
@@ -62,7 +59,7 @@ public class MoveTransition extends AnchorPane {
             @Override
             public void handle(ActionEvent t) {
                 image.setVisible(false);
-                dest.addSoldier(player.getPlayerID(),soldierImage , player.getNumSoldiersAtSquare(toMove));
+                dest.addSoldier(player.getPlayerID(), soldierImage, player.getNumSoldiersAtSquare(toMove));
                 if (model.getCurrPlayer().getType() == COMPUTER) {
                     try {
                         controller.makeComputerTurn(model.getCurrPlayer());
@@ -71,18 +68,19 @@ public class MoveTransition extends AnchorPane {
                     }
                 }
             }
-        });
+        }
+        );
         moveSoldierStart(from, to);
 
     }
-    
+
     private TranslateTransition createTransition() {
         TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(DURATION), this.image);
         translateTransition.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
                 image.setVisible(false);
-                
+
             }
         });
         return translateTransition;

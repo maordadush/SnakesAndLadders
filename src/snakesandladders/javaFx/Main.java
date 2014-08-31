@@ -117,7 +117,7 @@ public class Main extends Application {
                         GameSceneController gameSceneController = null;
                         sceneInitController.getOpenGameSelected().set(false);
                         eXMLLoadStatus returnedValue = openXML(primaryStage, gameSceneController, rootGame);
-                        gameSceneController.displayMessage(returnedValue.name());
+                      //  gameSceneController.displayMessage(returnedValue.name());
                     } catch (IOException ex) {
                         sceneInitController.showError(ex.getMessage());
                     } catch (SnakesAndLaddersRunTimeException ex) {
@@ -256,12 +256,10 @@ public class Main extends Application {
 
     private boolean getFinalAnswer(Stage primaryStage) throws XMLException {
         boolean quit = true;
-        String answer = CustomizablePromptDialog.show(primaryStage, "What do you want do to?", "Quit without saving", "Save and quit", "Stay");
+        String answer = CustomizablePromptDialog.show(primaryStage, "What do you want do to?","Quit", "Stay");
         switch (answer) {
-            case ("Quit without saving"):
-                break;
-            case ("Save and quit"):
-                saveXML(primaryStage);
+            case ("Quit"):
+                System.exit(0);
                 break;
             case ("Stay"):
                 quit = false;
@@ -359,10 +357,8 @@ public class Main extends Application {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         Scene scene = new Scene(rootGame, screenBounds.getWidth(), screenBounds.getHeight());
 
-        primaryStage.setX(
-                0);
-        primaryStage.setY(
-                0);
+        primaryStage.setX(0);
+        primaryStage.setY(0);
 
         primaryStage.setTitle(
                 model.getM_GameName());
