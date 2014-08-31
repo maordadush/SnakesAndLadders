@@ -5,9 +5,6 @@
  */
 package snakesandladders.javaFx.gameScene;
 
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -61,7 +58,7 @@ public class MoveTransition extends AnchorPane {
                     try {
                         controller.makeComputerTurn(model.getCurrPlayer());
                     } catch (SnakesAndLaddersRunTimeException ex) {
-                        Logger.getLogger(MoveTransition.class.getName()).log(Level.SEVERE, null, ex);
+                        controller.displayMessage(ex.getMessage());
                     }
                 }
             }

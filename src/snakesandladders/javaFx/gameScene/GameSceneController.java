@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.animation.FadeTransitionBuilder;
 import javafx.animation.TranslateTransition;
@@ -20,8 +18,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -65,12 +61,6 @@ public class GameSceneController implements Initializable {
     Cube cube;
     int cubeAnswer;
 
-    @FXML
-    private Font x1;
-    @FXML
-    private Color x2;
-    @FXML
-    private Font x3;
     private GameModel model;
     @FXML
     private Label labelCurrPlayer;
@@ -92,7 +82,7 @@ public class GameSceneController implements Initializable {
     private SimpleBooleanProperty userChooseSoldier2;
     private SimpleBooleanProperty userChooseSoldier3;
     private SimpleBooleanProperty userChooseSoldier4;
-    SnakesAndLaddersDrawingUtil snlUtil;
+    private SnakesAndLaddersDrawingUtil snlUtil;
     private List<Image> cubeImages;
 
     private List<ImageView> m_ImageViewSoldiers;
@@ -123,8 +113,7 @@ public class GameSceneController implements Initializable {
     private BorderPane boarderPaneRight;
     @FXML
     private AnchorPane anchorPaneLeft;
-    private String paneStyle = "-fx-background-color: #ffffe0;";
-    private TranslateTransition transitionMove;
+    private final String paneStyle = "-fx-background-color: #ffffe0;";
     private MoveTransition moveTransition;
 
     private boolean isErrorMessageShown;
@@ -153,7 +142,7 @@ public class GameSceneController implements Initializable {
 
         cube = new Cube();
 
-        m_ImageViewSoldiers = new ArrayList<ImageView>();
+        m_ImageViewSoldiers = new ArrayList<>();
         m_ImageViewSoldiers.add(imageViewSoldier1);
         m_ImageViewSoldiers.add(imageViewSoldier2);
         m_ImageViewSoldiers.add(imageViewSoldier3);
@@ -203,20 +192,14 @@ public class GameSceneController implements Initializable {
     public void InitModel(Boolean startNewGame, List<SinglePlayer> playersInitiated) throws SnakesAndLaddersRunTimeException {
         List<SinglePlayer> players = new ArrayList<>(playersInitiated);
 
-        try {
-            if (startNewGame) {
-                model.initNewGame(startNewGame);
-                initPlayers(players);
-            } else {
-                model.setPlayers(players);
-            }
-
-        } catch (SnakesAndLaddersRunTimeException ex) {
-            Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+        if (startNewGame) {
+            model.initNewGame(startNewGame);
+            initPlayers(players);
+        } else {
+            model.setPlayers(players);
         }
         model.selectFirstPlayer();
 
-        //addition from the controller
         printModelToScene();
         if (model.getCurrPlayer().getType() == COMPUTER) {
             makeComputerTurn(model.getCurrPlayer());
@@ -424,13 +407,14 @@ public class GameSceneController implements Initializable {
                     try {
                         player.setCurrentSoldier(1);
                     } catch (SnakesAndLaddersRunTimeException ex) {
-                        Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                        displayMessage(ex.getMessage());
                     }
                     try {
                         soldierChoosed(player);
                     } catch (SnakesAndLaddersRunTimeException ex) {
-                        Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                        displayMessage(ex.getMessage());
                     }
+
                 }
             }
         });
@@ -445,12 +429,12 @@ public class GameSceneController implements Initializable {
                     try {
                         player.setCurrentSoldier(2);
                     } catch (SnakesAndLaddersRunTimeException ex) {
-                        Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                        displayMessage(ex.getMessage());
                     }
                     try {
                         soldierChoosed(player);
                     } catch (SnakesAndLaddersRunTimeException ex) {
-                        Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                        displayMessage(ex.getMessage());
                     }
                 }
             }
@@ -466,12 +450,12 @@ public class GameSceneController implements Initializable {
                     try {
                         player.setCurrentSoldier(3);
                     } catch (SnakesAndLaddersRunTimeException ex) {
-                        Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                        displayMessage(ex.getMessage());
                     }
                     try {
                         soldierChoosed(player);
                     } catch (SnakesAndLaddersRunTimeException ex) {
-                        Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                        displayMessage(ex.getMessage());
                     }
                 }
             }
@@ -487,12 +471,12 @@ public class GameSceneController implements Initializable {
                     try {
                         player.setCurrentSoldier(4);
                     } catch (SnakesAndLaddersRunTimeException ex) {
-                        Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                        displayMessage(ex.getMessage());
                     }
                     try {
                         soldierChoosed(player);
                     } catch (SnakesAndLaddersRunTimeException ex) {
-                        Logger.getLogger(GameSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                        displayMessage(ex.getMessage());
                     }
                 }
             }
@@ -500,7 +484,7 @@ public class GameSceneController implements Initializable {
     }
 
     private void soldierChoosed(SinglePlayer player) throws SnakesAndLaddersRunTimeException {
-        boolean finishedGame = false;
+        boolean finishedGame;
         disableSoldierImages();
         playWithSoldier(player);
         finishedGame = checkPlayerWon(player);
@@ -543,7 +527,7 @@ public class GameSceneController implements Initializable {
         Soldier currSoldier = player.getCurrentSoldier();
         BoardSquare currSquare = currSoldier.getLocationOnBoard();
         SquareView origin = (SquareView) getSquareView(currSquare.getSquareNumber());
-        BoardSquare toMove = move(player, cubeAnswer);
+        BoardSquare move = move(player, cubeAnswer);
 
         origin.removeSoldier(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(currSquare));
 
@@ -633,7 +617,7 @@ public class GameSceneController implements Initializable {
 
         for (Soldier soldier : player.getM_SoldiersList()) {
             if (soldier.isM_FinishedGame()) {
-                
+
                 finishedSoldier++;
             }
         }

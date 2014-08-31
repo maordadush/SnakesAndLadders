@@ -27,7 +27,7 @@ public class SquareView extends VBox {
             + "-fx-border-width: 1;"
             + "-fx-border-color: black";
 
-    private BoardSquare boardSquare;
+    private final BoardSquare boardSquare;
     private HBox vPlayers;
     private ImageView imagePlayer1;
     private ImageView imagePlayer2;
@@ -50,7 +50,6 @@ public class SquareView extends VBox {
         this.boardSquare = boardSquare;
         setId(String.valueOf(squereNumber));
         addSquareNumberLabel();
-        //addSquareTypeLabel();
         initPlayersImages();
         initPlayersLabels();
         initPlayersHbox();
@@ -62,8 +61,6 @@ public class SquareView extends VBox {
         } else {
             setStyle(squereStyleOdd);
         }
-
-        //addSoldiersLabel();
     }
 
     private void addSquareNumberLabel() {
@@ -72,31 +69,12 @@ public class SquareView extends VBox {
         getChildren().add(label);
     }
 
-    private void addSquareTypeLabel() {
-        switch (boardSquare.getType()) {
-            case SNAKE_HEAD:
-                getChildren().add(new Label("SnakeHead"));
-                break;
-            case SNAKE_TAIL:
-                getChildren().add(new Label("SnakeTail"));
-                break;
-            case LADDER_HEAD:
-                getChildren().add(new Label("LadderHead"));
-                break;
-            case LADDER_TAIL:
-                getChildren().add(new Label("LadderTail"));
-                break;
-        }
-
-    }
-
     public void removeSoldier(int playerNumber, Image soldierImage, int numOfSoldiers) {
         HBox player = m_HboxPlayers.get(playerNumber - 1);
         ImageView imageView = m_ImagePlayers.get(playerNumber - 1);
         Label soldiersCount = m_LabelPlayers.get(playerNumber - 1);
 
         if (numOfSoldiers == 0) {
-            //vPlayers.getChildren().remove(player);
             player.getChildren().remove(soldiersCount);
         } else {
             imageView.setImage(soldierImage);
@@ -107,8 +85,6 @@ public class SquareView extends VBox {
             soldiersCount.textProperty().set(String.valueOf(numOfSoldiers));
             soldiersCount.setGraphic(imageView);
             soldiersCount.setContentDisplay(ContentDisplay.TOP);
-            //soldiersCount.setMaxHeight(150.0);
-            // player.getChildren().set(0, soldiersCount);
             player.getChildren().setAll(soldiersCount);
         }
     }
@@ -118,10 +94,6 @@ public class SquareView extends VBox {
         ImageView imageView = m_ImagePlayers.get(playerNumber - 1);
         Label soldiersCount = m_LabelPlayers.get(playerNumber - 1);
 
-//        if (numOfSoldiers == 0) {
-//            player.setVisible(true);
-//        }
-        //soldiersCount.textProperty().set((String.valueOf(Integer.valueOf(soldiersCount.getText()) + 1)));
         imageView.setImage(soldierImage);
         imageView.setFitWidth(30);
         imageView.setPreserveRatio(true);
@@ -130,8 +102,6 @@ public class SquareView extends VBox {
         soldiersCount.textProperty().set(String.valueOf(numOfSoldiers));
         soldiersCount.setGraphic(imageView);
         soldiersCount.setContentDisplay(ContentDisplay.TOP);
-        // player.getChildren().set(0, imageView);
-//        player.getChildren().set(0, soldiersCount);
         player.getChildren().setAll(soldiersCount);
         player.setAlignment(Pos.TOP_CENTER);
 
@@ -193,7 +163,7 @@ public class SquareView extends VBox {
         vPlayers.setMaxHeight(120.0);
         getChildren().add(vPlayers);
     }
-    
+
     public ImageView getSoldierImage(int playerID) {
         return m_ImagePlayers.get(playerID - 1);
     }

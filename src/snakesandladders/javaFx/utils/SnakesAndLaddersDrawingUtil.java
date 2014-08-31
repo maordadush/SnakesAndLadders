@@ -7,10 +7,6 @@ package snakesandladders.javaFx.utils;
 
 import static javafx.beans.binding.Bindings.add;
 import static javafx.beans.binding.Bindings.divide;
-import static javafx.beans.binding.Bindings.divide;
-import static javafx.beans.binding.Bindings.multiply;
-import static javafx.beans.binding.Bindings.multiply;
-import static javafx.beans.binding.Bindings.multiply;
 import static javafx.beans.binding.Bindings.multiply;
 import static javafx.beans.binding.Bindings.subtract;
 import javafx.beans.binding.DoubleBinding;
@@ -26,7 +22,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
-import snakesandladders.javaFx.components.BoardView;
 
 /**
  *
@@ -40,7 +35,7 @@ public class SnakesAndLaddersDrawingUtil {
     private static final String SNAKE_PATTERN_FILENAME = IMAGES_DIR + "snake.png";
 
     private final int size;
-    private GridPane cellsPane;
+    private final GridPane cellsPane;
     private final Pane snakesAndLaddersPane;
 
     public SnakesAndLaddersDrawingUtil(int size, GridPane cellsPane, AnchorPane boardView) {

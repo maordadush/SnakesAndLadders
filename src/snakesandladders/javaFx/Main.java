@@ -117,10 +117,10 @@ public class Main extends Application {
                         GameSceneController gameSceneController = null;
                         sceneInitController.getOpenGameSelected().set(false);
                         eXMLLoadStatus returnedValue = openXML(primaryStage, gameSceneController, rootGame);
-                      //  gameSceneController.displayMessage(returnedValue.name());
-                    } catch (IOException ex) {
-                        sceneInitController.showError(ex.getMessage());
-                    } catch (SnakesAndLaddersRunTimeException ex) {
+                        if (gameSceneController != null) {
+                            gameSceneController.displayMessage(returnedValue.name());
+                        }
+                    } catch (IOException | SnakesAndLaddersRunTimeException ex) {
                         sceneInitController.showError(ex.getMessage());
                     }
                 }
@@ -203,9 +203,7 @@ public class Main extends Application {
                         gameSceneController.getOpenGameSelected().set(false);
                         eXMLLoadStatus loadStatus = openXML(primaryStage, gameSceneController, rootGame);
                         gameSceneController.displayMessage(loadStatus.name());
-                    } catch (IOException ex) {
-                        gameSceneController.displayMessage(ex.getMessage());
-                    } catch (SnakesAndLaddersRunTimeException ex) {
+                    } catch (IOException | SnakesAndLaddersRunTimeException ex) {
                         gameSceneController.displayMessage(ex.getMessage());
                     }
                 }
@@ -249,17 +247,19 @@ public class Main extends Application {
                     }
                 }
             }
-
         });
 
     }
 
     private boolean getFinalAnswer(Stage primaryStage) throws XMLException {
         boolean quit = true;
-        String answer = CustomizablePromptDialog.show(primaryStage, "What do you want do to?","Quit", "Stay");
+        String answer = CustomizablePromptDialog.show(primaryStage, "What do you want do to?", "Quit", "Save and quit", "Stay");
         switch (answer) {
             case ("Quit"):
                 System.exit(0);
+                break;
+            case ("Save and quit"):
+                saveXML(primaryStage);
                 break;
             case ("Stay"):
                 quit = false;
@@ -281,7 +281,7 @@ public class Main extends Application {
         }
 
         startWithInitializedModel(stage, gameSceneController, rootGame);
-        return status.LOAD_SUCCESS;
+        return eXMLLoadStatus.LOAD_SUCCESS;
     }
 
     private void saveXML(Stage stage) throws XMLException {
