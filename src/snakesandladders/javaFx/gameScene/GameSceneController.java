@@ -232,16 +232,13 @@ public class GameSceneController implements Initializable {
     private void playButtonClicked(ActionEvent event) throws SnakesAndLaddersRunTimeException {
         hideError();
         buttonPlay.disableProperty().set(true);
-        SinglePlayer player = model.getCurrPlayer();
+
         cubeAnswer = cube.throwCube();
         showCubeAnswer(cubeAnswer);
 
-        if (player.getType() == COMPUTER) {
-            makeComputerTurn(player);
-        } else {
-            makeSoldiersAvaliable();
-            waitForUserToChooseSoldier();
-        }
+        makeSoldiersAvaliable();
+        waitForUserToChooseSoldier();
+
     }
 
     private void printModelToScene() {
@@ -417,7 +414,6 @@ public class GameSceneController implements Initializable {
 
     private void waitForUserToChooseSoldier() {
 
-//        //while (!newValue) {
         userChooseSoldier1.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> source, Boolean oldValue, Boolean newValue) {
@@ -548,7 +544,6 @@ public class GameSceneController implements Initializable {
         BoardSquare currSquare = currSoldier.getLocationOnBoard();
         SquareView origin = (SquareView) getSquareView(currSquare.getSquareNumber());
         BoardSquare toMove = move(player, cubeAnswer);
-        SquareView dest = (SquareView) getSquareView(toMove.getSquareNumber());
 
         origin.removeSoldier(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(currSquare));
 
@@ -596,8 +591,6 @@ public class GameSceneController implements Initializable {
             currentSoldier.setM_FinishedGame(true);
         }
         BoardSquare originBoardToMove = boardToMove;
-        SquareView originSquareView = (SquareView) getSquareView(originBoardToMove.getSquareNumber());
-
         SquareView middle = (SquareView) getSquareView(boardToMove.getSquareNumber());
         moveTransition.moveSoldier(Integer.valueOf(origin.getId()), Integer.valueOf(middle.getId()), getImageSoldier(player.getColor()),
                 player, middle, boardToMove, model, this);
@@ -640,6 +633,7 @@ public class GameSceneController implements Initializable {
 
         for (Soldier soldier : player.getM_SoldiersList()) {
             if (soldier.isM_FinishedGame()) {
+                
                 finishedSoldier++;
             }
         }
@@ -751,40 +745,6 @@ public class GameSceneController implements Initializable {
             }
 
         }
-    }
-
-    private TranslateTransition createTransitionMove(int playerID, Image imageSoldier, int numSoldiersAtSquare, SquareView origin, SquareView dest) {
-        ImageView imageView = origin.getSoldierImage(playerID);
-
-        //ImageView imageView = new ImageView();
-        //imageView.setImage(imageSoldier);
-        //  boardPane.getChildren().add(imageView);
-//        double boardViewX = boardView.getBoundsInParent().getMinX();
-//        double boardViewY = boardView.getBoundsInParent().getMinY();
-//        double ivX = imageView.getBoundsInParent().getMinX();
-//        double ivY = imageView.getBoundsInParent().getMinY();
-//        Point2D.Double from = boardView.getCellPoisition(Integer.valueOf(origin.getId()));
-//        Point2D.Double to = boardView.getCellPoisition(Integer.valueOf(dest.getId()));
-        TranslateTransition transition = new TranslateTransition(Duration.millis(1000), imageView);
-
-        transition.setFromX(0);
-        transition.setFromY(0);
-        transition.setToX(240);
-        transition.setToY(0);
-        transition.play();
-//        TranslateTransition transition = TranslateTransitionBuilder.create()
-//                .node(imageView)
-//                .fromX(from.x)
-//                // .fromX(origin.getBoundsInParent().getMinX())
-//                .toX(to.x)
-//                .fromY(from.y)
-//                .toY(to.y)
-//                .duration(Duration.millis(1000))
-//                .interpolator(Interpolator.LINEAR)
-//                .cycleCount(1)
-//                .build();
-
-        return transition;
     }
 
 }
