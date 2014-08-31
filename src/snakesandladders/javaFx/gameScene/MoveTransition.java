@@ -4,10 +4,12 @@
  * and open the template in the editor.
  */
 
-package snakesandladders.javaFx.utils;
+package snakesandladders.javaFx.gameScene;
 
 
 import java.awt.geom.Point2D;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -15,11 +17,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
+import snakesandladders.exception.SnakesAndLaddersRunTimeException;
 import snakesandladders.gamemodel.BoardSquare;
+import snakesandladders.gamemodel.GameModel;
 import snakesandladders.gamemodel.eChars;
 import snakesandladders.javaFx.components.BoardView;
 import snakesandladders.javaFx.components.SquareView;
+import snakesandladders.javaFx.gameScene.GameSceneController;
 import snakesandladders.players.SinglePlayer;
+import static snakesandladders.players.ePlayerType.COMPUTER;
 import snl.Players;
 import snl.Players.Player;
 
@@ -45,18 +51,25 @@ public class MoveTransition extends AnchorPane {
         transition = createTransition();
     }
 
-    public void moveSoldier(int fromCell, int toCell, final Image soldierImage, final SinglePlayer player, final SquareView dest, final BoardSquare toMove) {
+    public void moveSoldier(int fromCell, int toCell, final Image soldierImage, final SinglePlayer player, final SquareView dest,
+            final BoardSquare toMove, final GameModel model, final GameSceneController controller) {
        
-        Point2D.Double from = boardView.getCellPoisition(fromCell);
-        Point2D.Double to = boardView.getCellPoisition(toCell);
+        Point2D.Double from = boardView.getSquareView(fromCell);
+        Point2D.Double to = boardView.getSquareView(toCell);
         image.setImage(soldierImage);
         image.setVisible(true);
-       transition.setOnFinished(new EventHandler<ActionEvent>() {
+        transition.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
                 image.setVisible(false);
                 dest.addSoldier(player.getPlayerID(),soldierImage , player.getNumSoldiersAtSquare(toMove));
-                
+                if (model.getCurrPlayer().getType() == COMPUTER) {
+                    try {
+                        controller.makeComputerTurn(model.getCurrPlayer());
+                    } catch (SnakesAndLaddersRunTimeException ex) {
+                        Logger.getLogger(MoveTransition.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         });
         moveSoldierStart(from, to);

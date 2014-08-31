@@ -40,7 +40,7 @@ public class BoardView extends GridPane {
         }
     }
     
-    public Point2D.Double getCellPoisition(int squareNumber) {
+    public Point2D.Double getSquareView(int squareNumber) {
         
         double y = (boardSize - (int) ((squareNumber - 1) / boardSize) - 0.9) * heightSquare;
         double x = squareNumber % boardSize;

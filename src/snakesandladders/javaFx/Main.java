@@ -90,7 +90,7 @@ public class Main extends Application {
                         sceneInitController.showError(ex.getMessage());
                     }
 
-                    lisionersForGame(gameSceneController, primaryStage, rootGame);
+                    listenersForGame(gameSceneController, primaryStage, rootGame);
 
                     Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
                     Scene scene = new Scene(rootGame, screenBounds.getWidth(), screenBounds.getHeight());
@@ -149,7 +149,7 @@ public class Main extends Application {
         return listToReturn;
     }
 
-    private void lisionersForGame(final GameSceneController gameSceneController, final Stage primaryStage, final Parent rootGame) {
+    private void listenersForGame(final GameSceneController gameSceneController, final Stage primaryStage, final Parent rootGame) {
 
         primaryStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, new EventHandler<WindowEvent>() {
             @Override
@@ -354,7 +354,7 @@ public class Main extends Application {
         gameSceneController.setModel(model);
         gameSceneController.InitModel(false, model.getPlayers());
 
-        lisionersForGame(gameSceneController, primaryStage, rootGame);
+        listenersForGame(gameSceneController, primaryStage, rootGame);
 
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         Scene scene = new Scene(rootGame, screenBounds.getWidth(), screenBounds.getHeight());

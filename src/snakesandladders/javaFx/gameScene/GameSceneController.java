@@ -20,6 +20,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -46,7 +48,6 @@ import snakesandladders.javaFx.components.BoardView;
 import snakesandladders.javaFx.components.ImageManager;
 import snakesandladders.javaFx.components.PlayerView;
 import snakesandladders.javaFx.components.SquareView;
-import snakesandladders.javaFx.utils.MoveTransition;
 import snakesandladders.javaFx.utils.SnakesAndLaddersDrawingUtil;
 import snakesandladders.players.SinglePlayer;
 import snakesandladders.players.Soldier;
@@ -394,7 +395,7 @@ public class GameSceneController implements Initializable {
         return null;
     }
 
-    private void makeComputerTurn(SinglePlayer player) throws SnakesAndLaddersRunTimeException {
+     void makeComputerTurn(SinglePlayer player) throws SnakesAndLaddersRunTimeException {
         cubeAnswer = cube.throwCube();
         showCubeAnswer(cubeAnswer);
         int soldierIndex = getRandomSoldierIndex(player);
@@ -550,9 +551,6 @@ public class GameSceneController implements Initializable {
 
         model.forwardPlayer();
         setPlayerTurn();
-        if (model.getCurrPlayer().getType() == COMPUTER) {
-            makeComputerTurn(model.getCurrPlayer());
-        }
 
     }
 
@@ -596,7 +594,8 @@ public class GameSceneController implements Initializable {
         SquareView originSquareView = (SquareView) getSquareView(originBoardToMove.getSquareNumber());
 
         SquareView middle = (SquareView) getSquareView(boardToMove.getSquareNumber());
-        moveTransition.moveSoldier(Integer.valueOf(origin.getId()), Integer.valueOf(middle.getId()), getImageSoldier(player.getColor()), player, middle, boardToMove);
+        moveTransition.moveSoldier(Integer.valueOf(origin.getId()), Integer.valueOf(middle.getId()), getImageSoldier(player.getColor()),
+                player, middle, boardToMove, model, this);
         switch (boardToMove.getType()) {
             case LADDER_TAIL:
                 boardToMove = boardToMove.getJumpTo();
@@ -618,7 +617,8 @@ public class GameSceneController implements Initializable {
         SquareView dest = (SquareView) getSquareView(boardToMove.getSquareNumber());
         if (middle != dest) {
             middle.removeSoldier(player.getPlayerID(), getImageSoldier(player.getColor()), player.getNumSoldiersAtSquare(originBoardToMove));
-            moveTransition.moveSoldier(Integer.valueOf(middle.getId()), Integer.valueOf(dest.getId()), getImageSoldier(player.getColor()), player, dest, boardToMove);
+            moveTransition.moveSoldier(Integer.valueOf(middle.getId()), Integer.valueOf(dest.getId()), getImageSoldier(player.getColor()),
+                    player, dest, boardToMove, model, this);
         }
         return boardToMove;
     }
@@ -751,7 +751,7 @@ public class GameSceneController implements Initializable {
     private TranslateTransition createTransitionMove(int playerID, Image imageSoldier, int numSoldiersAtSquare, SquareView origin, SquareView dest) {
         ImageView imageView = origin.getSoldierImage(playerID);
 
-       //ImageView imageView = new ImageView();
+        //ImageView imageView = new ImageView();
         //imageView.setImage(imageSoldier);
         //  boardPane.getChildren().add(imageView);
 //        double boardViewX = boardView.getBoundsInParent().getMinX();
@@ -781,5 +781,7 @@ public class GameSceneController implements Initializable {
 
         return transition;
     }
+
+
 
 }
